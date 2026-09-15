@@ -1,0 +1,1196 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>1 Die Struktur von Webseiten: HTML</title>
+		<script>
+			/* Farbschema vor dem ersten Zeichnen setzen, damit beim Laden nichts
+			   aufblitzt. Dunkel ist der Standard, siehe assets/style.css. */
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.html.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="assets/style.css" />
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html">HTML und <span>CSS</span></a>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-html.html">1 HTML</a>
+				<a href="02-css.html">2 CSS</a>
+				<a href="03-projekt.html">3 Projekt</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main class="layout" data-ex-chapter="3" data-ex-offset="0">
+			<div class="content">
+				<p class="eyebrow">Abschnitt 1</p>
+				<h1>Die Struktur von Webseiten: HTML</h1>
+
+				<div class="progress" data-progress>
+					<span class="meter"><i style="width: 0"></i></span>
+					<span data-progress-text>0 von 14 Übungen erledigt</span>
+					<button type="button" data-reset>zurücksetzen</button>
+				</div>
+
+				<p>
+					Eine Webseite ist ein Dokument, das von Ihrem Webbrowser dargestellt
+					wird. Die Strukturierung des Dokuments wird mit <em>HTML</em> gemacht.
+					Dies ist eine einfache Art, dem Computer zu sagen, welche Teile
+					zusammengehören und von welchem Typ diese Teile sind. HTML ist dabei
+					eine Abkürzung für
+				</p>
+
+				<blockquote>
+					<em>H</em>yper-<em>T</em>ext <em>M</em>ark-up <em>L</em>anguage
+				</blockquote>
+
+				<p>
+					Eine solche HTML-Datei ist eine einfache Textdatei, üblicherweise mit
+					der Dateierweiterung <code>.html</code> oder <code>.htm</code>. Diese
+					Datei ist durch sogenannte <em>Tags</em> strukturiert. Diese haben
+					immer dieselbe Grundstruktur
+				</p>
+
+				<blockquote>
+					«<code>&lt;tagname&gt;</code>… <code>&lt;/tagname&gt;</code>».
+				</blockquote>
+
+				<p>
+					Das Eröffnungstag (<code>&lt;tagname&gt;</code>), das Schliessungstag
+					(<code>&lt;/tagname&gt;</code>) und der Inhalt (…) bilden zusammen ein
+					<em>Element</em>. HTML-Elemente sind hierarchisch angeordnet, was
+					bedeutet, dass sie verschachtelt werden können, um eine baumartige
+					Struktur des Inhalts auf der Webseite zu erstellen. Diese
+					hierarchische Struktur wird <em>DOM</em> (<em>D</em>ocument
+					<em>O</em>bject <em>M</em>odel) genannt und wird vom Webbrowser
+					verwendet, um die Webseite darzustellen.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing" id="listing-first">
+							<pre data-src="first-example.html"></pre>
+							<figcaption>
+								<b>Listing 1.</b> Vollständige HTML-Seite
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/first-example.html"
+									>first-example.html</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="first-example.html" data-height="340"></iframe>
+							<figcaption>
+								Dieselbe Seite, hier im Browser dargestellt.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<p>
+					In diesem Beispiel ist das HTML-Element
+					(<code>&lt;html&gt;</code>… <code>&lt;/html&gt;</code>) das
+					Wurzelelement der Hierarchie und enthält zwei Kindelemente: «head» und
+					«body». Das head-Element wiederum enthält die Kindelemente namens
+					«meta» und «title». Das body-Element enthält die Kindelemente namens
+					«h1», «p», «ul» und «img».
+				</p>
+
+				<dl class="deflist">
+					<div>
+						<dt>Überschriften</dt>
+						<dd>
+							<p>
+								Möchten wir einen Text als <em>Überschrift</em> festlegen,
+								machen wir das in HTML mit der folgenden Syntax:
+								<code>&lt;h1&gt;Titel&lt;/h1&gt;</code>.
+							</p>
+							<p>
+								Mit <code>&lt;h1&gt;</code> sagen Sie dem Computer, dass nun ein
+								Titel folgt. Dann wird all der Text bis
+								<code>&lt;/h1&gt;</code> als Titel interpretiert.
+							</p>
+							<p>
+								Neben <code>&lt;h1&gt;</code> gibt es auch kleinere Titel
+								<code>&lt;h2&gt;</code>, <code>&lt;h3&gt;</code>, …,
+								<code>&lt;h6&gt;</code>. Versuchen Sie auch diese in Ihr
+								Dokument zu integrieren.
+							</p>
+						</dd>
+					</div>
+					<div>
+						<dt>Abschnitt</dt>
+						<dd>
+							<p>
+								Um in HTML einen Abschnitt zu machen, wird das
+								<code>&lt;p&gt;</code>-Tag benutzt. Alles, was darin ist, wird
+								als Abschnitt betrachtet. HTML ignoriert Zeilenumbrüche und
+								mehrfache Leerzeichen, um Dokumente konsistent anzuzeigen.
+								Damit Sie Abschnitte verwenden können, ist also das
+								<code>&lt;p&gt;</code>-Tag nötig.
+							</p>
+						</dd>
+					</div>
+					<div>
+						<dt>Listen</dt>
+						<dd>
+							<p>
+								In HTML gibt es zwei Arten von Listen: ungeordnete Listen
+								<code>&lt;ul&gt;</code> und geordnete Listen
+								<code>&lt;ol&gt;</code>. Innerhalb einer Liste ist jedes Element
+								ein Listeneintrag. Der folgende Code erstellt Ihnen eine Liste.
+							</p>
+							<div class="split">
+								<figure class="listing">
+									<pre data-src="first-example.html" data-lines="13-16"></pre>
+									<figcaption><b>Listing 2.</b> Ungeordnete Liste</figcaption>
+								</figure>
+								<figure class="demo">
+									<iframe
+										data-src="first-example.html"
+										data-lines="13-16"
+										data-height="110"
+									></iframe>
+									<figcaption>Ungeordnete Liste im Browser</figcaption>
+								</figure>
+							</div>
+						</dd>
+					</div>
+					<div>
+						<dt>Bilder</dt>
+						<dd>
+							<p>
+								Bilder können Sie mit dem <code>&lt;img&gt;</code>-Tag
+								einfügen. Dazu finden Sie in Listing 3 bzw. Listing 1 ein
+								Beispiel. Alternativ können Sie ein Bild auch im selben Ordner
+								wie Ihre <code>.html</code>-Datei speichern und das Bild dann
+								mit seinem Namen anstelle des Links einbinden.
+							</p>
+							<figure class="listing">
+								<pre data-src="first-example.html" data-lines="17-20"></pre>
+								<figcaption><b>Listing 3.</b> Bild einfügen</figcaption>
+							</figure>
+						</dd>
+					</div>
+					<div>
+						<dt>Link</dt>
+						<dd>
+							<p>
+								Links zu anderen Adressen können mit dem
+								<code>&lt;a&gt;</code>-Tag gesetzt werden.
+							</p>
+							<figure class="listing">
+								<pre>
+&lt;a href="https://fsf.org"&gt;Das ist ein Link zur fsf&lt;/a&gt;</pre
+								>
+								<figcaption>
+									<b>Listing 4.</b> Link nach
+									<a href="https://fsf.org">https://fsf.org</a>
+								</figcaption>
+							</figure>
+						</dd>
+					</div>
+				</dl>
+
+				<p>
+					Dies sind einige Beispiele für HTML-Tags. Selbstverständlich ist diese
+					Liste alles andere als vollständig. Eine wesentlich ausführlichere
+					Liste finden Sie unter der folgenden Adresse:
+				</p>
+
+				<ul class="linkrow">
+					<li>
+						<a href="https://www.w3schools.com/html/default.asp"
+							>w3schools: HTML-Tutorial</a
+						>
+					</li>
+				</ul>
+
+				<h2 id="strukturieren">Webseite strukturieren</h2>
+
+				<p>
+					Webseiten sollten immer in sinnvolle Abschnitte unterteilt sein. Mit
+					HTML findet diese Unterteilung mit verschiedenen Tags statt. Welche
+					Tags man wofür einsetzen möchte, liegt dabei beim Benutzer. Sinnvoll
+					ist es, sich eine einfache Struktur zu überlegen und diese, so gut es
+					geht, beizubehalten.
+				</p>
+
+				<p>Für diese Unterteilung werden am häufigsten die folgenden Tags verwendet:</p>
+
+				<dl class="deflist">
+					<div>
+						<dt><code>&lt;header&gt;</code></dt>
+						<dd>Der Kopfbereich der Seite.</dd>
+					</div>
+					<div>
+						<dt><code>&lt;nav&gt;</code></dt>
+						<dd>Die Navigation, also die Links zu anderen Seiten.</dd>
+					</div>
+					<div>
+						<dt><code>&lt;main&gt;</code></dt>
+						<dd>Der Hauptinhalt der Seite.</dd>
+					</div>
+					<div>
+						<dt><code>&lt;article&gt;</code></dt>
+						<dd>Ein in sich abgeschlossener Beitrag.</dd>
+					</div>
+					<div>
+						<dt><code>&lt;section&gt;</code></dt>
+						<dd>Ein Abschnitt innerhalb eines Beitrags.</dd>
+					</div>
+					<div>
+						<dt><code>&lt;footer&gt;</code></dt>
+						<dd>Der Fussbereich der Seite.</dd>
+					</div>
+					<div>
+						<dt><code>&lt;div&gt;</code></dt>
+						<dd>
+							Ein Bereich ohne besondere Bedeutung. Dieses Tag wird verwendet,
+							wenn keines der anderen Tags passt.
+						</dd>
+					</div>
+				</dl>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<p>
+						Ein Artikel hat in der Regel einen Titel und besteht aus
+						verschiedenen Abschnitten. Dies kann mit HTML einfach dargestellt
+						werden.
+					</p>
+					<figure class="listing">
+						<pre data-src="article-example.html"></pre>
+						<figcaption>
+							<b>Listing 5.</b> Ein Artikel mit Abschnitten
+							(<a
+								href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/article-example.html"
+								>article-example.html</a
+							>)
+						</figcaption>
+					</figure>
+					<p>
+						Die logische Struktur kann hier einfach vom Programmierer und auch
+						vom Computer ausgelesen werden. Durch diese Art der Struktur können
+						später dann verschiedene Stile auf die Webseite angewendet werden,
+						was eine schöne und einheitliche Gestaltung ermöglicht, ohne darüber
+						nachdenken zu müssen.
+					</p>
+				</div>
+
+				<h2 id="hervorheben">Textelemente hervorheben</h2>
+
+				<p>
+					Wenn wir eine Webseite erstellen, möchten wir nicht nur die Seite
+					strukturieren, sondern auch einzelne Elemente hervorheben können. Soll
+					ein bestimmtes Wort im Text hervorgehoben werden, kann man dies durch
+					<strong>Fettdruck</strong> (<code>&lt;b&gt;</code>) oder
+					<em>Kursivschrift</em> (<code>&lt;i&gt;</code>) erreichen. Es gibt aber
+					auch noch andere Möglichkeiten, Text hervorzuheben.
+				</p>
+
+				<p>
+					Wichtig ist dabei der Unterschied zwischen der <em>Darstellung</em> und
+					der <em>Bedeutung</em>. Die Tags <code>&lt;b&gt;</code> und
+					<code>&lt;i&gt;</code> sagen nur, <em>wie</em> etwas aussehen soll. Die
+					Tags <code>&lt;strong&gt;</code> und <code>&lt;em&gt;</code> sagen
+					hingegen, dass ein Text <em>wichtig</em> beziehungsweise
+					<em>betont</em> ist. Dargestellt werden sie standardmässig gleich, aber
+					ein Vorlesegerät für blinde Menschen kann nur die zweite Variante
+					richtig interpretieren.
+				</p>
+
+				<p>Weitere Möglichkeiten und Informationen finden Sie hier:</p>
+
+				<ul class="linkrow">
+					<li>
+						<a href="https://www.w3schools.com/html/html_formatting.asp"
+							>w3schools: HTML Text Formatting</a
+						>
+					</li>
+				</ul>
+
+				<h2 id="block-inline">Block- und Inline-Elemente</h2>
+
+				<p>
+					HTML hat im Prinzip zwei unterschiedliche Elementarten. Einerseits
+					gibt es die Blockelemente (<code>&lt;h1&gt;</code>,
+					<code>&lt;p&gt;</code>, <code>&lt;div&gt;</code>,
+					<code>&lt;section&gt;</code>, usw.), andererseits die Inlineelemente
+					(<code>&lt;b&gt;</code>, <code>&lt;strong&gt;</code>,
+					<code>&lt;a&gt;</code>, <code>&lt;img&gt;</code>, usw.). Mit diesen
+					beiden Arten kann man das ganze Design einer Webseite beschreiben.
+					Dafür gibt es eine ganz einfache Regel. Ein <em>Blockelement</em> nimmt
+					immer die volle Breite der Webseite ein, und danach kommt ein Umbruch.
+					Ein <em>Inlineelement</em> hingegen nimmt nur so viel Platz ein, wie es
+					braucht, und danach geht der Text direkt weiter.
+				</p>
+
+				<h2 id="attribute">HTML-Attribute</h2>
+
+				<p>
+					Einige HTML-Elemente sind speziell und brauchen zusätzliche
+					Informationen. Diese Zusatzinformationen nennt man
+					<em>Attribute</em>. Einem Attribut wird dann mit einem
+					Gleichheitszeichen ein <em>Wert</em> zugeordnet.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<p>
+						Ein Link (oder auch anchor-Tag) ist ein Element, das zusätzliche
+						Informationen braucht. Das Element selbst bekommt den Text, der auf
+						der Webseite angezeigt wird, zusätzlich muss man dem Tag aber noch
+						sagen, auf welche Webseite verlinkt werden soll.
+					</p>
+					<figure class="listing">
+						<pre>
+&lt;a href="https://fsf.org"&gt;Free Software Foundation&lt;/a&gt;</pre
+						>
+						<figcaption>
+							<b>Listing 6.</b> Link zur Free Software Foundation
+						</figcaption>
+					</figure>
+					<p>
+						In diesem Fall ist <code>href</code> das Attribut und der Wert
+						<code>"https://fsf.org"</code> gibt an, auf welche Webseite verlinkt
+						wird.
+					</p>
+				</div>
+
+				<h3 id="weitere-attribute">Weitere Elemente mit Attributen</h3>
+
+				<p>
+					Auch Bilder brauchen ein Attribut (<code>src</code>), welches angibt,
+					wo sich das Bild befindet. Hier können auch weitere Attribute wie die
+					Höhe (<code>height="..."</code>) oder die Breite
+					(<code>width="..."</code>) des Bildes angegeben werden.
+				</p>
+
+				<h3 id="ids">IDs</h3>
+
+				<p>
+					<em>IDs</em> sind praktische Attribute, die Sie jedem Element zuweisen
+					können. Wichtig dabei ist, dass IDs beschreibend für das Element sind
+					und eindeutig auf der Webseite vergeben sind.
+				</p>
+
+				<figure class="listing">
+					<pre>
+&lt;section id="very-important-section"&gt;
+  Dies ist ein Abschnitt mit einer ID.
+&lt;/section&gt;</pre
+					>
+					<figcaption><b>Listing 7.</b> Abschnitt mit einer ID</figcaption>
+				</figure>
+
+				<p>
+					IDs werden verwendet, um spezielle Elemente zu kennzeichnen. Diese
+					können dann individuell gestaltet werden (CSS) oder man kann innerhalb
+					einer Webseite darauf verlinken. Die Webseite scrollt dann direkt zu
+					dem Element, das Sie verlinkt haben.
+				</p>
+
+				<p>
+					Um auf ein Element mit einer ID zu verlinken, können Sie den Code von
+					Listing 8 verwenden.
+				</p>
+
+				<figure class="listing" id="listing-id">
+					<pre>
+&lt;a href="#very-important-section"&gt;Sehr wichtiger Abschnitt&lt;/a&gt;</pre
+					>
+					<figcaption>
+						<b>Listing 8.</b> Link auf einen Abschnitt mit einer ID
+					</figcaption>
+				</figure>
+
+				<p>
+					Um auf IDs zu verlinken, stellen Sie einfach das
+					<code>#</code>-Zeichen vor die ID.
+				</p>
+
+				<h3 id="klassen">Klassen</h3>
+
+				<p>
+					<em>Klassen</em> werden später gebraucht, um Elemente zu gestalten
+					(CSS). Im Moment bringen sie uns noch nicht so viel, ausser dass wir
+					ähnliche Elemente gruppieren können. Im Unterschied zu einer ID darf
+					dieselbe Klasse beliebig vielen Elementen zugeordnet werden.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<p>
+						Mit <code>&lt;strong&gt;</code> können Sie ein wichtiges Element
+						hervorheben. Aber auch <code>&lt;em&gt;</code> hebt wichtige
+						Elemente hervor. Beiden kann die Klasse «very-important» zugeordnet
+						werden und somit findet eine Gruppierung statt.
+					</p>
+					<figure class="listing">
+						<pre>
+&lt;strong class="very-important"&gt;Super wichtig&lt;/strong&gt;
+&lt;em class="very-important"&gt;Super wichtig, aber anders&lt;/em&gt;</pre
+						>
+						<figcaption>
+							<b>Listing 9.</b> Zwei Elemente mit der Klasse
+							<code>very-important</code>
+						</figcaption>
+					</figure>
+					<p>
+						Beide sind «sehr wichtige» Elemente, werden aber anders dargestellt.
+					</p>
+				</div>
+
+				<h3 id="gestalten">Elemente gestalten</h3>
+
+				<p>
+					Mit dem <code>&lt;style&gt;</code>-Tag können wir die gruppierten
+					Elemente gestalten. Damit können wir zusätzliche Styles für Klassen
+					angeben (internes CSS). Das <code>&lt;style&gt;</code>-Tag wird dabei
+					in den <code>&lt;head&gt;</code> der Seite geschrieben.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<p>
+						Wir können sehr wichtige Elemente mit roter Schrift zusätzlich
+						hervorheben.
+					</p>
+					<figure class="listing">
+						<pre>
+&lt;style&gt;
+  .very-important {
+    color: red;
+  }
+&lt;/style&gt;</pre
+						>
+						<figcaption><b>Listing 10.</b> Style-Tag</figcaption>
+					</figure>
+				</div>
+
+				<p>
+					Mehr über die Gestaltung folgt im
+					<a href="02-css.html">Abschnitt 2 über CSS</a>.
+				</p>
+
+				<h2 id="uebungen">Übungen</h2>
+
+				<!-- ============================================== Übung 3.01 -->
+				<section class="exercise" id="ex-firstexample">
+					<div class="exercise__body">
+						<ol class="tasks">
+							<li>
+								Kopieren Sie das Beispiel von Listing 1 in die Werkbank und
+								schauen Sie sich das Resultat in der Vorschau an. Es ist schon
+								eingefüllt.
+							</li>
+							<li>Fügen Sie zwei weitere Einträge zur Liste hinzu.</li>
+							<li>Wechseln Sie die Liste in eine geordnete Liste.</li>
+							<li>Setzen Sie die Höhe des Gym-Logos auf 400 Pixel.</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb1"
+							data-files="html"
+							data-seed-html="first-example.html"
+							data-sol-html="basic-exercise.html"
+							data-height="340"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="basic-exercise.html"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/basic-exercise.html"
+											>basic-exercise.html</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.02 -->
+				<section class="exercise" id="ex-domtree">
+					<div class="exercise__body">
+						<p>Betrachten Sie die HTML-Seite von Listing 1.</p>
+						<ol class="tasks">
+							<li>
+								Welches Element ist das Elternelement von
+								<code>&lt;title&gt;</code>?
+							</li>
+							<li>
+								Welche Elemente sind die Kindelemente von
+								<code>&lt;body&gt;</code>?
+							</li>
+							<li>
+								Wie viele Listeneinträge hat die Liste und in welchem Element
+								liegen sie?
+							</li>
+							<li>Zeichnen Sie den DOM der ganzen Seite als Baum auf.</li>
+						</ol>
+
+						<figure class="listing">
+							<pre data-src="first-example.html" data-linenos></pre>
+							<figcaption><b>Listing 1</b> mit Zeilennummern</figcaption>
+						</figure>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<ol class="tasks">
+									<li>Das <code>&lt;head&gt;</code>-Element.</li>
+									<li>
+										Die Elemente <code>&lt;h1&gt;</code>, zwei
+										<code>&lt;p&gt;</code>, <code>&lt;ul&gt;</code> und
+										<code>&lt;img&gt;</code>.
+									</li>
+									<li>
+										Die Liste hat zwei Listeneinträge
+										(<code>&lt;li&gt;</code>). Beide liegen im
+										<code>&lt;ul&gt;</code>-Element.
+									</li>
+									<li>
+										Der DOM der Seite:
+										<div class="domtree">
+											<ul>
+												<li>
+													<b>html</b>
+													<ul>
+														<li>
+															<b>head</b>
+															<ul>
+																<li><b>meta</b></li>
+																<li><b>meta</b></li>
+																<li><b>title</b></li>
+															</ul>
+														</li>
+														<li>
+															<b>body</b>
+															<ul>
+																<li><b>h1</b></li>
+																<li><b>p</b></li>
+																<li><b>p</b></li>
+																<li>
+																	<b>ul</b>
+																	<ul>
+																		<li><b>li</b></li>
+																		<li><b>li</b></li>
+																	</ul>
+																</li>
+																<li><b>img</b></li>
+															</ul>
+														</li>
+													</ul>
+												</li>
+											</ul>
+										</div>
+									</li>
+								</ol>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.03 -->
+				<section class="exercise" id="ex-basehp">
+					<div class="exercise__body">
+						<p>
+							Erstellen Sie eine neue HTML-Datei
+							<code>my-first-page.html</code>. Diese soll einen Titel, einen
+							Untertitel und zwei Paragraphen enthalten. Verwenden Sie die Tags
+							<code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code> und
+							<code>&lt;p&gt;</code>.
+						</p>
+						<p>
+							Sie können den Inhalt der Seite selber wählen. Versuchen Sie die
+							Seite von Grund auf selber zu schreiben und keine Vorlage zu
+							benutzen.
+						</p>
+
+						<div class="box box--note">
+							<p class="box__label">Hinweis</p>
+							<p>
+								Auf diese Seite kommen Sie in
+								<a href="02-css.html#ex-simpleid">Übung 3.18</a> zurück. Lassen
+								Sie Ihren Code also stehen.
+							</p>
+						</div>
+
+						<div
+							class="workbench"
+							data-id="wb3"
+							data-files="html"
+							data-sol-html="my-first-page.html"
+							data-height="320"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="my-first-page.html"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/my-first-page.html"
+											>my-first-page.html</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.04 -->
+				<section class="exercise" id="ex-linkexercise">
+					<div class="exercise__body">
+						<ol class="tasks">
+							<li>
+								Erstellen Sie eine neue HTML-Datei. Diese soll nun einen Link
+								nach
+								<a href="https://www.gym-muttenz.ch">https://www.gym-muttenz.ch</a>
+								enthalten. Das heisst, es soll möglich sein, mit einem Klick zur
+								Webseite des Gymnasiums Muttenz zu gelangen.
+								<p>Verwenden Sie hierfür das <code>&lt;a&gt;</code>-Tag.</p>
+							</li>
+							<li>
+								Das <code>&lt;a&gt;</code>-Tag hat neben dem obligatorischen
+								Attribut <code>href</code> noch weitere optionale Attribute.
+								Eines davon ist das Attribut <code>title</code>. Damit lässt
+								sich Text definieren, der erscheint, wenn der Mauszeiger über
+								dem Link schwebt. Nutzen Sie dieses Attribut, um diesen Text auf
+								«Gymnasium» zu setzen.
+							</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb4"
+							data-files="html"
+							data-sol-html="link-exercise.html"
+							data-height="300"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="link-exercise.html"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/link-exercise.html"
+											>link-exercise.html</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.05 -->
+				<section class="exercise" id="ex-logolink">
+					<div class="exercise__body">
+						<p>
+							Erstellen Sie eine HTML-Datei mit dem Logo des Gymnasiums Muttenz.
+							Dieses Bild soll ein Link nach
+							<a href="https://www.gym-muttenz.ch">https://www.gym-muttenz.ch</a>
+							sein. Das heisst, beim Klicken auf dieses Bild soll man zur
+							Webseite vom Gymnasium Muttenz gelangen.
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb5"
+							data-files="html"
+							data-sol-html="picture-link.html"
+							data-height="320"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="picture-link.html"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/picture-link.html"
+											>picture-link.html</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.06 -->
+				<section class="exercise" id="ex-structure">
+					<div class="exercise__body">
+						<p>
+							Erstellen Sie eine neue HTML-Datei, die eine sinnvoll
+							strukturierte Webseite über Ihre Schule enthält. Verwenden Sie
+							dabei die folgenden Tags:
+						</p>
+						<ol class="tasks tasks--cols">
+							<li><code>&lt;header&gt;</code></li>
+							<li><code>&lt;nav&gt;</code></li>
+							<li><code>&lt;main&gt;</code></li>
+							<li><code>&lt;article&gt;</code></li>
+							<li><code>&lt;section&gt;</code></li>
+							<li><code>&lt;footer&gt;</code></li>
+						</ol>
+						<p>
+							Die Navigation soll dabei mindestens zwei Links enthalten, und der
+							Hauptinhalt soll aus einem Beitrag mit zwei Abschnitten bestehen.
+						</p>
+
+						<div class="hint">
+							<p>
+								<em>Hinweis:</em> Achten Sie darauf, dass Sie die Tags richtig
+								verschachteln. Die Seite sieht im Browser noch schlicht aus –
+								das ist in Ordnung, denn die Gestaltung folgt erst mit CSS.
+							</p>
+						</div>
+
+						<div
+							class="workbench"
+							data-id="wb6"
+							data-files="html"
+							data-sol-html="page-structure.html"
+							data-height="380"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="page-structure.html"></pre>
+									<figcaption>Lösungsvorschlag (page-structure.html)</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.07 -->
+				<section class="exercise" id="ex-formatting">
+					<div class="exercise__body">
+						<p>Bauen Sie die folgenden Elemente in eine Webseite ein:</p>
+						<ol class="tasks tasks--cols">
+							<li><code>&lt;b&gt;</code></li>
+							<li><code>&lt;i&gt;</code></li>
+							<li><code>&lt;strong&gt;</code></li>
+							<li><code>&lt;mark&gt;</code></li>
+							<li><code>&lt;em&gt;</code></li>
+							<li><code>&lt;sub&gt;</code></li>
+							<li><code>&lt;sup&gt;</code></li>
+						</ol>
+						<p>
+							Schreiben Sie zu jedem Element einen kurzen Text, der beschreibt,
+							was das Element bewirkt.
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb7"
+							data-files="html"
+							data-sol-html="formatting.html"
+							data-height="340"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="formatting.html"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/formatting.html"
+											>formatting.html</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.08 -->
+				<section class="exercise" id="ex-brokenpage">
+					<div class="exercise__body">
+						<p>
+							Die HTML-Seite von Listing 11 enthält sechs Fehler. Finden Sie die
+							Fehler und korrigieren Sie sie. Der fehlerhafte Code ist in der
+							Werkbank schon eingefüllt.
+						</p>
+
+						<figure class="listing">
+							<pre data-src="broken-page.html" data-linenos></pre>
+							<figcaption>
+								<b>Listing 11.</b> Eine HTML-Seite mit Fehlern
+								(broken-page.html)
+							</figcaption>
+						</figure>
+
+						<div class="hint">
+							<p>
+								<em>Hinweis:</em> Sie können Ihre Seite unter
+								<a href="https://validator.w3.org/#validate_by_input"
+									>validator.w3.org</a
+								>
+								überprüfen lassen. Kopieren Sie den Code dort ins Textfeld.
+							</p>
+						</div>
+
+						<div
+							class="workbench"
+							data-id="wb8"
+							data-files="html"
+							data-seed-html="broken-page.html"
+							data-sol-html="broken-page-fixed.html"
+							data-height="400"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<ol class="tasks">
+									<li>Das Schliessungstag <code>&lt;/head&gt;</code> fehlt.</li>
+									<li>
+										Der Titel wird mit <code>&lt;h1&gt;</code> anstatt mit
+										<code>&lt;/h1&gt;</code> geschlossen.
+									</li>
+									<li>
+										Beim ersten <code>&lt;p&gt;</code>-Tag fehlt das
+										Schliessungstag.
+									</li>
+									<li>
+										<code>&lt;strong&gt;</code> und <code>&lt;em&gt;</code> sind
+										falsch verschachtelt: Das innere Element muss zuerst
+										geschlossen werden.
+									</li>
+									<li>
+										Beim zweiten <code>&lt;li&gt;</code>-Tag fehlt das
+										Schliessungstag.
+									</li>
+									<li>
+										Der Wert des <code>src</code>-Attributs steht nicht in
+										Anführungszeichen.
+									</li>
+								</ol>
+								<figure class="listing">
+									<pre data-src="broken-page-fixed.html"></pre>
+									<figcaption>
+										Lösungsvorschlag (broken-page-fixed.html)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.09 -->
+				<section class="exercise" id="ex-table" data-tag="Recherche">
+					<div class="exercise__body">
+						<p>
+							Tabellen haben wir bisher nicht behandelt. Recherchieren Sie unter
+							<a href="https://www.w3schools.com/html/html_tables.asp"
+								>w3schools: HTML Tables</a
+							>, wie in HTML eine Tabelle erstellt wird, und stellen Sie damit
+							einen Teil Ihres Stundenplans dar.
+						</p>
+						<p>Die Tabelle soll eine Kopfzeile mit den Wochentagen haben.</p>
+
+						<div class="hint">
+							<p>
+								<em>Hinweis:</em> Sie brauchen dafür die Tags
+								<code>&lt;table&gt;</code>, <code>&lt;tr&gt;</code>,
+								<code>&lt;th&gt;</code> und <code>&lt;td&gt;</code>.
+							</p>
+						</div>
+
+						<div
+							class="workbench"
+							data-id="wb9"
+							data-files="html"
+							data-sol-html="table.html"
+							data-height="380"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="table.html"></pre>
+									<figcaption>Lösungsvorschlag (table.html)</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.10 -->
+				<section class="exercise" id="ex-blockinline">
+					<div class="exercise__body">
+						<ol class="tasks">
+							<li>
+								Was passiert, wenn Sie ein Blockelement in ein Inlineelement
+								packen?
+							</li>
+							<li>Von welchem Typ ist <code>&lt;img&gt;</code>?</li>
+							<li>
+								Wie können Sie ein Bild zentriert anzeigen, ohne Text daneben?
+								<div class="hint">
+									<p><em>Hinweis:</em> <code>&lt;center&gt;</code></p>
+								</div>
+							</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb10"
+							data-files="html"
+							data-sol-html="center-picture.html"
+							data-height="320"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<ol class="tasks">
+									<li>
+										Die Eigenschaften eines Blockelements bleiben erhalten.
+									</li>
+									<li><code>&lt;img&gt;</code> ist ein Inlineelement.</li>
+									<li>
+										<figure class="listing">
+											<pre data-src="center-picture.html"></pre>
+											<figcaption>
+												Lösungsvorschlag
+												(<a
+													href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/center-picture.html"
+													>center-picture.html</a
+												>)
+											</figcaption>
+										</figure>
+										<p>
+											Das <code>&lt;center&gt;</code>-Tag ist veraltet und
+											sollte eigentlich nicht mehr verwendet werden. In
+											<a href="02-css.html#bilder"
+												>Abschnitt 2, «Mit Bildern umgehen»</a
+											>
+											lernen Sie, wie ein Bild mit CSS zentriert wird.
+										</p>
+									</li>
+								</ol>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.11 -->
+				<section class="exercise" id="ex-blockorinline">
+					<div class="exercise__body">
+						<p>
+							Entscheiden Sie bei jedem der folgenden Tags, ob es sich um ein
+							Blockelement oder um ein Inlineelement handelt.
+						</p>
+						<ol class="tasks tasks--cols">
+							<li><code>&lt;p&gt;</code></li>
+							<li><code>&lt;a&gt;</code></li>
+							<li><code>&lt;div&gt;</code></li>
+							<li><code>&lt;span&gt;</code></li>
+							<li><code>&lt;ul&gt;</code></li>
+							<li><code>&lt;h3&gt;</code></li>
+							<li><code>&lt;strong&gt;</code></li>
+							<li><code>&lt;section&gt;</code></li>
+							<li><code>&lt;em&gt;</code></li>
+							<li><code>&lt;img&gt;</code></li>
+						</ol>
+
+						<div class="hint">
+							<p>
+								<em>Hinweis:</em> Probieren Sie es im Browser aus, wenn Sie sich
+								nicht sicher sind. Schreiben Sie dazu zwei gleiche Tags
+								hintereinander und schauen Sie, ob ein Umbruch entsteht.
+							</p>
+						</div>
+
+						<div
+							class="workbench"
+							data-id="wb11"
+							data-files="html"
+							data-height="300"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<ol class="tasks tasks--cols">
+									<li>Block</li>
+									<li>Inline</li>
+									<li>Block</li>
+									<li>Inline</li>
+									<li>Block</li>
+									<li>Block</li>
+									<li>Inline</li>
+									<li>Block</li>
+									<li>Inline</li>
+									<li>Inline</li>
+								</ol>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.12 -->
+				<section class="exercise" id="ex-divspan">
+					<div class="exercise__body">
+						<p>
+							Was ist der Unterschied zwischen dem
+							<code>&lt;div&gt;</code>-Tag und dem
+							<code>&lt;span&gt;</code>-Tag? Erklären Sie!
+						</p>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>
+									Ein <code>&lt;div&gt;</code>-Tag liefert ein Block-Element und
+									ein <code>&lt;span&gt;</code>-Tag ein Inline-Element.
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.13 -->
+				<section class="exercise" id="ex-idlinks">
+					<div class="exercise__body">
+						<p>
+							Erstellen Sie eine Webseite über drei Kantone der Schweiz. Jeder
+							Kanton soll in einem eigenen
+							<code>&lt;section&gt;</code>-Element mit einer passenden ID
+							stehen.
+						</p>
+						<p>
+							Erstellen Sie am Anfang der Seite ein Inhaltsverzeichnis in Form
+							einer Liste. Ein Klick auf einen Eintrag soll direkt zum
+							entsprechenden Kanton führen.
+						</p>
+
+						<div class="hint">
+							<p>
+								<em>Hinweis:</em> Um auf eine ID zu verlinken, stellen Sie das
+								<code>#</code>-Zeichen vor die ID
+								(<a href="#listing-id">Listing 8</a>).
+							</p>
+						</div>
+
+						<div
+							class="workbench"
+							data-id="wb13"
+							data-files="html"
+							data-sol-html="id-links.html"
+							data-height="400"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="id-links.html"></pre>
+									<figcaption>Lösungsvorschlag (id-links.html)</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.14 -->
+				<section class="exercise" id="ex-classes">
+					<div class="exercise__body">
+						<ol class="tasks">
+							<li>
+								Erstellen Sie eine Webseite mit einer Überschrift, zwei
+								Paragraphen und einer Liste mit zwei Einträgen.
+							</li>
+							<li>
+								Geben Sie der Überschrift, einem Paragraphen und einem
+								Listeneintrag die Klasse <code>wichtig</code>.
+							</li>
+							<li>
+								Ergänzen Sie die Seite im <code>&lt;head&gt;</code> mit einem
+								<code>&lt;style&gt;</code>-Tag, das alle Elemente der Klasse
+								<code>wichtig</code> rot darstellt.
+							</li>
+							<li>Weshalb wäre eine ID hier die falsche Wahl?</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb14"
+							data-files="html"
+							data-sol-html="classes.html"
+							data-height="380"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="classes.html"></pre>
+									<figcaption>Lösungsvorschlag (classes.html)</figcaption>
+								</figure>
+								<p>
+									Eine ID darf auf einer Webseite nur ein einziges Mal
+									vorkommen. Hier sollen aber drei Elemente gleich dargestellt
+									werden, also brauchen wir eine Klasse.
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<nav class="pager">
+					<a href="index.html">← <b>Übersicht</b></a>
+					<a href="02-css.html" style="text-align: right"
+						>Abschnitt 2 <b>Webseiten gestalten: CSS →</b></a
+					>
+				</nav>
+			</div>
+
+			<aside class="minitoc">
+				<h2>Auf dieser Seite</h2>
+				<ol></ol>
+			</aside>
+		</main>
+
+		<script src="assets/examples.js"></script>
+		<script src="assets/editor.js"></script>
+		<script src="assets/site.js"></script>
+	</body>
+</html>

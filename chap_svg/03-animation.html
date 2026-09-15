@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>3 Animationen – SVG</title>
+		<script>
+			/* Farbschema vor dem ersten Zeichnen setzen, damit beim Laden nichts
+			   aufblitzt. Dunkel ist der Standard, siehe assets/style.css. */
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.svg.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="assets/style.css" />
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html">SVG <span>Vektorgrafik</span></a>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-grundformen.html">1 Grundformen</a>
+				<a href="02-pfade.html">2 Pfade</a>
+				<a href="03-animation.html">3 Animation</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main class="layout" data-ex-chapter="5" data-ex-offset="25">
+			<div class="content">
+				<p class="eyebrow">Abschnitt 3</p>
+				<h1>Animationen</h1>
+
+				<div class="progress" data-progress>
+					<span class="meter"><i style="width: 0"></i></span>
+					<span data-progress-text>0 von 6 Übungen erledigt</span>
+					<button type="button" data-reset>zurücksetzen</button>
+				</div>
+
+				<h2 id="drei-arten">Drei Arten von Animationen</h2>
+
+				<p>
+					Im modernen Web ist fast alles irgendwie animiert, und das wollen wir
+					hier auch erreichen. Animationen mit SVG können sehr komplex werden,
+					aber man kann damit auch sehr schöne Dinge darstellen. Wir beschäftigen
+					uns nur mit den Grundlagen. Man kann damit aber auch schon komplexe
+					Animationen erstellen.
+				</p>
+
+				<div class="box box--note">
+					<p class="box__label">Bemerkung</p>
+					<p>
+						Im gedruckten Skript kann von einer Animation nur ein starres Bild
+						stehen. Auf dieser Seite laufen alle Animationen wirklich: Was Sie in
+						den Vorschauen sehen, ist dieselbe SVG-Datei, die auch im Listing
+						daneben steht — Ihr Browser spielt sie ab. Wenn eine Animation nur
+						einmal läuft und schon fertig ist, wenn Sie hinschauen, laden Sie die
+						Seite einfach neu.
+					</p>
+				</div>
+
+				<p>
+					Genauer schauen wir uns die folgenden drei Arten von SVG-Animationen
+					an.
+				</p>
+
+				<h3 id="verformung">Verformung</h3>
+
+				<p>
+					Indem wir gewisse Werte kontinuierlich verändern, erhalten wir eine
+					Animation. Dafür setzen wir ein
+					<code>&lt;animate&gt;</code>-Tag ein.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing" id="listing-squeeze">
+							<pre data-src="squeeze.svg"></pre>
+							<figcaption>
+								<b>Listing 1.</b> Ellipse zerquetschen
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/squeeze.svg"
+									>squeeze.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="squeeze.svg" data-height="180"></iframe>
+							<figcaption>
+								Die Ellipse wird endlos zusammengedrückt und wieder losgelassen.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<div class="box box--note">
+					<p class="box__label">Hinweis</p>
+					<p>
+						Beachten Sie, dass wir hier das
+						<code>&lt;ellipse&gt;</code>-Tag nicht selbstschliessend schreiben und
+						<em>darin</em> das <code>&lt;animate&gt;</code>-Tag einsetzen.
+					</p>
+				</div>
+
+				<h3 id="bewegung">Bewegung</h3>
+
+				<p>
+					Mit Hilfe des <code>&lt;animateMotion&gt;</code>-Tags lassen sich
+					Objekte entlang eines Pfades bewegen.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing" id="listing-motion">
+							<pre data-src="animate-motion.svg"></pre>
+							<figcaption>
+								<b>Listing 2.</b> Kreis entlang einer Linie fahren lassen
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/animate-motion.svg"
+									>animate-motion.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="animate-motion.svg" data-height="200"></iframe>
+							<figcaption>
+								Der Kreis fährt in fünf Sekunden über die Linie und beginnt
+								wieder von vorn.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<p>
+					Der Pfad, dem gefolgt werden soll, wird hier nicht direkt angegeben,
+					sondern mit einem <code>&lt;mpath&gt;</code>-Tag über seine ID
+					referenziert. Alternativ kann man ihn dem
+					<code>&lt;animateMotion&gt;</code>-Tag auch direkt im Attribut
+					<code>path</code> mitgeben.
+				</p>
+
+				<h3 id="transformation">Transformation</h3>
+
+				<p>
+					Das <code>&lt;animateTransform&gt;</code>-Tag animiert die
+					<a href="02-pfade.html#gruppen">Transformationen aus Abschnitt 2</a>. Im
+					Attribut <code>type</code> geben wir an, welche:
+					<code>translate</code>, <code>rotate</code> oder <code>scale</code>.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing" id="listing-scale">
+							<pre data-src="animate-scale.svg"></pre>
+							<figcaption>
+								<b>Listing 3.</b> Einen Kreis pulsieren lassen
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/animate-scale.svg"
+									>animate-scale.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="animate-scale.svg" data-height="180"></iframe>
+							<figcaption>
+								Der Kreis liegt im Ursprung — darum streckt
+								<code>scale</code> ihn von der Mitte aus.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<h3 id="attribute">Der Ablauf einer Animation</h3>
+
+				<p>
+					Allen drei Tags sind die Attribute gemeinsam, mit denen wir den Ablauf
+					der Animation steuern:
+				</p>
+
+				<dl>
+					<dt><code>attributeName</code></dt>
+					<dd>
+						Welches Attribut verändert werden soll, zum Beispiel
+						<code>cx</code> oder <code>ry</code>. Bei einer animierten
+						Transformation ist es immer <code>transform</code>.
+					</dd>
+					<dt><code>from</code> und <code>to</code></dt>
+					<dd>Der Wert am Anfang und derjenige am Ende der Animation.</dd>
+					<dt><code>values</code></dt>
+					<dd>
+						Eine ganze Liste von Werten, mit Semikolon getrennt, die der Reihe
+						nach durchlaufen werden. Damit können wir eine Animation auch wieder
+						zum Anfang zurückführen, wie etwa
+						<code>values="50;20;50"</code>.
+					</dd>
+					<dt><code>dur</code></dt>
+					<dd>
+						Die Dauer eines Durchlaufs, zum Beispiel <code>2s</code> für zwei
+						Sekunden oder <code>500ms</code> für eine halbe Sekunde.
+					</dd>
+					<dt><code>begin</code></dt>
+					<dd>
+						Wann die Animation startet. Standardmässig sofort, mit
+						<code>begin="1s"</code> eine Sekunde später.
+					</dd>
+					<dt><code>repeatCount</code></dt>
+					<dd>
+						Wie oft die Animation läuft. Mit <code>indefinite</code> läuft sie
+						endlos.
+					</dd>
+					<dt><code>fill</code></dt>
+					<dd>
+						Was nach dem letzten Durchlauf passiert. Mit
+						<code>freeze</code> bleibt der Endwert stehen, mit
+						<code>remove</code> (Standard) springt die Form in den
+						Ausgangszustand zurück. Verwechseln Sie dieses
+						<code>fill</code> nicht mit der Füllfarbe — hier steht es an einem
+						<code>&lt;animate&gt;</code>-Tag und nicht an einer Form.
+					</dd>
+				</dl>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing" id="listing-freeze">
+							<pre data-src="animate-freeze.svg"></pre>
+							<figcaption>
+								<b>Listing 4.</b> Eine Animation, die einmal läuft und stehen
+								bleibt
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/animate-freeze.svg"
+									>animate-freeze.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="animate-freeze.svg" data-height="120"></iframe>
+							<figcaption>
+								Der Punkt wartet eine Sekunde, fährt zwei Sekunden lang nach
+								rechts und bleibt dort. Laden Sie die Seite neu, um die
+								Animation nochmals zu sehen.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<div class="box box--note">
+					<p class="box__label">Bemerkung</p>
+					<p>
+						Animationen lassen sich auch mit CSS erzeugen, und für Webseiten ist
+						das oft der bequemere Weg. Der Vorteil der hier gezeigten Variante
+						ist, dass die Animation <em>in der Bilddatei selbst</em> steckt: Die
+						Datei animiert sich auch dann, wenn sie ganz ohne Webseite geöffnet
+						wird.
+					</p>
+				</div>
+
+				<h3 id="nachschlagen">Zum Nachschlagen</h3>
+
+				<p>
+					SVG-Animationen haben mehr Attribute, als wir hier zeigen können. Diese
+					zwei Adressen genügen für alles, was in den Übungen vorkommt:
+				</p>
+
+				<ul class="linkrow">
+					<li>
+						<a href="https://www.w3schools.com/graphics/svg_animation.asp"
+							>SVG-Animationen (w3schools)</a
+						>
+					</li>
+					<li>
+						<a href="https://wiki.selfhtml.org/wiki/SVG/Element/animateTransform"
+							>animateTransform (SelfHTML)</a
+						>
+					</li>
+				</ul>
+
+				<h2 id="uebungen">Übungen</h2>
+
+				<!-- ============================================== Übung 5.26 -->
+				<section class="exercise" id="ex-smiley">
+					<div class="exercise__body">
+						<p>
+							Erstellen Sie einen animierten Smiley, der Ihnen mit einem Auge
+							zuzwinkert.
+						</p>
+
+						<figure class="demo" style="max-width: 18rem">
+							<iframe data-src="smiley-animation.svg" data-height="200"></iframe>
+							<figcaption>Das Ziel — hier läuft die Animation schon.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb26"
+							data-files="svg"
+							data-sol-svg="smiley-animation.svg"
+							data-height="320"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="smiley-animation.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/smiley-animation.svg"
+											>smiley-animation.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.27 -->
+				<section class="exercise" id="ex-bouncingball">
+					<div class="exercise__body">
+						<p>
+							Lassen Sie einen Ball endlos zwischen einem Boden und einem oberen
+							Punkt hin und her hüpfen.
+						</p>
+
+						<div class="box box--note">
+							<p class="box__label">Hinweis</p>
+							<p>
+								Mit <code>from</code> und <code>to</code> allein springt der Ball
+								am Ende zurück. Nutzen Sie stattdessen <code>values</code>.
+							</p>
+						</div>
+
+						<figure class="demo" style="max-width: 18rem">
+							<iframe data-src="bouncing-ball.svg" data-height="240"></iframe>
+							<figcaption>Das Ziel — hier läuft die Animation schon.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb27"
+							data-files="svg"
+							data-sol-svg="bouncing-ball.svg"
+							data-height="320"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="bouncing-ball.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/bouncing-ball.svg"
+											>bouncing-ball.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.28 -->
+				<section class="exercise" id="ex-progressbar">
+					<div class="exercise__body">
+						<p>
+							Erstellen Sie einen Fortschrittsbalken, der sich in vier Sekunden
+							einmal von leer bis voll füllt und dann voll bleibt.
+						</p>
+
+						<div class="box box--note">
+							<p class="box__label">Hinweis</p>
+							<p>
+								Animieren Sie die Breite eines Rechtecks. Dass der Balken am Ende
+								stehen bleibt, erreichen Sie mit einem geeigneten Attribut am
+								<code>&lt;animate&gt;</code>-Tag.
+							</p>
+						</div>
+
+						<figure class="demo" style="max-width: 26rem">
+							<iframe data-src="progress-bar.svg" data-height="120"></iframe>
+							<figcaption>
+								Das Ziel. Diese Animation läuft nur einmal — laden Sie die Seite
+								neu, um sie von vorn zu sehen.
+							</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb28"
+							data-files="svg"
+							data-sol-svg="progress-bar.svg"
+							data-height="320"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="progress-bar.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/progress-bar.svg"
+											>progress-bar.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.29 -->
+				<section class="exercise" id="ex-spinner">
+					<div class="exercise__body">
+						<p>
+							Erstellen Sie eine Ladeanimation: einen Kreisbogen, der sich endlos
+							um einen blassen Ring dreht.
+						</p>
+
+						<div class="box box--note">
+							<p class="box__label">Hinweis</p>
+							<p>
+								Sie brauchen keinen Bogen zu berechnen. Ein Kreis mit einer
+								passenden <code>stroke-dasharray</code> zeigt nur ein Stück seines
+								Randes. Der Umfang eines Kreises mit Radius 35 ist
+								2π · 35 ≈ 220.
+							</p>
+						</div>
+
+						<figure class="demo" style="max-width: 16rem">
+							<iframe data-src="spinner.svg" data-height="180"></iframe>
+							<figcaption>Das Ziel — hier läuft die Animation schon.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb29"
+							data-files="svg"
+							data-sol-svg="spinner.svg"
+							data-height="320"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="spinner.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/spinner.svg"
+											>spinner.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.30 -->
+				<section class="exercise" id="ex-gymwave">
+					<div class="exercise__body">
+						<p>
+							Lassen Sie den Text «Gymnasium Muttenz» entlang einer
+							«Wellenkurve» hin und her animieren.
+						</p>
+
+						<div class="box box--note">
+							<p class="box__label">Hinweis</p>
+							<p>
+								Nutzen Sie «<code>text-anchor="middle"</code>» und
+								«<code>rotate="auto"</code>» jeweils an einer geeigneten Stelle.
+								Was bewirken diese Optionen?
+							</p>
+						</div>
+
+						<figure class="demo">
+							<iframe data-src="gym-wave.svg" data-height="220"></iframe>
+							<figcaption>Das Ziel — hier läuft die Animation schon.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb30"
+							data-files="svg"
+							data-sol-svg="gym-wave.svg"
+							data-height="340"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="gym-wave.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/gym-wave.svg"
+											>gym-wave.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.31 -->
+				<section class="exercise" id="ex-squarerotate">
+					<div class="exercise__body">
+						<p>Erstellen Sie ein rotes Quadrat, welches rotiert.</p>
+
+						<div class="box box--note">
+							<p class="box__label">Hinweis</p>
+							<p>
+								Lesen Sie unter
+								<a
+									href="https://wiki.selfhtml.org/wiki/SVG/Element/animateTransform"
+									>animateTransform (SelfHTML)</a
+								>
+								etwas über das Tag
+								<code>&lt;animateTransform&gt;</code>. Achten Sie darauf, wo der
+								Drehpunkt Ihres Quadrates liegt.
+							</p>
+						</div>
+
+						<figure class="demo" style="max-width: 18rem">
+							<iframe data-src="square-rotate.svg" data-height="240"></iframe>
+							<figcaption>Das Ziel — hier läuft die Animation schon.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb31"
+							data-files="svg"
+							data-sol-svg="square-rotate.svg"
+							data-height="320"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="square-rotate.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/square-rotate.svg"
+											>square-rotate.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<nav class="pager">
+					<a href="02-pfade.html"
+						>← Abschnitt 2 <b>Pfade, Gruppen und Transformationen</b></a
+					>
+					<a href="index.html" style="text-align: right"
+						><b>Übersicht →</b></a
+					>
+				</nav>
+			</div>
+
+			<aside class="minitoc">
+				<h2>Auf dieser Seite</h2>
+				<ol></ol>
+			</aside>
+		</main>
+
+		<script src="assets/examples.js"></script>
+		<script src="assets/editor.js"></script>
+		<script src="assets/site.js"></script>
+	</body>
+</html>

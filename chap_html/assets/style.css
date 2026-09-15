@@ -1,0 +1,1311 @@
+/* ==========================================================================
+   HTML und CSS -- Webversion des Kapitels
+   ========================================================================== */
+
+/* Das dunkle Schema ist der Standard; hell nur auf Wunsch
+   ([data-theme="light"], gesetzt vom Umschalter in der Kopfleiste). */
+:root {
+	--ink: #e4eaef;
+	--ink-soft: #aab8c4;
+	--ink-faint: #7e8d9a;
+	--paper: #161c22;
+	--paper-soft: #1d242b;
+	--paper-sunk: #252d35;
+	--line: #35404a;
+	--line-soft: #2a333c;
+
+	--accent: #5fc9ae;
+	--accent-soft: #17302a;
+	--accent-line: #2f5f53;
+
+	--flag: #e88b90;
+	--flag-soft: #2e1c1e;
+
+	--code-bg: #1a2128;
+	--code-tag: #5fc9ae;
+	--code-attr: #d9a94a;
+	--code-string: #e88b90;
+	--code-comment: #7e8d9a;
+	--code-prop: #82b6e0;
+	--code-punct: #7e8d9a;
+
+	color-scheme: dark;
+
+	--radius: 6px;
+	--measure: 46rem;
+	--mono: "SFMono-Regular", "JetBrains Mono", "Fira Mono", Menlo, Consolas,
+		monospace;
+	--sans: "Fira Sans", -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+		sans-serif;
+}
+
+:root[data-theme="light"] {
+	--ink: #1b2733;
+	--ink-soft: #4a5a6a;
+	--ink-faint: #7b8a99;
+	--paper: #ffffff;
+	--paper-soft: #f5f7f9;
+	--paper-sunk: #eaeef2;
+	--line: #d7dee5;
+	--line-soft: #e6ebf0;
+
+	--accent: #0b6b58;
+	--accent-soft: #e3f1ed;
+	--accent-line: #9dcabe;
+
+	--flag: #a4343a;
+	--flag-soft: #fbeced;
+
+	--code-bg: #f7f9fa;
+	--code-tag: #0b6b58;
+	--code-attr: #8a5a00;
+	--code-string: #a4343a;
+	--code-comment: #7b8a99;
+	--code-prop: #1f4e79;
+	--code-punct: #7b8a99;
+
+	color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+	scroll-padding-top: 5rem;
+	/* Saemtliche Groessen der Seite sind in rem angegeben und haengen damit an
+	   dieser einen Zahl: 110% der ueblichen 16px ergeben 17.6px. Wer die Schrift
+	   im ganzen Skript groesser oder kleiner haben will, dreht nur hier. */
+	font-size: 110%;
+}
+
+body {
+	margin: 0;
+	background: var(--paper);
+	color: var(--ink);
+	font-family: var(--sans);
+	font-size: 1.0625rem;
+	line-height: 1.62;
+	-webkit-text-size-adjust: 100%;
+}
+
+/* --- Kopfleiste ---------------------------------------------------------- */
+
+.topbar {
+	position: sticky;
+	top: 0;
+	z-index: 40;
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	padding: 0.55rem 1.25rem;
+	background: var(--paper);
+	background: color-mix(in srgb, var(--paper) 88%, transparent);
+	backdrop-filter: blur(10px);
+	border-bottom: 1px solid var(--line-soft);
+}
+
+.topbar__home {
+	font-weight: 600;
+	font-size: 0.9rem;
+	text-decoration: none;
+	color: var(--ink);
+	white-space: nowrap;
+}
+
+.topbar__home span {
+	color: var(--accent);
+}
+
+.topbar nav {
+	display: flex;
+	gap: 0.15rem;
+	margin-left: auto;
+	flex-wrap: wrap;
+}
+
+.topbar nav a {
+	padding: 0.3rem 0.7rem;
+	border-radius: var(--radius);
+	font-size: 0.85rem;
+	text-decoration: none;
+	color: var(--ink-soft);
+	transition: background 0.15s, color 0.15s;
+}
+
+.topbar nav a:hover,
+.topbar nav a:focus-visible {
+	background: var(--paper-sunk);
+	color: var(--ink);
+}
+
+.topbar nav a[aria-current="page"] {
+	background: var(--accent-soft);
+	color: var(--accent);
+	font-weight: 600;
+}
+
+.themetoggle {
+	border: 1px solid var(--line);
+	background: var(--paper);
+	color: var(--ink-soft);
+	border-radius: var(--radius);
+	width: 2rem;
+	height: 2rem;
+	font-size: 0.95rem;
+	cursor: pointer;
+	line-height: 1;
+}
+
+.themetoggle:hover {
+	color: var(--ink);
+	border-color: var(--ink-faint);
+}
+
+/* --- Grundraster --------------------------------------------------------- */
+
+.layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 15rem;
+	gap: 3rem;
+	max-width: 74rem;
+	margin: 0 auto;
+	padding: 2.5rem 1.5rem 6rem;
+	align-items: start;
+}
+
+.content {
+	min-width: 0;
+	max-width: var(--measure);
+}
+
+.content > * {
+	max-width: var(--measure);
+}
+
+/* Editoren und Listings duerfen breiter sein als der Lesetext. */
+.content > .workbench,
+.content > figure.listing,
+.content > .split,
+.content .exercise {
+	max-width: none;
+}
+
+/* --- Seitliches Inhaltsverzeichnis (minitoc) ---------------------------- */
+
+.minitoc {
+	position: sticky;
+	top: 4.5rem;
+	font-size: 0.85rem;
+	border-left: 2px solid var(--line-soft);
+	padding-left: 1rem;
+	max-height: calc(100vh - 7rem);
+	overflow-y: auto;
+}
+
+.minitoc h2 {
+	font-size: 0.72rem;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+	color: var(--ink-faint);
+	margin: 0 0 0.6rem;
+	font-weight: 600;
+}
+
+.minitoc ol {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.minitoc li {
+	margin: 0.1rem 0;
+}
+
+.minitoc li.sub {
+	padding-left: 0.9rem;
+	font-size: 0.8rem;
+}
+
+.minitoc a {
+	color: var(--ink-soft);
+	text-decoration: none;
+	display: block;
+	padding: 0.12rem 0;
+	border-radius: 3px;
+}
+
+.minitoc a:hover {
+	color: var(--accent);
+}
+
+.minitoc a.active {
+	color: var(--accent);
+	font-weight: 600;
+}
+
+@media (max-width: 62rem) {
+	.layout {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 0;
+	}
+
+	.minitoc {
+		display: none;
+	}
+}
+
+/* --- Typografie ---------------------------------------------------------- */
+
+h1,
+h2,
+h3,
+h4 {
+	line-height: 1.22;
+	color: var(--ink);
+	font-weight: 650;
+	margin: 0 0 0.6rem;
+	text-wrap: balance;
+}
+
+h1 {
+	font-size: clamp(1.9rem, 4.5vw, 2.5rem);
+	letter-spacing: -0.02em;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 3.2rem;
+	padding-top: 1.2rem;
+	border-top: 1px solid var(--line-soft);
+}
+
+h3 {
+	font-size: 1.16rem;
+	margin-top: 2.4rem;
+}
+
+h4 {
+	font-size: 1rem;
+	margin-top: 1.8rem;
+	color: var(--ink-soft);
+}
+
+.eyebrow {
+	font-size: 0.76rem;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--accent);
+	font-weight: 650;
+	margin: 0 0 0.35rem;
+}
+
+p {
+	margin: 0 0 1.05rem;
+}
+
+a {
+	color: var(--accent);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 2px;
+}
+
+em {
+	font-style: italic;
+}
+
+strong {
+	font-weight: 650;
+}
+
+ul,
+ol {
+	margin: 0 0 1.05rem;
+	padding-left: 1.4rem;
+}
+
+li {
+	margin: 0.2rem 0;
+}
+
+blockquote {
+	margin: 1.4rem 0;
+	padding: 0.1rem 0 0.1rem 1.2rem;
+	border-left: 3px solid var(--accent-line);
+	color: var(--ink-soft);
+	font-style: italic;
+}
+
+blockquote footer {
+	font-style: normal;
+	font-size: 0.85rem;
+	color: var(--ink-faint);
+	margin-top: 0.4rem;
+}
+
+hr {
+	border: 0;
+	border-top: 1px solid var(--line-soft);
+	margin: 2.5rem 0;
+}
+
+/* Definitionslisten (LaTeX description) */
+.deflist {
+	margin: 0 0 1.2rem;
+}
+
+.deflist > div {
+	padding: 0.7rem 0;
+	border-bottom: 1px solid var(--line-soft);
+}
+
+.deflist > div:first-child {
+	border-top: 1px solid var(--line-soft);
+}
+
+.deflist dt {
+	font-weight: 650;
+	margin-bottom: 0.2rem;
+}
+
+.deflist dd {
+	margin: 0;
+	color: var(--ink-soft);
+}
+
+.deflist dd > p:last-child {
+	margin-bottom: 0;
+}
+
+/* --- Inline-Code --------------------------------------------------------- */
+
+code {
+	font-family: var(--mono);
+	font-size: 0.875em;
+	background: var(--paper-sunk);
+	padding: 0.1em 0.35em;
+	border-radius: 3px;
+	white-space: nowrap;
+}
+
+/* --- Listings ------------------------------------------------------------ */
+
+figure.listing {
+	margin: 1.5rem 0;
+}
+
+figure.listing pre {
+	margin: 0;
+	overflow-x: auto;
+	background: var(--code-bg);
+	border: 1px solid var(--line-soft);
+	border-radius: var(--radius);
+	padding: 0.9rem 1rem;
+	font-family: var(--mono);
+	font-size: 0.82rem;
+	line-height: 1.6;
+	tab-size: 2;
+}
+
+figure.listing pre code {
+	background: none;
+	padding: 0;
+	font-size: inherit;
+	white-space: pre;
+	border-radius: 0;
+}
+
+figure.listing figcaption {
+	font-size: 0.82rem;
+	color: var(--ink-faint);
+	margin-top: 0.5rem;
+	padding-left: 0.1rem;
+}
+
+figure.listing figcaption b {
+	color: var(--ink-soft);
+	font-weight: 600;
+}
+
+/* Zeilennummern. Der Zaehler steht auf dem <pre>, damit ein Ausschnitt per
+   Inline-Style bei der echten Zeilennummer der Datei beginnen kann. */
+pre.linenos {
+	counter-reset: ln;
+}
+
+pre.linenos code {
+	display: block;
+}
+
+pre.linenos .ln {
+	counter-increment: ln;
+	display: block;
+}
+
+pre.linenos .ln::before {
+	content: counter(ln);
+	display: inline-block;
+	width: 2.2em;
+	margin-right: 1em;
+	text-align: right;
+	color: var(--ink-faint);
+	user-select: none;
+	opacity: 0.7;
+}
+
+pre .hl {
+	background: var(--accent-soft);
+	display: block;
+	margin: 0 -1rem;
+	padding: 0 1rem;
+}
+
+/* Syntax-Farben */
+.t-tag {
+	color: var(--code-tag);
+}
+.t-attr {
+	color: var(--code-attr);
+}
+.t-str {
+	color: var(--code-string);
+}
+.t-com {
+	color: var(--code-comment);
+	font-style: italic;
+}
+.t-prop {
+	color: var(--code-prop);
+}
+.t-sel {
+	color: var(--code-tag);
+	font-weight: 600;
+}
+.t-punct {
+	color: var(--code-punct);
+}
+.t-num {
+	color: var(--code-string);
+}
+
+/* --- Zwei Spalten (Code + Bild / HTML + CSS) ---------------------------- */
+
+.split {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+	gap: 1.2rem;
+	align-items: start;
+	margin: 1.5rem 0;
+}
+
+.split > figure {
+	margin: 0;
+	min-width: 0;
+}
+
+figure.shot {
+	margin: 1.5rem 0;
+}
+
+figure.shot img {
+	display: block;
+	max-width: 100%;
+	height: auto;
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	background: #fff;
+}
+
+figure.shot.plain img {
+	border: 0;
+	background: none;
+}
+
+figure.shot figcaption {
+	font-size: 0.82rem;
+	color: var(--ink-faint);
+	margin-top: 0.5rem;
+}
+
+/* Live-Vorschau eines Beispiels */
+.demo {
+	margin: 1.5rem 0;
+}
+
+.demo iframe {
+	display: block;
+	width: 100%;
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	background: #fff;
+}
+
+.demo figcaption {
+	font-size: 0.82rem;
+	color: var(--ink-faint);
+	margin-top: 0.5rem;
+}
+
+/* --- Auszeichnungsboxen (eg, rem, def) ---------------------------------- */
+
+.box {
+	margin: 1.6rem 0;
+	padding: 1.1rem 1.25rem;
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	background: var(--paper-soft);
+}
+
+.box > :last-child {
+	margin-bottom: 0;
+}
+
+.box__label {
+	font-size: 0.72rem;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+	font-weight: 650;
+	color: var(--accent);
+	margin: 0 0 0.55rem;
+}
+
+.box--note {
+	background: var(--accent-soft);
+	border-color: var(--accent-line);
+}
+
+.box--warn {
+	background: var(--flag-soft);
+	border-color: var(--flag);
+}
+
+.box--warn .box__label {
+	color: var(--flag);
+}
+
+/* Hinweis in einer Uebung */
+.hint {
+	font-size: 0.9rem;
+	color: var(--ink-soft);
+	border-left: 3px solid var(--line);
+	padding-left: 0.9rem;
+	margin: 0.9rem 0;
+}
+
+.hint > :last-child {
+	margin-bottom: 0;
+}
+
+/* --- Uebungen ------------------------------------------------------------ */
+
+.exercise {
+	margin: 2.2rem 0;
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	background: var(--paper);
+	overflow: hidden;
+}
+
+.exercise__head {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.7rem 1.1rem;
+	background: var(--paper-soft);
+	border-bottom: 1px solid var(--line-soft);
+}
+
+.exercise__no {
+	font-size: 0.78rem;
+	font-weight: 650;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--accent);
+}
+
+.exercise__tag {
+	font-size: 0.7rem;
+	padding: 0.1rem 0.45rem;
+	border-radius: 999px;
+	border: 1px solid var(--line);
+	color: var(--ink-faint);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.exercise__done {
+	margin-left: auto;
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	font-size: 0.8rem;
+	color: var(--ink-faint);
+	cursor: pointer;
+	user-select: none;
+	white-space: nowrap;
+}
+
+.exercise__done input {
+	accent-color: var(--accent);
+	width: 1rem;
+	height: 1rem;
+	cursor: pointer;
+}
+
+.exercise[data-done="1"] .exercise__head {
+	background: var(--accent-soft);
+}
+
+.exercise[data-done="1"] .exercise__done {
+	color: var(--accent);
+	font-weight: 600;
+}
+
+.exercise__body {
+	padding: 1.1rem 1.1rem 1.25rem;
+}
+
+.exercise__body > :first-child {
+	margin-top: 0;
+}
+
+.exercise__body > :last-child {
+	margin-bottom: 0;
+}
+
+/* Aufgabenliste (tasks) */
+.tasks {
+	list-style: none;
+	counter-reset: task;
+	padding: 0;
+	margin: 0 0 1.05rem;
+}
+
+.tasks > li {
+	counter-increment: task;
+	position: relative;
+	padding-left: 2rem;
+	margin: 0.45rem 0;
+}
+
+.tasks > li::before {
+	content: "(" counter(task, lower-alpha) ")";
+	position: absolute;
+	left: 0;
+	color: var(--ink-faint);
+	font-variant-numeric: tabular-nums;
+	font-size: 0.9rem;
+}
+
+.tasks--cols {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+	gap: 0 1rem;
+}
+
+/* --- Loesungen ----------------------------------------------------------- */
+
+details.sol {
+	margin: 1.2rem 0 0;
+	border: 1px dashed var(--accent-line);
+	border-radius: var(--radius);
+	background: var(--paper-soft);
+}
+
+details.sol > summary {
+	cursor: pointer;
+	padding: 0.55rem 0.9rem;
+	font-size: 0.86rem;
+	font-weight: 600;
+	color: var(--accent);
+	list-style: none;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+details.sol > summary::-webkit-details-marker {
+	display: none;
+}
+
+details.sol > summary::before {
+	content: "▸";
+	font-size: 0.8rem;
+	transition: transform 0.15s;
+}
+
+details.sol[open] > summary::before {
+	transform: rotate(90deg);
+}
+
+details.sol > summary:hover {
+	text-decoration: underline;
+}
+
+.sol__body {
+	padding: 0 0.9rem 0.9rem;
+	border-top: 1px solid var(--line-soft);
+	padding-top: 0.9rem;
+}
+
+.sol__body > :first-child {
+	margin-top: 0;
+}
+
+.sol__body > :last-child {
+	margin-bottom: 0;
+}
+
+/* --- Werkbank (Editor + Vorschau) --------------------------------------- */
+
+.workbench {
+	margin: 1.4rem 0;
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	background: var(--paper-soft);
+	overflow: hidden;
+}
+
+.wb__bar {
+	display: flex;
+	align-items: center;
+	gap: 0.3rem;
+	padding: 0.4rem 0.55rem;
+	background: var(--paper-sunk);
+	border-bottom: 1px solid var(--line);
+	flex-wrap: wrap;
+}
+
+.wb__tabs {
+	display: flex;
+	gap: 0.2rem;
+}
+
+.wb__tab {
+	font-family: var(--mono);
+	font-size: 0.76rem;
+	padding: 0.3rem 0.65rem;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	background: none;
+	color: var(--ink-soft);
+	cursor: pointer;
+}
+
+.wb__tab:hover {
+	color: var(--ink);
+}
+
+.wb__tab[aria-selected="true"] {
+	background: var(--paper);
+	border-color: var(--line);
+	color: var(--ink);
+	font-weight: 600;
+}
+
+.wb__actions {
+	margin-left: auto;
+	display: flex;
+	gap: 0.25rem;
+	flex-wrap: wrap;
+}
+
+.wb__btn {
+	font-size: 0.76rem;
+	font-family: var(--sans);
+	padding: 0.3rem 0.6rem;
+	border: 1px solid var(--line);
+	border-radius: 4px;
+	background: var(--paper);
+	color: var(--ink-soft);
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.wb__btn:hover {
+	color: var(--ink);
+	border-color: var(--ink-faint);
+}
+
+.wb__btn--primary {
+	background: var(--accent);
+	border-color: var(--accent);
+	color: #fff;
+	font-weight: 600;
+}
+
+.wb__btn--primary:hover {
+	color: #fff;
+	filter: brightness(1.08);
+}
+
+.wb__panes {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	min-height: 17rem;
+}
+
+.wb__editor {
+	position: relative;
+	display: flex;
+	background: var(--code-bg);
+	border-right: 1px solid var(--line);
+	min-width: 0;
+}
+
+.wb__gutter {
+	flex: 0 0 auto;
+	padding: 0.75rem 0.4rem 0.75rem 0.7rem;
+	font-family: var(--mono);
+	font-size: 0.8rem;
+	line-height: 1.55;
+	color: var(--ink-faint);
+	text-align: right;
+	user-select: none;
+	opacity: 0.6;
+	white-space: pre;
+	overflow: hidden;
+}
+
+/* Der Editor besteht aus zwei genau uebereinanderliegenden Ebenen: unten der
+   eingefaerbte Code (.wb__hl), darueber das Textfeld mit durchsichtiger
+   Schrift. Beide brauchen dieselben Schriftmasse, sonst laufen sie auseinander. */
+.wb__stack {
+	position: relative;
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.wb__hl,
+.wb__code {
+	position: absolute;
+	inset: 0;
+	margin: 0;
+	border: 0;
+	padding: 0.75rem 0.75rem 0.75rem 0.3rem;
+	font-family: var(--mono);
+	font-size: 0.8rem;
+	line-height: 1.55;
+	tab-size: 2;
+	background: none;
+	white-space: pre;
+	overflow-wrap: normal;
+}
+
+.wb__hl {
+	overflow: hidden;
+	pointer-events: none;
+	color: var(--ink);
+}
+
+/* Die globale Regel fuer <code> (Hintergrund, kleinere Schrift) wuerde die
+   Ebenen gegeneinander verschieben. */
+.wb__hl code {
+	font: inherit;
+	background: none;
+	padding: 0;
+	border-radius: 0;
+	white-space: pre;
+}
+
+.wb__code {
+	width: 100%;
+	height: 100%;
+	outline: none;
+	resize: none;
+	overflow: auto;
+	color: transparent;
+	caret-color: var(--ink);
+}
+
+/* Halbdurchsichtig, damit der eingefaerbte Code darunter sichtbar bleibt. */
+.wb__code::selection {
+	background: color-mix(in srgb, var(--accent) 32%, transparent);
+}
+
+.wb__code:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: -2px;
+}
+
+.wb__preview {
+	display: flex;
+	flex-direction: column;
+	background: #fff;
+	min-width: 0;
+}
+
+.wb__preview iframe {
+	flex: 1 1 auto;
+	width: 100%;
+	border: 0;
+	min-height: 17rem;
+	background: #fff;
+}
+
+.wb__status {
+	font-size: 0.72rem;
+	padding: 0.25rem 0.6rem;
+	color: var(--ink-faint);
+	background: var(--paper-sunk);
+	border-top: 1px solid var(--line);
+	font-family: var(--mono);
+	display: flex;
+	justify-content: space-between;
+	gap: 0.5rem;
+}
+
+.wb__status .saved {
+	color: var(--accent);
+}
+
+@media (max-width: 46rem) {
+	.wb__panes {
+		grid-template-columns: 1fr;
+	}
+
+	.wb__editor {
+		border-right: 0;
+		border-bottom: 1px solid var(--line);
+	}
+}
+
+/* Vollbild */
+.workbench.is-full {
+	position: fixed;
+	inset: 0;
+	z-index: 90;
+	margin: 0;
+	border-radius: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.workbench.is-full .wb__panes {
+	flex: 1 1 auto;
+	min-height: 0;
+}
+
+.workbench.is-full .wb__editor,
+.workbench.is-full .wb__preview {
+	min-height: 0;
+	overflow: hidden;
+}
+
+.workbench.is-full .wb__preview iframe {
+	min-height: 0;
+}
+
+/* --- Startseite ---------------------------------------------------------- */
+
+.hero {
+	max-width: var(--measure);
+	margin: 0 auto;
+	padding: 4rem 1.5rem 0;
+}
+
+.hero p.lead {
+	font-size: 1.1rem;
+	color: var(--ink-soft);
+}
+
+.cards {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+	gap: 1rem;
+	max-width: 74rem;
+	margin: 2.5rem auto 0;
+	padding: 0 1.5rem;
+	list-style: none;
+}
+
+.cards li {
+	margin: 0;
+}
+
+.card {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	padding: 1.2rem 1.3rem 1.3rem;
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	background: var(--paper-soft);
+	text-decoration: none;
+	color: var(--ink);
+	transition: border-color 0.15s, transform 0.15s;
+}
+
+.card:hover,
+.card:focus-visible {
+	border-color: var(--accent);
+	transform: translateY(-2px);
+}
+
+.card__no {
+	font-size: 0.75rem;
+	font-weight: 650;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+	color: var(--accent);
+	margin-bottom: 0.35rem;
+}
+
+.card h2 {
+	font-size: 1.16rem;
+	margin: 0 0 0.4rem;
+	border: 0;
+	padding: 0;
+}
+
+.card p {
+	font-size: 0.9rem;
+	color: var(--ink-soft);
+	margin: 0 0 1rem;
+}
+
+.card__meter {
+	margin-top: auto;
+	font-size: 0.78rem;
+	color: var(--ink-faint);
+}
+
+.meter {
+	height: 5px;
+	border-radius: 99px;
+	background: var(--paper-sunk);
+	overflow: hidden;
+	margin-bottom: 0.35rem;
+}
+
+.meter > i {
+	display: block;
+	height: 100%;
+	background: var(--accent);
+	border-radius: 99px;
+	transition: width 0.3s;
+}
+
+.pagefoot {
+	max-width: 74rem;
+	margin: 0 auto;
+	padding: 3rem 1.5rem 5rem;
+	font-size: 0.85rem;
+	color: var(--ink-faint);
+}
+
+.pagefoot a {
+	color: var(--ink-soft);
+}
+
+/* Blaettern */
+.pager {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-top: 4rem;
+	padding-top: 1.5rem;
+	border-top: 1px solid var(--line-soft);
+	font-size: 0.9rem;
+	max-width: var(--measure);
+}
+
+.pager a {
+	text-decoration: none;
+	color: var(--ink-soft);
+}
+
+.pager a:hover {
+	color: var(--accent);
+}
+
+.pager a b {
+	display: block;
+	color: var(--ink);
+	font-weight: 600;
+}
+
+/* Fortschrittsbalken der Seite */
+.progress {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	margin: 1.5rem 0 0;
+	padding: 0.7rem 0.9rem;
+	border: 1px solid var(--line-soft);
+	border-radius: var(--radius);
+	background: var(--paper-soft);
+	font-size: 0.85rem;
+	color: var(--ink-soft);
+	max-width: var(--measure);
+}
+
+.progress .meter {
+	flex: 1 1 auto;
+	margin: 0;
+}
+
+.progress button {
+	font-size: 0.75rem;
+	background: none;
+	border: 0;
+	color: var(--ink-faint);
+	cursor: pointer;
+	text-decoration: underline;
+	padding: 0;
+}
+
+.progress button:hover {
+	color: var(--flag);
+}
+
+/* --- DOM-Baum (Loesung zu Uebung 2) ------------------------------------- */
+
+.domtree {
+	font-family: var(--mono);
+	font-size: 0.78rem;
+	overflow-x: auto;
+	padding: 0.5rem 0;
+}
+
+.domtree ul {
+	list-style: none;
+	padding-left: 1.4rem;
+	margin: 0;
+	position: relative;
+}
+
+.domtree > ul {
+	padding-left: 0;
+}
+
+.domtree li {
+	position: relative;
+	padding: 0.15rem 0 0.15rem 0;
+	margin: 0;
+}
+
+.domtree ul ul li::before {
+	content: "";
+	position: absolute;
+	left: -0.85rem;
+	top: 0;
+	bottom: 50%;
+	border-left: 1px solid var(--line);
+	border-bottom: 1px solid var(--line);
+	width: 0.7rem;
+}
+
+.domtree ul ul li:not(:last-child)::after {
+	content: "";
+	position: absolute;
+	left: -0.85rem;
+	top: 50%;
+	bottom: 0;
+	border-left: 1px solid var(--line);
+}
+
+.domtree b {
+	display: inline-block;
+	border: 1px solid var(--line);
+	border-radius: 4px;
+	padding: 0.05rem 0.4rem;
+	background: var(--paper);
+	font-weight: 500;
+	color: var(--code-tag);
+}
+
+/* --- Diverses ------------------------------------------------------------ */
+
+.qr {
+	display: inline-flex;
+	align-items: baseline;
+	gap: 0.3rem;
+}
+
+.linkrow {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+	margin: 1.2rem 0;
+	padding: 0;
+	list-style: none;
+}
+
+.linkrow a {
+	display: inline-block;
+	font-size: 0.83rem;
+	padding: 0.28rem 0.7rem;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	text-decoration: none;
+	color: var(--ink-soft);
+	background: var(--paper);
+}
+
+.linkrow a:hover {
+	border-color: var(--accent);
+	color: var(--accent);
+}
+
+.linkrow a::after {
+	content: " ↗";
+	color: var(--ink-faint);
+}
+
+table.data {
+	border-collapse: collapse;
+	width: 100%;
+	font-size: 0.9rem;
+	margin: 1.4rem 0;
+}
+
+table.data th,
+table.data td {
+	text-align: left;
+	padding: 0.5rem 0.7rem;
+	border-bottom: 1px solid var(--line-soft);
+	vertical-align: top;
+}
+
+table.data th {
+	font-size: 0.78rem;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--ink-faint);
+}
+
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+}
+
+@media print {
+	.topbar,
+	.minitoc,
+	.wb__bar,
+	.wb__status,
+	.pager,
+	.progress {
+		display: none;
+	}
+
+	.layout {
+		display: block;
+	}
+
+	details.sol {
+		border-style: solid;
+	}
+
+	details.sol > .sol__body {
+		display: block !important;
+	}
+}

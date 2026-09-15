@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>SVG – Gymnasium Muttenz</title>
+		<meta
+			name="description"
+			content="Webversion des Kapitels SVG - Scalable Vector Graphics aus dem Informatik-Skript des Gymnasiums Muttenz."
+		/>
+		<script>
+			/* Farbschema vor dem ersten Zeichnen setzen, damit beim Laden nichts
+			   aufblitzt. Dunkel ist der Standard, siehe assets/style.css. */
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.svg.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="assets/style.css" />
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html">SVG <span>Vektorgrafik</span></a>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-grundformen.html">1 Grundformen</a>
+				<a href="02-pfade.html">2 Pfade</a>
+				<a href="03-animation.html">3 Animation</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main>
+			<div class="hero">
+				<p class="eyebrow">Informatik · Gymnasium Muttenz</p>
+				<h1>SVG — Scalable Vector Graphics</h1>
+				<p class="lead">
+					Ein Bild, das nicht aus Pixeln besteht, sondern aus einer
+					Bauanleitung: <em>Zeichne einen Kreis hierhin, einen Strich dorthin.</em>
+					Sie schreiben diese Anleitung selber — und weil sie nur Text ist,
+					brauchen Sie dafür nichts als diese Seite. Jede Übung hat eine
+					<strong>Werkbank</strong> mit Editor und Vorschau.
+				</p>
+
+				<figure class="demo" style="max-width: 26rem">
+					<iframe data-src="flower.svg" data-height="220"></iframe>
+					<figcaption>
+						Ein paar Zeilen SVG. Diese Blume bauen Sie in Abschnitt 2.
+					</figcaption>
+				</figure>
+
+				<div class="box box--note">
+					<p class="box__label">So arbeiten Sie mit dieser Seite</p>
+					<ul>
+						<li>
+							Schreiben Sie Ihren Code links in die Werkbank. Die Vorschau
+							rechts aktualisiert sich automatisch, mit
+							<code>Ctrl</code>/<code>⌘</code> + <code>Enter</code> sofort.
+						</li>
+						<li>
+							Der Reiter heisst <code>bild.svg</code>: Was Sie schreiben, ist
+							eine vollständige Bilddatei. Mit <em>Herunterladen</em> holen Sie
+							sie auf den Computer und können sie im Browser oder in einer
+							Webseite verwenden.
+						</li>
+						<li>
+							Ihr Code bleibt in diesem Browser gespeichert, auch wenn Sie die
+							Seite schliessen.
+						</li>
+						<li>
+							Die Animationen auf dieser Seite laufen wirklich — anders als im
+							gedruckten Skript, wo nur ein starres Bild davon stehen kann.
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<ul class="cards">
+				<li>
+					<a
+						class="card"
+						href="01-grundformen.html"
+						data-page="01-grundformen.html"
+						data-total="13"
+					>
+						<span class="card__no">Abschnitt 1</span>
+						<h2>Grundformen</h2>
+						<p>
+							Raster gegen Vektor, das Koordinatensystem, Farben und Deckkraft,
+							die <code>viewBox</code>. Kreise, Ellipsen, Rechtecke, Linien,
+							Polygone und Text — und wie man Striche gestaltet.
+						</p>
+						<span class="card__meter">
+							<span class="meter"><i style="width: 0"></i></span>
+							<span data-count>0 / 13 Übungen erledigt</span>
+						</span>
+					</a>
+				</li>
+				<li>
+					<a
+						class="card"
+						href="02-pfade.html"
+						data-page="02-pfade.html"
+						data-total="12"
+					>
+						<span class="card__no">Abschnitt 2</span>
+						<h2>Pfade, Gruppen und Transformationen</h2>
+						<p>
+							Der Zeichenstift: Linien, Bézierkurven und Bögen. Formen
+							gruppieren, verschieben, drehen und skalieren. Objekte benennen
+							und wiederverwenden, Clipping.
+						</p>
+						<span class="card__meter">
+							<span class="meter"><i style="width: 0"></i></span>
+							<span data-count>0 / 12 Übungen erledigt</span>
+						</span>
+					</a>
+				</li>
+				<li>
+					<a
+						class="card"
+						href="03-animation.html"
+						data-page="03-animation.html"
+						data-total="6"
+					>
+						<span class="card__no">Abschnitt 3</span>
+						<h2>Animationen</h2>
+						<p>
+							Werte verändern, Objekte einem Pfad folgen lassen und
+							Transformationen animieren — alles in der Bilddatei selbst, ohne
+							eine Zeile JavaScript.
+						</p>
+						<span class="card__meter">
+							<span class="meter"><i style="width: 0"></i></span>
+							<span data-count>0 / 6 Übungen erledigt</span>
+						</span>
+					</a>
+				</li>
+			</ul>
+
+			<div class="hero" style="padding-top: 3rem">
+				<blockquote>
+					<p>
+						«I was asking questions which nobody else had asked before, because
+						nobody else had actually looked at certain structures. Therefore, as
+						I will tell, the advent of the computer, not as a computer but as a
+						<em>drawing machine</em>, was for me a major event in my life.»
+					</p>
+					<p>
+						<img
+							src="assets/img/mandelbrot.jpg"
+							alt="Benoît Mandelbrot"
+							width="90"
+							style="border-radius: 6px; vertical-align: middle"
+						/>
+						Benoît Mandelbrot (1924–2010), zitiert nach
+						<a href="https://en.wikiquote.org/wiki/Beno%C3%AEt_Mandelbrot"
+							>Wikiquote</a
+						>
+					</p>
+					<p class="credit">
+						Foto: Rama,
+						<a
+							href="https://commons.wikimedia.org/wiki/File:Benoit_Mandelbrot_mg_1804.jpg"
+							>Wikimedia Commons</a
+						>,
+						<a
+							rel="license"
+							href="https://creativecommons.org/licenses/by-sa/2.0/fr/deed.de"
+							>CC BY-SA 2.0 FR</a
+						>
+					</p>
+				</blockquote>
+
+				<h2 id="nachschlagen">Zum Nachschlagen</h2>
+				<p>
+					Die folgenden Adressen werden im Kapitel erwähnt. SVG hat sehr viele
+					Attribute — niemand kennt sie alle auswendig, man schlägt sie nach.
+				</p>
+				<ul class="linkrow">
+					<li>
+						<a href="https://developer.mozilla.org/de/docs/Web/SVG/Reference"
+							>SVG-Referenz (MDN)</a
+						>
+					</li>
+					<li>
+						<a href="https://www.w3schools.com/graphics/svg_intro.asp"
+							>SVG-Tutorial (w3schools)</a
+						>
+					</li>
+					<li>
+						<a href="https://www.w3schools.com/graphics/svg_transformations.asp"
+							>SVG-Transformationen</a
+						>
+					</li>
+					<li>
+						<a href="https://www.w3schools.com/graphics/svg_animation.asp"
+							>SVG-Animationen</a
+						>
+					</li>
+					<li>
+						<a
+							href="https://wiki.selfhtml.org/wiki/SVG/Element/animateTransform"
+							>animateTransform (SelfHTML)</a
+						>
+					</li>
+					<li>
+						<a href="https://prlbr.de/2016/quadratische-funktion-bezierkurve/"
+							>Quadratische Funktion → Bézierkurve</a
+						>
+					</li>
+				</ul>
+
+				<h2 id="werkzeuge">Werkzeuge</h2>
+				<ul class="linkrow">
+					<li><a href="https://inkscape.org/de/">Inkscape — SVG zeichnen</a></li>
+					<li>
+						<a href="https://www.svgrepo.com/">SVG Repo — freie Vektorgrafiken</a>
+					</li>
+				</ul>
+			</div>
+		</main>
+
+		<footer class="pagefoot">
+			<p>
+				Webversion des Kapitels <em>SVG — Scalable Vector Graphics</em> aus dem
+				Informatik-Skript des Gymnasiums Muttenz. Alle Listings und
+				Lösungsvorschläge stammen aus dem Repository
+				<a href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg"
+					>oli4warin/gyminf</a
+				>.
+			</p>
+			<p>
+				Ihre Eingaben und Häkchen werden nur in diesem Browser gespeichert und
+				nirgends hochgeladen.
+			</p>
+		</footer>
+
+		<script src="assets/examples.js"></script>
+		<script src="assets/editor.js"></script>
+		<script src="assets/site.js"></script>
+	</body>
+</html>

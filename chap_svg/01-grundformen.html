@@ -1,0 +1,1318 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>1 Grundformen – SVG</title>
+		<script>
+			/* Farbschema vor dem ersten Zeichnen setzen, damit beim Laden nichts
+			   aufblitzt. Dunkel ist der Standard, siehe assets/style.css. */
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.svg.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="assets/style.css" />
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html">SVG <span>Vektorgrafik</span></a>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-grundformen.html">1 Grundformen</a>
+				<a href="02-pfade.html">2 Pfade</a>
+				<a href="03-animation.html">3 Animation</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main class="layout" data-ex-chapter="5" data-ex-offset="0">
+			<div class="content">
+				<p class="eyebrow">Abschnitt 1</p>
+				<h1>Grundformen</h1>
+
+				<div class="progress" data-progress>
+					<span class="meter"><i style="width: 0"></i></span>
+					<span data-progress-text>0 von 13 Übungen erledigt</span>
+					<button type="button" data-reset>zurücksetzen</button>
+				</div>
+
+				<h2 id="idee">Die Idee von SVG</h2>
+
+				<p>
+					Die meisten Bilder und Grafiken, die Sie verwenden und online finden,
+					basieren auf Pixeln. Das ist ein Nachteil, da sie sich nicht gut
+					skalieren lassen. Das heisst, wenn Sie ausreichend heranzoomen, werden
+					Sie irgendwann immer die einzelnen Pixel sehen. Vektorgrafiken
+					basieren auf einer völlig anderen Idee: Anstatt dem Computer zu sagen,
+					welche Pixel ein- und ausgeschaltet werden sollen, geben wir dem
+					Computer vor, welche <em>Form</em> wir möchten, und er füllt die Pixel
+					bei Bedarf aus. Das bedeutet, dass der Computer immer weiss, wie das
+					Bild aussehen sollte, unabhängig davon, wie stark wir heran- oder
+					herauszoomen, und es mit der entsprechenden Auflösung zeichnen kann.
+				</p>
+
+				<figure class="demo">
+					<iframe data-src="raster-vs-vector.svg" data-height="200"></iframe>
+					<figcaption>
+						Derselbe Kreis als Rastergrafik und als Vektorgrafik. Zoomen Sie in
+						diese Seite hinein (<code>Ctrl</code>/<code>⌘</code> +
+						<code>+</code>): Der rechte Kreis bleibt scharf, der linke nicht.
+					</figcaption>
+				</figure>
+
+				<p>
+					Eine <em>Rastergrafik</em> ist also eine Tabelle von Farbwerten: für
+					jeden Pixel ist gespeichert, welche Farbe er hat. Wie viele Pixel es
+					gibt, wird beim Speichern des Bildes ein für alle Mal festgelegt — das
+					ist die <em>Auflösung</em>. Eine <em>Vektorgrafik</em> ist dagegen eine
+					Bauanleitung: «Zeichne einen Kreis mit Mittelpunkt (60, 60) und Radius
+					60». Erst wenn das Bild dargestellt wird, rechnet der Computer aus,
+					welche Pixel dafür welche Farbe brauchen.
+				</p>
+
+				<table class="data">
+					<thead>
+						<tr>
+							<th></th>
+							<th>Rastergrafik</th>
+							<th>Vektorgrafik</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>gespeichert wird</td>
+							<td>die Farbe jedes Pixels</td>
+							<td>die Form jedes Objektes</td>
+						</tr>
+						<tr>
+							<td>Auflösung</td>
+							<td>fest</td>
+							<td>beliebig</td>
+						</tr>
+						<tr>
+							<td>Vergrössern</td>
+							<td>wird unscharf oder klotzig</td>
+							<td>bleibt scharf</td>
+						</tr>
+						<tr>
+							<td>Dateigrösse</td>
+							<td>je mehr Pixel, desto grösser</td>
+							<td>je mehr Objekte, desto grösser</td>
+						</tr>
+						<tr>
+							<td>geeignet für</td>
+							<td>Fotos</td>
+							<td>Logos, Icons, Diagramme, Karten</td>
+						</tr>
+						<tr>
+							<td>Dateiformate</td>
+							<td><code>.png</code>, <code>.jpg</code></td>
+							<td><code>.svg</code>, <code>.pdf</code></td>
+						</tr>
+					</tbody>
+				</table>
+
+				<p>
+					Ein Foto lässt sich nicht sinnvoll als Vektorgrafik beschreiben — es
+					besteht nicht aus einigen wenigen Formen. Umgekehrt ist ein Logo, das
+					einmal auf einer Visitenkarte und einmal auf einem Plakat gedruckt
+					wird, als Vektorgrafik viel besser aufgehoben. Genau deshalb sind
+					Icons, Schriftarten und Landkarten im Web praktisch immer
+					Vektorgrafiken.
+				</p>
+
+				<div class="box box--note">
+					<p class="box__label">Bemerkung</p>
+					<p>
+						Eine SVG-Datei ist eine reine Textdatei. Sie können sie also mit
+						jedem Texteditor öffnen und von Hand verändern — genau das machen wir
+						in diesem Kapitel. Sie lässt sich auch mit einem Programm erzeugen
+						und mit <code>git</code> versionieren. Für aufwändigere Zeichnungen
+						gibt es Programme wie
+						<a href="https://inkscape.org/de/">Inkscape</a>, welche die Formen für
+						Sie in SVG-Code umwandeln.
+					</p>
+				</div>
+
+				<h2 id="grundstruktur">Grundstruktur</h2>
+
+				<p>
+					Skalierbare Vektorgrafiken (SVG) sind nichts anderes als eine Serie von
+					Befehlen, die Ihrem Computer mitteilen, was er auf Ihrem Bildschirm
+					zeichnen soll. Sie lassen sich ganz einfach in HTML-Code einbetten,
+					können aber auch als separate Bilddateien (üblicherweise mit der
+					Dateierweiterung «<code>.svg</code>») verwendet werden.
+				</p>
+
+				<p>
+					Der Aufbau ist derselbe, den Sie von HTML kennen: Es gibt Tags, die mit
+					<code>&lt;</code> und <code>&gt;</code> geschrieben werden, und diese
+					Tags haben Attribute der Form <code>name="wert"</code>. Alles wird von
+					einem <code>&lt;svg&gt;</code>-Tag umschlossen. Eine Form, die keinen
+					Inhalt hat, schreiben wir als selbstschliessendes Tag, also zum Beispiel
+					<code>&lt;circle … /&gt;</code>. Kommentare werden wie in HTML mit
+					<code>&lt;!-- … --&gt;</code> geschrieben.
+				</p>
+
+				<p>
+					Jedes SVG-Bild wird in einem Koordinatensystem gezeichnet. Das
+					Koordinatensystem ist allerdings anders, als wir es aus der Mathematik
+					gewohnt sind. Die <em>y</em>-Achse zeigt nach unten statt nach oben!
+					Der Ursprung (0, 0) liegt also in der <em>oberen linken</em> Ecke. Die
+					Längen werden dabei in «Benutzereinheiten» angegeben, was
+					standardmässig einem Pixel entspricht.
+				</p>
+
+				<figure class="diagram">
+					<svg viewBox="-25 -20 200 160" width="330" aria-hidden="true">
+						<g
+							stroke="currentColor"
+							fill="currentColor"
+							stroke-width="1.5"
+							font-size="11"
+							font-family="sans-serif"
+						>
+							<line x1="-10" y1="0" x2="165" y2="0" />
+							<polygon points="165 0 158 -4 158 4" stroke="none" />
+							<text x="168" y="4" stroke="none" font-style="italic">x</text>
+							<line x1="0" y1="-10" x2="0" y2="130" />
+							<polygon points="0 130 -4 123 4 123" stroke="none" />
+							<text x="-3" y="140" stroke="none" font-style="italic">y</text>
+							<g stroke-width="1">
+								<line x1="25" y1="-4" x2="25" y2="4" />
+								<line x1="50" y1="-4" x2="50" y2="4" />
+								<line x1="75" y1="-4" x2="75" y2="4" />
+								<line x1="100" y1="-4" x2="100" y2="4" />
+								<line x1="125" y1="-4" x2="125" y2="4" />
+								<line x1="-4" y1="25" x2="4" y2="25" />
+								<line x1="-4" y1="50" x2="4" y2="50" />
+								<line x1="-4" y1="75" x2="4" y2="75" />
+								<line x1="-4" y1="100" x2="4" y2="100" />
+							</g>
+							<g stroke="none" text-anchor="middle">
+								<text x="25" y="-8">25</text>
+								<text x="50" y="-8">50</text>
+								<text x="75" y="-8">75</text>
+								<text x="100" y="-8">100</text>
+								<text x="125" y="-8">125</text>
+							</g>
+							<g stroke="none" text-anchor="end">
+								<text x="-8" y="29">25</text>
+								<text x="-8" y="54">50</text>
+								<text x="-8" y="79">75</text>
+								<text x="-8" y="104">100</text>
+							</g>
+							<circle cx="100" cy="50" r="3" stroke="none" fill="#e05252" />
+							<text x="106" y="47" stroke="none" fill="#e05252">(100, 50)</text>
+						</g>
+					</svg>
+					<figcaption>
+						Das SVG-Koordinatensystem. Diese Figur ist selber ein SVG, direkt in
+						dieser Seite.
+					</figcaption>
+				</figure>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing" id="listing-circle">
+							<pre data-src="circle.svg"></pre>
+							<figcaption>
+								<b>Listing 1.</b> Roter Kreis als SVG
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/circle.svg"
+									>circle.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="circle.svg" data-height="180"></iframe>
+							<figcaption>Dasselbe Bild, hier im Browser gezeichnet.</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<p>
+					Im vorliegenden Beispiel wird ein SVG-Tag zusammen mit einer Reihe von
+					Attributen dargestellt. Wird das SVG-Tag direkt in eine HTML-Datei
+					geschrieben, so geben die Attribute <code>width</code> und
+					<code>height</code> des SVG-Tags an, wie viel Platz auf der Webseite für
+					dieses Bild reserviert werden soll.
+				</p>
+
+				<p>
+					Wie wir in Listing 1 sehen können, lassen sich Grundformen mit diversen
+					optionalen Attributen ergänzen. Unter vielen anderen sind da die
+					folgenden zu nennen:
+				</p>
+
+				<dl>
+					<dt><code>fill</code></dt>
+					<dd>Die Füllfarbe.</dd>
+					<dt><code>stroke</code></dt>
+					<dd>Die Strichfarbe.</dd>
+					<dt><code>stroke-width</code></dt>
+					<dd>Die Strichbreite.</dd>
+					<dt><code>opacity</code></dt>
+					<dd>Die Deckkraft der Form.</dd>
+				</dl>
+
+				<p>
+					Wir werden diese Attribute in den folgenden Beispielen immer wieder
+					anwenden.
+				</p>
+
+				<h3 id="farben">Farben und Deckkraft</h3>
+
+				<p>Für Farben gibt es — genau wie in CSS — mehrere Schreibweisen:</p>
+
+				<dl>
+					<dt>Farbnamen</dt>
+					<dd>
+						Es gibt rund 150 vordefinierte Namen, zum Beispiel
+						<code>red</code>, <code>yellow</code> oder <code>tomato</code>.
+					</dd>
+					<dt>Hexadezimal</dt>
+					<dd>
+						<code>#4682b4</code> gibt den Rot-, Grün- und Blauanteil je als
+						zweistellige Hexadezimalzahl an.
+					</dd>
+					<dt><code>rgb(…)</code></dt>
+					<dd>
+						<code>rgb(60, 179, 113)</code> gibt dieselben drei Anteile als Zahlen
+						von 0 bis 255 an.
+					</dd>
+					<dt><code>none</code></dt>
+					<dd>
+						Gar keine Farbe. Ein <code>fill="none"</code> ist also nicht dasselbe
+						wie ein weiss gefülltes Objekt: Was darunter liegt, bleibt sichtbar.
+					</dd>
+				</dl>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="colors.svg"></pre>
+							<figcaption>
+								<b>Listing 2.</b> Die verschiedenen Schreibweisen für Farben
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/colors.svg"
+									>colors.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="colors.svg" data-height="140"></iframe>
+							<figcaption>
+								Farbname, Hexadezimalwert, <code>rgb(…)</code> und
+								<code>none</code>.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<p>
+					Die Deckkraft können wir mit einer Zahl zwischen 0 (durchsichtig) und 1
+					(deckend) steuern. Dabei gibt es drei Attribute, die man nicht
+					verwechseln sollte:
+				</p>
+
+				<dl>
+					<dt><code>opacity</code></dt>
+					<dd>Die Deckkraft der ganzen Form, inklusive Rand.</dd>
+					<dt><code>fill-opacity</code></dt>
+					<dd>Nur die Deckkraft der Füllung.</dd>
+					<dt><code>stroke-opacity</code></dt>
+					<dd>Nur die Deckkraft des Randes.</dd>
+				</dl>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="opacity.svg"></pre>
+							<figcaption>
+								<b>Listing 3.</b> Deckkraft der ganzen Form, der Füllung und des
+								Randes
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/opacity.svg"
+									>opacity.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="opacity.svg" data-height="140"></iframe>
+							<figcaption>
+								Alle drei Quadrate sind gelb mit schwarzem Rand — nur die
+								Deckkraft ist unterschiedlich verteilt.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<h3 id="viewbox">Die Zeichenfläche und die <code>viewBox</code></h3>
+
+				<p>
+					Neben <code>width</code> und <code>height</code> kann auch das
+					<code>viewBox</code>-Attribut verwendet werden, um ein SVG-Element
+					genauer zu platzieren.
+				</p>
+
+				<figure class="listing">
+					<pre data-lang="html">
+&lt;svg viewBox="min-x min-y width height"&gt;</pre
+					>
+					<figcaption><b>Listing 4.</b> Nutzung von <code>viewBox</code></figcaption>
+				</figure>
+
+				<p>Die Attributwerte sind dabei die folgenden:</p>
+
+				<dl>
+					<dt><code>min-x</code></dt>
+					<dd>
+						Die kleinste <em>x</em>-Koordinate, die dargestellt wird. Alles
+						«weiter links» wird abgeschnitten.
+					</dd>
+					<dt><code>min-y</code></dt>
+					<dd>
+						Die kleinste <em>y</em>-Koordinate, die dargestellt wird. Alles
+						«weiter oben» wird abgeschnitten.
+					</dd>
+					<dt><code>width</code></dt>
+					<dd>
+						Die Breite des zu zeichnenden Bildes. Alles «weiter rechts» wird
+						abgeschnitten.
+					</dd>
+					<dt><code>height</code></dt>
+					<dd>
+						Die Höhe des zu zeichnenden Bildes. Alles «weiter unten» wird
+						abgeschnitten.
+					</dd>
+				</dl>
+
+				<p>
+					Die <code>viewBox</code> ist also ein <em>Ausschnitt</em> des
+					Koordinatensystems, und dieser Ausschnitt wird auf den zur Verfügung
+					stehenden Platz gestreckt. Damit können wir zwei Dinge auf einmal
+					erreichen: Wir wählen aus, welcher Teil der Zeichnung sichtbar ist, und
+					wir bestimmen, wie stark sie vergrössert dargestellt wird.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="viewbox-example.svg"></pre>
+							<figcaption>
+								<b>Listing 5.</b> Vier Kreise, von denen nur zwei sichtbar sind
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/viewbox-example.svg"
+									>viewbox-example.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="viewbox-example.svg" data-height="240"></iframe>
+							<figcaption>
+								Der Code zeichnet vier Kreise. Die <code>viewBox</code> zeigt nur
+								die rechte Hälfte, also sind nur zwei zu sehen.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<div class="box box--note">
+					<p class="box__label">Bemerkung</p>
+					<p>
+						Es ist meistens praktisch, die <code>viewBox</code> so zu wählen,
+						dass die Zeichnung genau hineinpasst, und auf <code>width</code> und
+						<code>height</code> ganz zu verzichten. Dann passt sich das Bild
+						automatisch dem Platz an, den es bekommt — und genau das ist ja der
+						Sinn einer skalierbaren Grafik.
+					</p>
+				</div>
+
+				<h3 id="einbetten">SVG in einer Webseite verwenden</h3>
+
+				<p>
+					Es gibt drei gängige Wege, eine Vektorgrafik in eine Webseite
+					einzubauen.
+				</p>
+
+				<figure class="listing">
+					<pre data-src="embed.html" data-lines="16-25"></pre>
+					<figcaption>
+						<b>Listing 6.</b> Drei Möglichkeiten, ein SVG einzubetten
+						(<a
+							href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/embed.html"
+							>embed.html</a
+						>)
+					</figcaption>
+				</figure>
+
+				<p>
+					Der erste Weg schreibt den SVG-Code direkt in die HTML-Datei. Nur so
+					können wir die einzelnen Formen später mit CSS gestalten oder mit
+					JavaScript verändern. Die anderen zwei Wege verweisen auf eine separate
+					Datei; das ist übersichtlicher und die Datei kann vom Browser
+					zwischengespeichert werden.
+				</p>
+
+				<h2 id="grundformen">Grundformen</h2>
+
+				<h3 id="kreise">Kreise und Ellipsen</h3>
+
+				<p>
+					Das Element <code>&lt;circle&gt;</code> erzeugt einen Kreis auf dem
+					Bildschirm. Es verwendet drei grundlegende Attribute, um die Position
+					und Grösse des Elements zu bestimmen:
+				</p>
+
+				<dl>
+					<dt><code>r</code></dt>
+					<dd>Der Radius des Kreises.</dd>
+					<dt><code>cx</code></dt>
+					<dd>Die <em>x</em>-Koordinate des Mittelpunktes des Kreises.</dd>
+					<dt><code>cy</code></dt>
+					<dd>Die <em>y</em>-Koordinate des Mittelpunktes des Kreises.</dd>
+				</dl>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="fancy-circle.svg"></pre>
+							<figcaption><b>Listing 7.</b> Kreis (fancy-circle.svg)</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="fancy-circle.svg" data-height="180"></iframe>
+							<figcaption>Kreis mit Rand und Füllung.</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<p>
+					Das Element <code>&lt;ellipse&gt;</code> erzeugt eine Ellipse. Es
+					verwendet vier grundlegende Attribute:
+				</p>
+
+				<dl>
+					<dt><code>rx</code></dt>
+					<dd>Die Länge der horizontalen Halbachse.</dd>
+					<dt><code>ry</code></dt>
+					<dd>Die Länge der vertikalen Halbachse.</dd>
+					<dt><code>cx</code></dt>
+					<dd>Die <em>x</em>-Koordinate des Mittelpunktes der Ellipse.</dd>
+					<dt><code>cy</code></dt>
+					<dd>Die <em>y</em>-Koordinate des Mittelpunktes der Ellipse.</dd>
+				</dl>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="ellipse-svg.svg"></pre>
+							<figcaption><b>Listing 8.</b> Ellipse (ellipse-svg.svg)</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="ellipse-svg.svg" data-height="160"></iframe>
+							<figcaption>Halb durchsichtige schwarze Ellipse.</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<h3 id="rechtecke">Rechtecke</h3>
+
+				<p>
+					Das Element <code>&lt;rect&gt;</code> erzeugt ein Rechteck. Es gibt
+					sechs Attribute, die die Position und die Form des Rechtecks steuern.
+				</p>
+
+				<dl>
+					<dt><code>x</code>, <code>y</code></dt>
+					<dd>Die Koordinaten der oberen linken Ecke.</dd>
+					<dt><code>width</code>, <code>height</code></dt>
+					<dd>Die Breite und die Höhe des Rechtecks.</dd>
+					<dt><code>rx</code>, <code>ry</code></dt>
+					<dd>
+						Die Radien für abgerundete Ecken. Fehlen beide, sind die Ecken nicht
+						abgerundet. Ist nur einer der beiden angegeben, gilt er für beide.
+					</dd>
+				</dl>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="rectangle-svg.svg"></pre>
+							<figcaption>
+								<b>Listing 9.</b> Rechteck (rectangle-svg.svg)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="rectangle-svg.svg" data-height="140"></iframe>
+							<figcaption>Rechteck mit abgerundeten Ecken.</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<h3 id="linien">Linien, Polylinien und Polygone</h3>
+
+				<p>
+					Das Element <code>&lt;line&gt;</code> nimmt die Koordinaten von zwei
+					Punkten als Parameter und zeichnet eine gerade Linie zwischen ihnen.
+					Die Attribute heissen <code>x1</code>, <code>y1</code> für den ersten
+					und <code>x2</code>, <code>y2</code> für den zweiten Punkt. Beachten
+					Sie, dass eine Linie keine Füllung hat: Ohne <code>stroke</code> sehen
+					Sie also gar nichts.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="line.svg"></pre>
+							<figcaption><b>Listing 10.</b> Linie (line.svg)</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="line.svg" data-height="140"></iframe>
+							<figcaption>Eine grüne Linie.</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<p>
+					Das Element <code>&lt;polyline&gt;</code> bietet die Möglichkeit, eine
+					ganze Liste von Punkten miteinander zu verbinden. Da diese Liste lang
+					werden kann, sind alle Punkte in einem einzigen Attribut
+					<code>points</code> enthalten. Jeder Punkt muss sowohl eine
+					<em>x</em>- als auch eine <em>y</em>-Koordinate enthalten. Die Liste
+					(0, 0), (1, 3), (2024, 33) wird einfach als
+					<code>points="0 0 1 3 2024 33"</code> geschrieben. Es empfiehlt sich
+					für eine bessere Lesbarkeit, jeden Punkt auf eine neue Zeile zu
+					schreiben.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="polyline.svg"></pre>
+							<figcaption><b>Listing 11.</b> Polylinie (polyline.svg)</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="polyline.svg" data-height="200"></iframe>
+							<figcaption>Ein Zickzack aus sieben Punkten.</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<p>
+					Beachten Sie, dass <code>&lt;polyline&gt;</code> standardmässig die
+					Füllfarbe schwarz setzt. Um dies zu «entfernen», können wir
+					<code>fill="none"</code> setzen.
+				</p>
+
+				<p>
+					Das Element <code>&lt;polygon&gt;</code> funktioniert sehr ähnlich wie
+					<code>&lt;polyline&gt;</code>. Es verbindet ebenfalls eine Liste von
+					Punkten geradlinig miteinander. Bei Polygonen wird allerdings der letzte
+					Punkt wieder mit dem ersten verbunden, um eine geschlossene Form zu
+					erstellen.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="polygon.svg"></pre>
+							<figcaption><b>Listing 12.</b> Polygon (polygon.svg)</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="polygon.svg" data-height="180"></iframe>
+							<figcaption>Ein Dreieck als Polygon.</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<h3 id="text">Text</h3>
+
+				<p>
+					Das Element <code>&lt;text&gt;</code> erzeugt einen Text auf dem
+					Bildschirm. Wo der Text steht, bestimmen zwei Attribute:
+					<code>x</code> ist die <em>x</em>-Koordinate des Textanfangs,
+					<code>y</code> die <em>y</em>-Koordinate der <em>Grundlinie</em>.
+					Buchstaben wie «g» oder «p» ragen also nach unten darüber hinaus.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="text.svg"></pre>
+							<figcaption><b>Listing 13.</b> Text (text.svg)</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="text.svg" data-height="160"></iframe>
+							<figcaption>
+								Der Punkt (0, 0) liegt links unter dem Text — der Text steht
+								darum ausserhalb des Bildes.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<p>
+					Anders als bei den übrigen Formen steht der Text <em>zwischen</em> dem
+					öffnenden und dem schliessenden Tag. Die Schrift selbst können wir mit
+					den folgenden Attributen gestalten:
+				</p>
+
+				<dl>
+					<dt><code>font-family</code></dt>
+					<dd>
+						Die Schriftart, zum Beispiel <code>sans-serif</code> oder
+						<code>serif</code>.
+					</dd>
+					<dt><code>font-size</code></dt>
+					<dd>Die Schriftgrösse in Benutzereinheiten.</dd>
+					<dt><code>font-weight</code></dt>
+					<dd>
+						Die Strichstärke der Schrift, zum Beispiel <code>bold</code>.
+					</dd>
+					<dt><code>text-anchor</code></dt>
+					<dd>
+						Welcher Teil des Textes bei (<code>x</code>, <code>y</code>) liegt:
+						<code>start</code> (Standard), <code>middle</code> oder
+						<code>end</code>. Mit <code>middle</code> wird der Text also um
+						(<code>x</code>, <code>y</code>) zentriert.
+					</dd>
+				</dl>
+
+				<p>
+					Die Farbe des Textes wird mit <code>fill</code> gesetzt — ein Buchstabe
+					ist für SVG eine Form wie jede andere.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="text-styled.svg"></pre>
+							<figcaption>
+								<b>Listing 14.</b> Text gestalten
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/text-styled.svg"
+									>text-styled.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="text-styled.svg" data-height="180"></iframe>
+							<figcaption>
+								Die graue Linie zeigt, wo <code>x = 150</code> liegt: Beide
+								Zeilen sind um diese Linie zentriert.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<h3 id="striche">Striche gestalten</h3>
+
+				<p>
+					Bis jetzt haben wir von einem Strich nur die Farbe und die Breite
+					bestimmt. Es gibt aber noch mehr zu holen:
+				</p>
+
+				<dl>
+					<dt><code>stroke-linecap</code></dt>
+					<dd>
+						Die Form der Strichenden: <code>butt</code> (Standard, gerade
+						abgeschnitten), <code>round</code> (runde Enden) oder
+						<code>square</code> (der Strich wird um die halbe Strichbreite
+						verlängert).
+					</dd>
+					<dt><code>stroke-linejoin</code></dt>
+					<dd>
+						Die Form der Ecken: <code>miter</code> (Standard, spitz),
+						<code>round</code> oder <code>bevel</code> (abgeflacht).
+					</dd>
+					<dt><code>stroke-dasharray</code></dt>
+					<dd>
+						Eine Liste von Längen für einen gestrichelten Strich.
+						<code>"30 10"</code> bedeutet: 30 Einheiten zeichnen, 10 Einheiten
+						Lücke, und so weiter.
+					</dd>
+				</dl>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="stroke-styles.svg"></pre>
+							<figcaption>
+								<b>Listing 15.</b> Gerade Enden, runde Enden und ein
+								gestrichelter Strich
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/stroke-styles.svg"
+									>stroke-styles.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="stroke-styles.svg" data-height="180"></iframe>
+							<figcaption>
+								Alle drei Striche gehen von <code>x = 20</code> bis
+								<code>x = 180</code>. Der mittlere ist trotzdem länger — die
+								runden Enden ragen hinaus.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<h2 id="uebungen">Übungen</h2>
+
+				<!-- ============================================== Übung 5.01 -->
+				<section class="exercise" id="ex-firstcircle">
+					<div class="exercise__body">
+						<p>
+							Zeichnen Sie einen blau ausgefüllten Kreis mit grünem Rand und
+							Radius 30 px als SVG. Probieren Sie verschiedene Deckkraftstufen
+							aus.
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb1"
+							data-files="svg"
+							data-height="300"
+						>
+							<template data-seed="svg">
+&lt;svg viewBox="0 0 100 100"&gt;
+  &lt;!-- Ihr Kreis kommt hierhin --&gt;
+&lt;/svg&gt;
+							</template>
+						</div>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.02 -->
+				<section class="exercise" id="ex-threecircles">
+					<div class="exercise__body">
+						<p>
+							Zeichnen Sie drei Kreise in einer Reihe, die sich berühren und von
+							links nach rechts kleiner werden. Die Kreise sollten alle
+							unterschiedliche Füllfarben haben.
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb2"
+							data-files="svg"
+							data-sol-svg="three-circles.svg"
+							data-height="300"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<div class="split">
+									<figure class="listing">
+										<pre data-src="three-circles.svg"></pre>
+										<figcaption>
+											Lösungsvorschlag
+											(<a
+												href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/three-circles.svg"
+												>three-circles.svg</a
+											>)
+										</figcaption>
+									</figure>
+									<figure class="demo">
+										<iframe
+											data-src="three-circles.svg"
+											data-height="160"
+										></iframe>
+										<figcaption>Das Resultat.</figcaption>
+									</figure>
+								</div>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.03 -->
+				<section class="exercise" id="ex-colorcircle">
+					<div class="exercise__body">
+						<p>
+							Zeichnen Sie einen Kreis, dessen Füllfarbe hexadezimal und dessen
+							Randfarbe mit <code>rgb(…)</code> angegeben ist. Die Füllung soll
+							halb durchsichtig sein, der Rand aber deckend.
+						</p>
+
+						<div class="box box--note">
+							<p class="box__label">Hinweis</p>
+							<p>
+								Es gibt ein Attribut, mit dem Sie <em>nur</em> die Deckkraft der
+								Füllung verändern.
+							</p>
+						</div>
+
+						<div
+							class="workbench"
+							data-id="wb3"
+							data-files="svg"
+							data-sol-svg="color-circle.svg"
+							data-height="300"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<div class="split">
+									<figure class="listing">
+										<pre data-src="color-circle.svg"></pre>
+										<figcaption>
+											Lösungsvorschlag
+											(<a
+												href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/color-circle.svg"
+												>color-circle.svg</a
+											>)
+										</figcaption>
+									</figure>
+									<figure class="demo">
+										<iframe data-src="color-circle.svg" data-height="200"></iframe>
+										<figcaption>Das Resultat.</figcaption>
+									</figure>
+								</div>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.04 -->
+				<section class="exercise" id="ex-bigellipse">
+					<div class="exercise__body">
+						<p>Erstellen Sie die folgende SVG-Grafik.</p>
+
+						<figure class="demo" style="max-width: 22rem">
+							<iframe data-src="big-ellipse.svg" data-height="220"></iframe>
+							<figcaption>Das Ziel.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb4"
+							data-files="svg"
+							data-sol-svg="big-ellipse.svg"
+							data-height="300"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="big-ellipse.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/big-ellipse.svg"
+											>big-ellipse.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.05 -->
+				<section class="exercise" id="ex-threeellipse">
+					<div class="exercise__body">
+						<p>Erstellen Sie die folgende SVG-Grafik.</p>
+
+						<figure class="demo" style="max-width: 26rem">
+							<iframe data-src="three-ellipse.svg" data-height="180"></iframe>
+							<figcaption>Das Ziel.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb5"
+							data-files="svg"
+							data-sol-svg="three-ellipse.svg"
+							data-height="300"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="three-ellipse.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/three-ellipse.svg"
+											>three-ellipse.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.06 -->
+				<section class="exercise" id="ex-viewbox">
+					<div class="exercise__body">
+						<p>
+							Nehmen Sie Ihre Lösung von Übung 5.05 (sie ist in der Werkbank
+							schon eingefüllt) und ergänzen Sie das
+							<code>&lt;svg&gt;</code>-Tag mit einer <code>viewBox</code>.
+						</p>
+						<ol class="tasks">
+							<li>
+								Wählen Sie die <code>viewBox</code> so, dass die ganze Grafik
+								genau hineinpasst.
+							</li>
+							<li>
+								Wählen Sie sie so, dass nur die linke Hälfte der Grafik zu sehen
+								ist.
+							</li>
+							<li>
+								Verdoppeln Sie nun in Ihrer <code>viewBox</code> nur die Breite
+								und die Höhe. Was beobachten Sie?
+							</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb6"
+							data-files="svg"
+							data-seed-svg="three-ellipse.svg"
+							data-height="300"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<ol class="tasks">
+									<li><code>viewBox="0 0 400 100"</code></li>
+									<li><code>viewBox="0 0 200 100"</code></li>
+									<li>
+										Die Grafik wird kleiner dargestellt: Der Ausschnitt ist
+										doppelt so gross, wird aber auf denselben Platz gezeichnet.
+									</li>
+								</ol>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.07 -->
+				<section class="exercise" id="ex-svgsquare">
+					<div class="exercise__body">
+						<p>Erstellen Sie die folgende SVG-Grafik.</p>
+
+						<figure class="demo" style="max-width: 14rem">
+							<iframe data-src="svg-square.svg" data-height="180"></iframe>
+							<figcaption>Das Ziel.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb7"
+							data-files="svg"
+							data-sol-svg="svg-square.svg"
+							data-height="300"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="svg-square.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/svg-square.svg"
+											>svg-square.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.08 -->
+				<section class="exercise" id="ex-twosquares">
+					<div class="exercise__body">
+						<p>Erstellen Sie die folgende SVG-Grafik.</p>
+
+						<figure class="demo" style="max-width: 24rem">
+							<iframe data-src="two-squares.svg" data-height="200"></iframe>
+							<figcaption>Das Ziel.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb8"
+							data-files="svg"
+							data-sol-svg="two-squares.svg"
+							data-height="300"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="two-squares.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/two-squares.svg"
+											>two-squares.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.09 -->
+				<section class="exercise" id="ex-swissflag">
+					<div class="exercise__body">
+						<p>
+							Zeichnen Sie die Schweizer Fahne. Diese ist quadratisch, und die
+							vier Arme des Kreuzes sind gleich gross und um ein Sechstel länger
+							als breit.
+						</p>
+
+						<div class="box box--note">
+							<p class="box__label">Hinweis</p>
+							<p>Sie brauchen dafür nur Rechtecke.</p>
+						</div>
+
+						<figure class="demo" style="max-width: 16rem">
+							<iframe data-src="swiss-flag.svg" data-height="220"></iframe>
+							<figcaption>Das Ziel.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb9"
+							data-files="svg"
+							data-sol-svg="swiss-flag.svg"
+							data-height="300"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="swiss-flag.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/swiss-flag.svg"
+											>swiss-flag.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.10 -->
+				<section class="exercise" id="ex-simpleline">
+					<div class="exercise__body">
+						<p>Erstellen Sie die folgende SVG-Grafik.</p>
+
+						<figure class="demo" style="max-width: 26rem">
+							<iframe data-src="simple-line.svg" data-height="120"></iframe>
+							<figcaption>Das Ziel.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb10"
+							data-files="svg"
+							data-sol-svg="simple-line.svg"
+							data-height="300"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="simple-line.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/simple-line.svg"
+											>simple-line.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.11 -->
+				<section class="exercise" id="ex-dashedlines">
+					<div class="exercise__body">
+						<p>
+							Zeichnen Sie drei waagrechte, gleich lange Striche untereinander:
+						</p>
+						<ol class="tasks">
+							<li>einen dicken Strich mit runden Enden,</li>
+							<li>einen gestrichelten Strich,</li>
+							<li>einen gepunkteten Strich.</li>
+						</ol>
+
+						<div class="box box--note">
+							<p class="box__label">Hinweis</p>
+							<p>
+								Für die Punkte kombinieren Sie <code>stroke-dasharray</code> mit
+								runden Strichenden.
+							</p>
+						</div>
+
+						<figure class="demo" style="max-width: 22rem">
+							<iframe data-src="dashed-lines.svg" data-height="180"></iframe>
+							<figcaption>Das Ziel.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb11"
+							data-files="svg"
+							data-sol-svg="dashed-lines.svg"
+							data-height="300"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="dashed-lines.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/dashed-lines.svg"
+											>dashed-lines.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.12 -->
+				<section class="exercise" id="ex-poster">
+					<div class="exercise__body">
+						<p>
+							Erstellen Sie ein Schild mit einem abgerundeten farbigen Rechteck
+							und zwei Zeilen Text darauf. Beide Zeilen sollen horizontal
+							zentriert sein und sich in Grösse und Farbe unterscheiden.
+						</p>
+
+						<figure class="demo" style="max-width: 24rem">
+							<iframe data-src="poster.svg" data-height="180"></iframe>
+							<figcaption>Ein mögliches Ziel.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb12"
+							data-files="svg"
+							data-sol-svg="poster.svg"
+							data-height="320"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="poster.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/poster.svg"
+											>poster.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.13 -->
+				<section class="exercise" id="ex-house">
+					<div class="exercise__body">
+						<p>
+							Zeichnen Sie ein Haus mit Dach, Tür und zwei Fenstern. Verwenden
+							Sie für das Dach ein <code>&lt;polygon&gt;</code>.
+						</p>
+
+						<figure class="demo" style="max-width: 20rem">
+							<iframe data-src="house.svg" data-height="220"></iframe>
+							<figcaption>Ein mögliches Ziel.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb13"
+							data-files="svg"
+							data-sol-svg="house.svg"
+							data-height="320"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="house.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/house.svg"
+											>house.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<nav class="pager">
+					<a href="index.html">← <b>Übersicht</b></a>
+					<a href="02-pfade.html" style="text-align: right"
+						>Abschnitt 2 <b>Pfade, Gruppen und Transformationen →</b></a
+					>
+				</nav>
+			</div>
+
+			<aside class="minitoc">
+				<h2>Auf dieser Seite</h2>
+				<ol></ol>
+			</aside>
+		</main>
+
+		<script src="assets/examples.js"></script>
+		<script src="assets/editor.js"></script>
+		<script src="assets/site.js"></script>
+	</body>
+</html>

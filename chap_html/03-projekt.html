@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>3 Eine eigene Webseite</title>
+		<script>
+			/* Farbschema vor dem ersten Zeichnen setzen, damit beim Laden nichts
+			   aufblitzt. Dunkel ist der Standard, siehe assets/style.css. */
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.html.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="assets/style.css" />
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html">HTML und <span>CSS</span></a>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-html.html">1 HTML</a>
+				<a href="02-css.html">2 CSS</a>
+				<a href="03-projekt.html">3 Projekt</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main class="layout" data-ex-chapter="3" data-ex-offset="37">
+			<div class="content">
+				<p class="eyebrow">Abschnitt 3</p>
+				<h1>Eine eigene Webseite</h1>
+
+				<div class="progress" data-progress>
+					<span class="meter"><i style="width: 0"></i></span>
+					<span data-progress-text>0 von 2 Übungen erledigt</span>
+					<button type="button" data-reset>zurücksetzen</button>
+				</div>
+
+				<h2 id="projekt">Das Schlussprojekt</h2>
+
+				<!-- ============================================== Übung 3.38 -->
+				<section class="exercise" id="ex-project" data-tag="Projekt">
+					<div class="exercise__body">
+						<p>
+							Erstellen Sie eine eigene Webseite zu einem Thema, das Sie
+							interessiert. Die Seite soll alles enthalten, was Sie in diesem
+							Kapitel gelernt haben.
+						</p>
+
+						<ol class="tasks">
+							<li>
+								Die Seite ist mit <code>&lt;header&gt;</code>,
+								<code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code> und
+								<code>&lt;footer&gt;</code> sinnvoll strukturiert.
+							</li>
+							<li>
+								Die ganze Gestaltung steht in einer externen Datei
+								<code>style.css</code>. In der HTML-Datei kommt kein
+								<code>style</code>-Attribut vor.
+							</li>
+							<li>
+								Die Navigationsleiste ist mit Flexbox umgesetzt und bleibt beim
+								Scrollen oben sichtbar.
+							</li>
+							<li>
+								Es gibt mindestens drei Abschnitte mit einer eigenen ID, auf die
+								die Navigation verlinkt.
+							</li>
+							<li>
+								Mindestens ein Abschnitt stellt ein Bild neben einem Text dar
+								(Grid-Layout).
+							</li>
+							<li>
+								Alle Links und Knöpfe verändern ihr Aussehen bei
+								<code>:hover</code> <em>und</em> bei <code>:focus</code>. Der
+								Übergang ist mit einer <code>transition</code> weich gestaltet.
+							</li>
+							<li>
+								Die Seite enthält mindestens eine Klasse, die auf mehreren
+								Elementen verwendet wird.
+							</li>
+						</ol>
+
+						<div class="hint">
+							<p>
+								<em>Hinweis:</em> Prüfen Sie Ihre Seite am Schluss unter
+								<a href="https://validator.w3.org/#validate_by_input"
+									>validator.w3.org</a
+								>. Sie sollte ohne Fehlermeldung durchlaufen.
+							</p>
+						</div>
+
+						<div class="box box--note">
+							<p class="box__label">Zum Abgeben</p>
+							<p>
+								Diese Werkbank ist grösser als die anderen und ist Ihr
+								Arbeitsplatz für das Projekt. Nutzen Sie den Knopf
+								<em>Vollbild</em>, um mehr Platz zu haben, und
+								<em>Herunterladen</em> auf beiden Reitern, um am Schluss
+								<code>index.html</code> und <code>style.css</code> abzugeben.
+							</p>
+							<p>
+								Speichern Sie die beiden Dateien in denselben Ordner. Dann
+								funktioniert das
+								<code>&lt;link rel="stylesheet" href="style.css"&gt;</code> auch
+								auf Ihrem Computer.
+							</p>
+						</div>
+
+						<div
+							class="workbench"
+							data-id="wb38"
+							data-files="html,css"
+							data-height="520"
+						>
+							<template data-seed="html">
+&lt;!doctype html&gt;
+&lt;html lang="de-CH"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width" /&gt;
+    &lt;link rel="stylesheet" href="style.css" /&gt;
+    &lt;title&gt;Mein Thema&lt;/title&gt;
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    &lt;header&gt;
+      &lt;h1&gt;Mein Thema&lt;/h1&gt;
+    &lt;/header&gt;
+
+    &lt;nav&gt;
+      &lt;ul class="navbar"&gt;
+        &lt;li&gt;&lt;a href="#teil-1"&gt;Teil 1&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#teil-2"&gt;Teil 2&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#teil-3"&gt;Teil 3&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/nav&gt;
+
+    &lt;main&gt;
+      &lt;section id="teil-1"&gt;
+        &lt;h2&gt;Teil 1&lt;/h2&gt;
+        &lt;p&gt;Hier kommt Ihr Text hin.&lt;/p&gt;
+      &lt;/section&gt;
+
+      &lt;section id="teil-2"&gt;
+        &lt;h2&gt;Teil 2&lt;/h2&gt;
+        &lt;p&gt;Hier kommt Ihr Text hin.&lt;/p&gt;
+      &lt;/section&gt;
+
+      &lt;section id="teil-3"&gt;
+        &lt;h2&gt;Teil 3&lt;/h2&gt;
+        &lt;p&gt;Hier kommt Ihr Text hin.&lt;/p&gt;
+      &lt;/section&gt;
+    &lt;/main&gt;
+
+    &lt;footer&gt;
+      &lt;p&gt;Eine Seite von mir, Gymnasium Muttenz.&lt;/p&gt;
+    &lt;/footer&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+							</template>
+							<template data-seed="css">
+* {
+  box-sizing: border-box;
+}
+
+/* Ihre Regeln */
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Woran Sie sich orientieren können</summary>
+							<div class="sol__body">
+								<p>
+									Zu dieser Übung gibt es keinen Lösungsvorschlag – die Seite
+									soll Ihre eigene sein. Die folgenden Bausteine aus dem Kapitel
+									decken aber alle sieben Anforderungen ab:
+								</p>
+								<table class="data">
+									<tr>
+										<th>Anforderung</th>
+										<th>Nachschlagen</th>
+									</tr>
+									<tr>
+										<td>Struktur mit header, nav, main, footer</td>
+										<td>
+											<a href="01-html.html#strukturieren">Webseite strukturieren</a>,
+											<a href="01-html.html#ex-structure">Übung 3.06</a>
+										</td>
+									</tr>
+									<tr>
+										<td>Gestaltung in einer externen Datei</td>
+										<td>
+											<a href="02-css.html#zusammenspiel">Zusammenspiel von HTML und CSS</a>,
+											<a href="02-css.html#ex-externalcss">Übung 3.15</a>
+										</td>
+									</tr>
+									<tr>
+										<td>Navigationsleiste mit Flexbox, beim Scrollen sichtbar</td>
+										<td>
+											<a href="02-css.html#flexbox">Das Flexbox-Modell</a>,
+											<a href="02-css.html#ex-navbar">Übung 3.36</a>
+										</td>
+									</tr>
+									<tr>
+										<td>Abschnitte mit IDs, Navigation verlinkt darauf</td>
+										<td>
+											<a href="01-html.html#ids">IDs</a>,
+											<a href="01-html.html#ex-idlinks">Übung 3.13</a>
+										</td>
+									</tr>
+									<tr>
+										<td>Bild neben Text</td>
+										<td>
+											<a href="02-css.html#grid">Das Grid-Layout</a>,
+											<a href="02-css.html#ex-gridlayout">Übung 3.32</a>
+										</td>
+									</tr>
+									<tr>
+										<td><code>:hover</code>, <code>:focus</code> und <code>transition</code></td>
+										<td>
+											<a href="02-css.html#pseudo-klassen">Pseudo-Klassen</a>,
+											<a href="02-css.html#animationen">CSS-Animationen</a>,
+											<a href="02-css.html#ex-hoverbutton">Übung 3.20</a>
+										</td>
+									</tr>
+									<tr>
+										<td>Eine Klasse auf mehreren Elementen</td>
+										<td>
+											<a href="01-html.html#klassen">Klassen</a>,
+											<a href="02-css.html#css-klassen">CSS-Klassen</a>,
+											<a href="01-html.html#ex-classes">Übung 3.14</a>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.39 -->
+				<section class="exercise" id="ex-selfhtml" data-tag="Tutorial">
+					<div class="exercise__body">
+						<p>Arbeiten Sie das Online-Tutorial durch.</p>
+						<ul class="linkrow">
+							<li>
+								<a href="https://wiki.selfhtml.org/wiki/HTML/Tutorials/Einstieg"
+									>SelfHTML: HTML/Tutorials/Einstieg</a
+								>
+							</li>
+						</ul>
+					</div>
+				</section>
+
+				<h2 id="wie-weiter">Wie weiter?</h2>
+
+				<p>
+					Dieses Kapitel hat nur einen Bruchteil von HTML und CSS behandelt. Die
+					folgenden Adressen sind gute Ausgangspunkte, wenn Sie weitermachen
+					wollen.
+				</p>
+
+				<ul class="linkrow">
+					<li>
+						<a href="https://www.w3schools.com/html/default.asp"
+							>w3schools: HTML-Tutorial</a
+						>
+					</li>
+					<li>
+						<a href="https://www.w3schools.com/cssref/index.php"
+							>w3schools: CSS Reference</a
+						>
+					</li>
+					<li>
+						<a href="https://wiki.selfhtml.org/wiki/HTML/Tutorials/Einstieg"
+							>SelfHTML-Einstieg</a
+						>
+					</li>
+					<li><a href="https://validator.w3.org/">W3C-Validator</a></li>
+				</ul>
+
+				<nav class="pager">
+					<a href="02-css.html">← <b>2 Webseiten gestalten: CSS</b></a>
+					<a href="index.html" style="text-align: right"
+						>zurück zur <b>Übersicht →</b></a
+					>
+				</nav>
+			</div>
+
+			<aside class="minitoc">
+				<h2>Auf dieser Seite</h2>
+				<ol></ol>
+			</aside>
+		</main>
+
+		<script src="assets/examples.js"></script>
+		<script src="assets/editor.js"></script>
+		<script src="assets/site.js"></script>
+	</body>
+</html>

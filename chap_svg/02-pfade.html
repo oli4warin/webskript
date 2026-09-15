@@ -1,0 +1,1305 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>2 Pfade – SVG</title>
+		<script>
+			/* Farbschema vor dem ersten Zeichnen setzen, damit beim Laden nichts
+			   aufblitzt. Dunkel ist der Standard, siehe assets/style.css. */
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.svg.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="assets/style.css" />
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html">SVG <span>Vektorgrafik</span></a>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-grundformen.html">1 Grundformen</a>
+				<a href="02-pfade.html">2 Pfade</a>
+				<a href="03-animation.html">3 Animation</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main class="layout" data-ex-chapter="5" data-ex-offset="13">
+			<div class="content">
+				<p class="eyebrow">Abschnitt 2</p>
+				<h1>Pfade, Gruppen und Transformationen</h1>
+
+				<div class="progress" data-progress>
+					<span class="meter"><i style="width: 0"></i></span>
+					<span data-progress-text>0 von 12 Übungen erledigt</span>
+					<button type="button" data-reset>zurücksetzen</button>
+				</div>
+
+				<h2 id="pfade">Pfade</h2>
+
+				<p>
+					Neben den Grundformen gibt es noch das sogenannte Pfad-Objekt
+					<code>&lt;path&gt;</code>. Dieses ist sehr vielfältig einsetzbar und es
+					lassen sich damit unter anderem alle Grundformen aus Abschnitt 1 auch
+					als Pfad erzeugen. Ein Pfad ist durch ein einziges Attribut definiert.
+				</p>
+
+				<dl>
+					<dt><code>d</code></dt>
+					<dd>
+						Eine Liste von Punkten und anderen Informationen darüber, wie der
+						Pfad gezeichnet werden soll.
+					</dd>
+				</dl>
+
+				<p>
+					Sie können sich einen Pfad als Anleitung für einen Zeichenstift
+					vorstellen: Der Stift wird an eine Stelle gesetzt und dann Stück für
+					Stück über das Papier geführt. Jeder Befehl beginnt mit einem
+					Buchstaben. Ein <em>grosser</em> Buchstabe bedeutet dabei immer
+					<em>absolute</em> Koordinaten, ein <em>kleiner</em> Buchstabe
+					<em>relative</em> Koordinaten — also die Verschiebung gegenüber der
+					aktuellen Position des Stiftes.
+				</p>
+
+				<h3 id="moveto">MoveTo und LineTo</h3>
+
+				<p>
+					Der <code>MoveTo</code>-Befehl erlaubt es, den virtuellen Zeichenstift
+					an eine beliebige Position zu setzen.
+				</p>
+
+				<dl>
+					<dt><code>M x,y</code></dt>
+					<dd>
+						Setzt die Position des Stiftes auf die Position
+						(<em>x</em>, <em>y</em>).
+					</dd>
+					<dt><code>m x,y</code></dt>
+					<dd>
+						Setzt die Position des Stiftes von der aktuellen Position aus
+						<em>x</em> Einheiten nach rechts und <em>y</em> Einheiten nach
+						unten. Man spricht hier von <em>relativen Koordinaten</em>.
+					</dd>
+				</dl>
+
+				<p>
+					Der Befehl <code>LineTo</code> erlaubt es, geradlinige Striche zu
+					malen.
+				</p>
+
+				<dl>
+					<dt><code>L x,y</code></dt>
+					<dd>
+						Zeichnet von der aktuellen Position des Stiftes eine gerade Linie
+						bis zum Punkt (<em>x</em>, <em>y</em>).
+					</dd>
+					<dt><code>x,y</code></dt>
+					<dd>
+						Eine Abkürzung für <code>L x,y</code>. Wird kein Steuerbefehl vor
+						den Koordinaten eines Punktes angegeben, wird der letzte Befehl
+						wiederholt; nach einem <code>MoveTo</code> ist das ein
+						<code>LineTo</code>.
+					</dd>
+					<dt><code>l dx,dy</code></dt>
+					<dd>
+						Zeichnet von der aktuellen Position aus eine geradlinige Linie um
+						<em>dx</em> Einheiten nach rechts und <em>dy</em> Einheiten nach
+						unten. (<em>relative Koordinaten</em>)
+					</dd>
+					<dt><code>H x</code> und <code>V y</code></dt>
+					<dd>
+						Zeichnen eine waagrechte beziehungsweise senkrechte Linie. Es
+						braucht nur eine Koordinate, die andere bleibt unverändert.
+					</dd>
+				</dl>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="lineto.svg"></pre>
+							<figcaption>
+								<b>Listing 1.</b> MoveTo- und LineTo-Befehl
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/lineto.svg"
+									>lineto.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="lineto.svg" data-height="160"></iframe>
+							<figcaption>
+								Zwei Striche: Der zweite nutzt die Abkürzung ohne Buchstaben.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="lineto-relative.svg"></pre>
+							<figcaption>
+								<b>Listing 2.</b> MoveTo- und LineTo-Befehl mit relativen
+								Koordinaten
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/lineto-relative.svg"
+									>lineto-relative.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="lineto-relative.svg" data-height="160"></iframe>
+							<figcaption>
+								Derselbe Aufbau, aber mit kleinen Buchstaben: Die Zahlen sind
+								jetzt Verschiebungen.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<h3 id="closepath">Pfad schliessen</h3>
+
+				<p>
+					Der Befehl <code>closePath</code> schliesst den aktuellen Pfad.
+				</p>
+
+				<dl>
+					<dt><code>Z</code></dt>
+					<dd>Schliesst den aktuellen Pfad.</dd>
+				</dl>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="closepath.svg"></pre>
+							<figcaption>
+								<b>Listing 3.</b> Pfad schliessen
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/closepath.svg"
+									>closepath.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="closepath.svg" data-height="160"></iframe>
+							<figcaption>
+								Der Pfad zeichnet nur zwei Seiten — das <code>Z</code> ergänzt
+								die dritte und macht das Dreieck füllbar.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<h3 id="quadratisch">Quadratische Bézierkurven</h3>
+
+				<p>
+					Quadratische Bézierkurven sind Kurven, die durch zwei gegebene Punkte
+					verlaufen und die durch einen Kontrollpunkt beeinflusst werden. Man
+					kann sich das so vorstellen, dass die geradlinige Verbindung zwischen
+					den gegebenen Punkten «in Richtung» des Kontrollpunkts gezogen wird.
+					Wie dies mathematisch genau funktioniert, ist hier nicht unser
+					Thema — Genaueres finden Sie zum Beispiel bei
+					<a href="https://prlbr.de/2016/quadratische-funktion-bezierkurve/"
+						>Martin Janecke, «Quadratische Funktion → Bézierkurve»</a
+					>.
+				</p>
+
+				<figure class="diagram">
+					<svg viewBox="0 0 720 200" width="680" aria-hidden="true">
+						<g
+							stroke="currentColor"
+							fill="currentColor"
+							font-size="12"
+							font-family="sans-serif"
+						>
+							<!-- Kontrollpunkt oberhalb der Verbindungslinie -->
+							<g transform="translate(100, 150)">
+								<polyline
+									points="0 0 50 -70 100 0"
+									fill="none"
+									stroke-width="1"
+								/>
+								<path
+									d="M 0 0 Q 50 -70 100 0"
+									fill="none"
+									stroke="#e05252"
+									stroke-width="3"
+								/>
+								<circle cx="0" cy="0" r="3.5" stroke="none" fill="#4a7fd0" />
+								<circle cx="100" cy="0" r="3.5" stroke="none" fill="#4a7fd0" />
+								<circle cx="50" cy="-70" r="3.5" stroke="none" />
+								<g stroke="none" text-anchor="middle">
+									<text x="0" y="18">Punkt 1</text>
+									<text x="100" y="18">Punkt 2</text>
+									<text x="50" y="-80">Kontrollpunkt</text>
+								</g>
+							</g>
+							<!-- Kontrollpunkt unterhalb und aussen -->
+							<g transform="translate(320, 70)">
+								<polyline
+									points="0 0 110 95 100 0"
+									fill="none"
+									stroke-width="1"
+								/>
+								<path
+									d="M 0 0 Q 110 95 100 0"
+									fill="none"
+									stroke="#e05252"
+									stroke-width="3"
+								/>
+								<circle cx="0" cy="0" r="3.5" stroke="none" fill="#4a7fd0" />
+								<circle cx="100" cy="0" r="3.5" stroke="none" fill="#4a7fd0" />
+								<circle cx="110" cy="95" r="3.5" stroke="none" />
+								<g stroke="none" text-anchor="middle">
+									<text x="0" y="-10">Punkt 1</text>
+									<text x="100" y="-10">Punkt 2</text>
+									<text x="110" y="112">Kontrollpunkt</text>
+								</g>
+							</g>
+							<!-- Kontrollpunkt links ausserhalb -->
+							<g transform="translate(600, 150)">
+								<polyline
+									points="0 0 -70 -70 70 0"
+									fill="none"
+									stroke-width="1"
+								/>
+								<path
+									d="M 0 0 Q -70 -70 70 0"
+									fill="none"
+									stroke="#e05252"
+									stroke-width="3"
+								/>
+								<circle cx="0" cy="0" r="3.5" stroke="none" fill="#4a7fd0" />
+								<circle cx="70" cy="0" r="3.5" stroke="none" fill="#4a7fd0" />
+								<circle cx="-70" cy="-70" r="3.5" stroke="none" />
+								<g stroke="none" text-anchor="middle">
+									<text x="-14" y="18">Punkt 1</text>
+									<text x="84" y="18">Punkt 2</text>
+									<text x="-70" y="-80">Kontrollpunkt</text>
+								</g>
+							</g>
+						</g>
+					</svg>
+					<figcaption>
+						Drei Beispiele von quadratischen Bézierkurven. Die dünnen Linien
+						gehören nicht zur Kurve; sie zeigen nur, wo der Kontrollpunkt liegt.
+						Der Kontrollpunkt muss nicht zwischen den beiden Punkten liegen.
+					</figcaption>
+				</figure>
+
+				<dl>
+					<dt><code>Q xc yc x y</code></dt>
+					<dd>
+						Verbindet die aktuelle Position mit dem Punkt
+						(<em>x</em>, <em>y</em>) mit einer quadratischen Bézierkurve mit dem
+						Kontrollpunkt (<em>xc</em>, <em>yc</em>).
+					</dd>
+					<dt><code>q xc yc x y</code></dt>
+					<dd>Analog mit relativen Koordinaten.</dd>
+					<dt><code>T x y</code></dt>
+					<dd>
+						Verbindet die aktuelle Position mit dem Punkt
+						(<em>x</em>, <em>y</em>) mit einer quadratischen Bézierkurve. Falls
+						das letzte Stück des Pfades auch eine quadratische Bézierkurve ist,
+						wird der letzte Kontrollpunkt an der aktuellen Position gespiegelt
+						und das Resultat als Kontrollpunkt verwendet. Andernfalls wird die
+						aktuelle Position selbst als Kontrollpunkt benutzt.
+					</dd>
+					<dt><code>t x y</code></dt>
+					<dd>Analog mit relativen Koordinaten.</dd>
+				</dl>
+
+				<p>
+					Der Befehl <code>T</code> ist genau das, was wir für eine
+					«Wellenlinie» brauchen: Jedes neue Stück setzt die Kurve glatt fort,
+					ohne dass wir den Kontrollpunkt erneut ausrechnen müssen.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="path.svg"></pre>
+							<figcaption>
+								<b>Listing 4.</b> Pfad
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/path.svg"
+									>path.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="path.svg" data-height="160"></iframe>
+							<figcaption>
+								Ein <code>q</code> und zwei <code>t</code> ergeben eine
+								Wellenlinie aus drei Bögen.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<!-- Hier stand ein Portrait von Pierre Bezier. Wikimedia Commons hat die
+				     Datei am 6. August 2024 als Urheberrechtsverletzung geloescht (sie war
+				     schon vor dem Upload anderswo im Netz zu finden), und ein frei
+				     lizenziertes Bild von ihm gibt es dort nicht. Darum nur der Text. -->
+				<p>
+					Pierre Bézier (1910–1999) entwickelte diese Kurven bei Renault für den
+					Autobau.
+				</p>
+
+				<h3 id="kubisch">Kubische Bézierkurven</h3>
+
+				<p>
+					Neben den quadratischen gibt es auch <em>kubische</em> Bézierkurven.
+					Diese funktionieren ähnlich, verwenden aber <em>zwei</em>
+					Kontrollpunkte — einen für jedes Ende der Kurve. Damit lassen sich
+					Formen zeichnen, die sich unterwegs in die andere Richtung krümmen, was
+					mit einer quadratischen Kurve nicht möglich ist.
+				</p>
+
+				<dl>
+					<dt><code>C x1 y1 x2 y2 x y</code></dt>
+					<dd>
+						Verbindet die aktuelle Position mit dem Punkt
+						(<em>x</em>, <em>y</em>). Dabei ist (<em>x1</em>, <em>y1</em>) der
+						Kontrollpunkt für den Anfang und (<em>x2</em>, <em>y2</em>)
+						derjenige für das Ende der Kurve.
+					</dd>
+					<dt><code>S x2 y2 x y</code></dt>
+					<dd>
+						Wie <code>C</code>, aber der erste Kontrollpunkt wird gespiegelt —
+						analog zu <code>T</code> bei den quadratischen Kurven.
+					</dd>
+					<dt><code>c</code> und <code>s</code></dt>
+					<dd>Analog mit relativen Koordinaten.</dd>
+				</dl>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="cubic-bezier.svg"></pre>
+							<figcaption>
+								<b>Listing 5.</b> Kubische Bézierkurve
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/cubic-bezier.svg"
+									>cubic-bezier.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="cubic-bezier.svg" data-height="160"></iframe>
+							<figcaption>
+								Beide Kontrollpunkte liegen oben: Die Kurve startet und endet
+								senkrecht.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<h3 id="boegen">Elliptische Bögen</h3>
+
+				<p>
+					Mit dem Befehl <code>A</code> (beziehungsweise <code>a</code>) lassen
+					sich Kreis- und Ellipsenbögen zeichnen. Das ist der Befehl mit den
+					meisten Parametern, denn durch zwei Punkte und zwei Radien sind immer
+					<em>vier</em> verschiedene Bögen möglich; zwei Schalter wählen den
+					gewünschten aus.
+				</p>
+
+				<dl>
+					<dt><code>A rx ry phi lf sf x y</code></dt>
+					<dd>
+						Zeichnet von der aktuellen Position aus einen elliptischen Bogen bis
+						zum Punkt (<em>x</em>, <em>y</em>).
+					</dd>
+					<dt><code>rx</code></dt>
+					<dd>Die Länge der horizontalen Halbachse.</dd>
+					<dt><code>ry</code></dt>
+					<dd>Die Länge der vertikalen Halbachse.</dd>
+					<dt><code>phi</code></dt>
+					<dd>
+						Der Winkel, um den die Ellipse gedreht ist. Für einen Kreisbogen
+						spielt er keine Rolle, wir setzen ihn dann auf 0.
+					</dd>
+					<dt><code>lf</code></dt>
+					<dd>
+						Das <em>large-arc-flag</em>. Mit 1 wird der längere der beiden
+						möglichen Bögen gezeichnet, mit 0 der kürzere.
+					</dd>
+					<dt><code>sf</code></dt>
+					<dd>
+						Das <em>sweep-flag</em>. Es bestimmt, auf welcher Seite der
+						Verbindungslinie der Bogen liegt.
+					</dd>
+				</dl>
+
+				<div class="split">
+					<figure class="demo">
+						<iframe data-src="arc-sweep.svg" data-height="200"></iframe>
+						<figcaption>
+							Wirkung des <em>sweep-flags</em>: Beide Bögen haben dieselben
+							Endpunkte und denselben Radius.
+						</figcaption>
+					</figure>
+					<figure class="demo">
+						<iframe data-src="arc-large.svg" data-height="200"></iframe>
+						<figcaption>
+							Wirkung des <em>large-arc-flags</em>: der kürzere und der längere
+							der beiden Bögen.
+						</figcaption>
+					</figure>
+				</div>
+
+				<p>
+					Ein häufiger Anwendungsfall ist ein Kreissektor, also ein
+					«Tortenstück»: Vom Mittelpunkt mit <code>L</code> an den Rand, mit
+					<code>A</code> entlang des Kreises und mit <code>Z</code> zurück zum
+					Mittelpunkt.
+				</p>
+
+				<table class="data">
+					<thead>
+						<tr>
+							<th>Befehl</th>
+							<th>Bedeutung</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>M x y</code></td>
+							<td>Stift an (<em>x</em>, <em>y</em>) setzen, ohne zu zeichnen</td>
+						</tr>
+						<tr>
+							<td><code>L x y</code></td>
+							<td>Gerade Linie nach (<em>x</em>, <em>y</em>)</td>
+						</tr>
+						<tr>
+							<td><code>H x</code></td>
+							<td>Waagrechte Linie</td>
+						</tr>
+						<tr>
+							<td><code>V y</code></td>
+							<td>Senkrechte Linie</td>
+						</tr>
+						<tr>
+							<td><code>Q xc yc x y</code></td>
+							<td>Quadratische Bézierkurve</td>
+						</tr>
+						<tr>
+							<td><code>T x y</code></td>
+							<td>Quadratische Bézierkurve, Kontrollpunkt gespiegelt</td>
+						</tr>
+						<tr>
+							<td><code>C x1 y1 x2 y2 x y</code></td>
+							<td>Kubische Bézierkurve</td>
+						</tr>
+						<tr>
+							<td><code>S x2 y2 x y</code></td>
+							<td>Kubische Bézierkurve, Kontrollpunkt gespiegelt</td>
+						</tr>
+						<tr>
+							<td><code>A rx ry phi lf sf x y</code></td>
+							<td>Elliptischer Bogen</td>
+						</tr>
+						<tr>
+							<td><code>Z</code></td>
+							<td>Pfad schliessen</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<p>
+					Übersicht über die Pfadbefehle. Der kleine Buchstabe bedeutet jeweils
+					dasselbe mit relativen Koordinaten.
+				</p>
+
+				<div class="box box--note">
+					<p class="box__label">Bemerkung</p>
+					<p>
+						Es empfiehlt sich, wenn immer sinnvoll, mit relativen Koordinaten zu
+						arbeiten. So wird es zum Beispiel wesentlich einfacher, einen ganzen
+						Pfad zu verschieben.
+					</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="translate.svg"></pre>
+							<figcaption>
+								<b>Listing 6.</b> Mehrmals die gleiche verschobene Kurve
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/translate.svg"
+									>translate.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="translate.svg" data-height="180"></iframe>
+							<figcaption>
+								Nur die vier <code>M</code>-Befehle unterscheiden sich — der Rest
+								der Kurve ist viermal derselbe Text.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<h2 id="gruppen">Gruppieren und Transformieren</h2>
+
+				<p>
+					Sobald eine Zeichnung aus mehr als ein paar Formen besteht, möchten wir
+					mehrere Formen gemeinsam behandeln. Dafür gibt es das
+					<code>&lt;g&gt;</code>-Tag (für <em>group</em>). Attribute, die wir an
+					der Gruppe setzen, gelten für alle Formen darin — wir müssen sie also
+					nur einmal schreiben. Setzt eine Form das Attribut selbst, gewinnt die
+					Form.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="group.svg"></pre>
+							<figcaption>
+								<b>Listing 7.</b> Gemeinsame Attribute für eine Gruppe
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/group.svg"
+									>group.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="group.svg" data-height="160"></iframe>
+							<figcaption>
+								Alle drei Formen erben Füllung, Randfarbe und Randbreite von der
+								Gruppe.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<p>
+					Der eigentliche Grund für Gruppen ist aber das Attribut
+					<code>transform</code>. Damit verschieben, drehen und skalieren wir
+					eine Form oder eine ganze Gruppe, <em>ohne</em> alle Koordinaten neu
+					ausrechnen zu müssen:
+				</p>
+
+				<dl>
+					<dt><code>translate(dx, dy)</code></dt>
+					<dd>
+						Verschiebt um <em>dx</em> nach rechts und <em>dy</em> nach unten.
+					</dd>
+					<dt><code>rotate(winkel)</code></dt>
+					<dd>
+						Dreht um den Ursprung (0, 0). Der Winkel wird in Grad angegeben, und
+						weil die <em>y</em>-Achse nach unten zeigt, dreht ein positiver
+						Winkel im Uhrzeigersinn. Mit <code>rotate(winkel, cx, cy)</code>
+						drehen wir stattdessen um den Punkt
+						(<code>cx</code>, <code>cy</code>).
+					</dd>
+					<dt><code>scale(faktor)</code></dt>
+					<dd>
+						Streckt vom Ursprung aus. Mit <code>scale(fx, fy)</code> können wir
+						in <em>x</em>- und <em>y</em>-Richtung unterschiedlich strecken.
+					</dd>
+				</dl>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="transform.svg"></pre>
+							<figcaption>
+								<b>Listing 8.</b> Verschieben, drehen und skalieren
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/transform.svg"
+									>transform.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="transform.svg" data-height="220"></iframe>
+							<figcaption>
+								Viermal dasselbe Rechteck: unverändert (grau), verschoben (rot),
+								verschoben und gedreht (blau), verschoben und gestreckt (grün).
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<div class="box box--note">
+					<p class="box__label">Bemerkung</p>
+					<p>
+						Schreiben wir mehrere Transformationen in ein Attribut, so werden sie
+						<em>von rechts nach links</em> angewendet. Bei
+						<code>transform="translate(100,0) rotate(45)"</code> wird also zuerst
+						gedreht und dann verschoben. Das ist etwas anderes als zuerst
+						verschieben und dann drehen — probieren Sie es aus! Mehr dazu finden
+						Sie bei
+						<a
+							href="https://www.w3schools.com/graphics/svg_transformations.asp"
+							>w3schools, SVG-Transformationen</a
+						>.
+					</p>
+				</div>
+
+				<h2 id="benennen">Einzelne Elemente benennen und nutzen</h2>
+
+				<p>
+					Bilder bestehen oft aus mehreren gleichen oder mindestens ähnlichen
+					Teilen. Es ist daher sinnvoll, wenn wir gewisse Objekte mit einem Namen
+					versehen und diese dann wiederverwenden.
+				</p>
+
+				<p>
+					Wir können dazu, wie in HTML, einzelne Objekte mit einer ID versehen
+					und diese dann wieder verwenden. Dafür verwenden wir das Tag
+					<code>&lt;use&gt;</code>.
+				</p>
+
+				<p>
+					Als Beispiel ist hier eine entsprechende Variante der Grafik von
+					Listing 6.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="translate-improved.svg"></pre>
+							<figcaption>
+								<b>Listing 9.</b> Kurve mehrmals benutzen
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/translate-improved.svg"
+									>translate-improved.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="translate-improved.svg" data-height="180"></iframe>
+							<figcaption>
+								Dasselbe Bild wie vorher — die Kurve steht aber nur noch einmal
+								im Code.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<p>
+					In den meisten Fällen ist es jedoch ratsam, zunächst einen Prototyp des
+					betreffenden Objektes zu erstellen, welcher anschliessend in einem
+					zweiten Schritt gezeichnet wird, sobald das Objekt aufgerufen und mit
+					Attributen ergänzt wird.
+				</p>
+
+				<p>
+					Für die Umsetzung der obigen Anforderungen ist das
+					<code>&lt;defs&gt;</code>-Tag erforderlich. Dieses ermöglicht die
+					Definition von Objekten sowie deren Benennung, wobei eine direkte
+					Zeichnung erst nach Aufruf der Objekte mittels des
+					<code>&lt;use&gt;</code>-Tags erfolgt. Bei Aufruf können zudem
+					zusätzliche Optionen angegeben werden.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing" id="listing-defs">
+							<pre data-src="defs-example.svg"></pre>
+							<figcaption>
+								<b>Listing 10.</b> Objekte vordefinieren
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/defs-example.svg"
+									>defs-example.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="defs-example.svg" data-height="200"></iframe>
+							<figcaption>
+								Ein Dreieck, dreimal benutzt: verschoben, gedreht und je in einer
+								anderen Farbe.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<p>
+					Ein <code>&lt;use&gt;</code>-Tag versteht neben
+					<code>transform</code> auch die Attribute <code>x</code> und
+					<code>y</code>. Diese verschieben die Kopie — was Sie sich als
+					abgekürztes <code>translate</code> merken können.
+				</p>
+
+				<h3 id="clipping">Clipping</h3>
+
+				<p>
+					<em>Clipping</em> ist eine Methode, bei der man einen Teil des Bildes
+					zeigt und den Rest versteckt. Diese Methode wird oft bei Profilbildern
+					verwendet. Dabei wird das Bild mit einem Kreis überlagert. Nur der
+					Teil, der innerhalb des Kreises liegt, wird angezeigt. Man sagt dazu
+					auch <em>masking</em>. Das wird aber mehr bei Rastergrafiken verwendet,
+					weil die Maske dort sagt, welche Pixel gezeichnet werden und welche
+					nicht. Bei Vektorgrafiken wird geometrisch bestimmt, was gezeichnet
+					wird. Deshalb spricht man dort von Clipping.
+				</p>
+
+				<p>
+					Um dies zu bewerkstelligen, nutzen wir das
+					<code>&lt;clipPath&gt;</code>-Tag und versehen es mit einer ID. Diese
+					ID geben wir anschliessend dem Objekt, das beschnitten werden soll, im
+					Attribut <code>clip-path</code> mit — und zwar in der Form
+					<code>clip-path="url(#meine-id)"</code>.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="clipping-example.svg"></pre>
+							<figcaption>
+								<b>Listing 11.</b> Beispiel von Clipping
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/clipping-example.svg"
+									>clipping-example.svg</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe data-src="clipping-example.svg" data-height="200"></iframe>
+							<figcaption>
+								Der blaue Umriss zeigt das ganze Dreieck; rot gefüllt ist nur der
+								Teil innerhalb des Kreises.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<h2 id="uebungen">Übungen</h2>
+
+				<!-- ============================================== Übung 5.14 -->
+				<section class="exercise" id="ex-stairs">
+					<div class="exercise__body">
+						<p>Erstellen Sie die folgende SVG-Grafik.</p>
+
+						<figure class="demo" style="max-width: 22rem">
+							<iframe data-src="stairs.svg" data-height="180"></iframe>
+							<figcaption>Das Ziel.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb14"
+							data-files="svg"
+							data-sol-svg="stairs.svg"
+							data-height="300"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="stairs.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/stairs.svg"
+											>stairs.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.15 -->
+				<section class="exercise" id="ex-hexagon">
+					<div class="exercise__body">
+						<p>
+							Zeichnen Sie ein grün gefülltes Sechseck mit violettem Rand.
+						</p>
+
+						<figure class="demo" style="max-width: 20rem">
+							<iframe data-src="hexagon.svg" data-height="200"></iframe>
+							<figcaption>Das Ziel.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb15"
+							data-files="svg"
+							data-sol-svg="hexagon.svg"
+							data-height="300"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="hexagon.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/hexagon.svg"
+											>hexagon.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.16 -->
+				<section class="exercise" id="ex-star">
+					<div class="exercise__body">
+						<p>Zeichnen Sie einen fünfzackigen rot gefüllten Stern.</p>
+
+						<figure class="demo" style="max-width: 20rem">
+							<iframe data-src="star.svg" data-height="200"></iframe>
+							<figcaption>Das Ziel.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb16"
+							data-files="svg"
+							data-sol-svg="star.svg"
+							data-height="300"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="star.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/star.svg"
+											>star.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.17 -->
+				<section class="exercise" id="ex-eight">
+					<div class="exercise__body">
+						<p>Erstellen Sie die folgende SVG-Grafik.</p>
+
+						<div class="box box--note">
+							<p class="box__label">Hinweis</p>
+							<p>Verwenden Sie Bézierkurven.</p>
+						</div>
+
+						<figure class="demo" style="max-width: 20rem">
+							<iframe data-src="eight.svg" data-height="220"></iframe>
+							<figcaption>Das Ziel.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb17"
+							data-files="svg"
+							data-sol-svg="eight.svg"
+							data-height="300"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="eight.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/eight.svg"
+											>eight.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.18 -->
+				<section class="exercise" id="ex-heart">
+					<div class="exercise__body">
+						<p>Zeichnen Sie ein Herz mit kubischen Bézierkurven.</p>
+
+						<div class="box box--note">
+							<p class="box__label">Hinweis</p>
+							<p>
+								Beginnen Sie unten an der Spitze und arbeiten Sie sich über die
+								linke Seite nach oben. Eine Hälfte besteht aus zwei Kurven.
+							</p>
+						</div>
+
+						<figure class="demo" style="max-width: 18rem">
+							<iframe data-src="heart.svg" data-height="220"></iframe>
+							<figcaption>Das Ziel.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb18"
+							data-files="svg"
+							data-sol-svg="heart.svg"
+							data-height="300"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="heart.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/heart.svg"
+											>heart.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.19 -->
+				<section class="exercise" id="ex-piechart">
+					<div class="exercise__body">
+						<p>
+							Zeichnen Sie ein Kreisdiagramm mit den drei Anteilen 50 %, 25 %
+							und 25 %.
+						</p>
+
+						<div class="box box--note">
+							<p class="box__label">Hinweis</p>
+							<p>
+								Jedes Tortenstück ist ein eigener Pfad aus einer Linie, einem
+								Bogen und <code>Z</code>. Überlegen Sie zuerst, wo die Grenzen
+								zwischen den Sektoren auf dem Kreis liegen.
+							</p>
+						</div>
+
+						<figure class="demo" style="max-width: 18rem">
+							<iframe data-src="pie-chart.svg" data-height="220"></iframe>
+							<figcaption>Das Ziel.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb19"
+							data-files="svg"
+							data-sol-svg="pie-chart.svg"
+							data-height="320"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="pie-chart.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/pie-chart.svg"
+											>pie-chart.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.20 -->
+				<section class="exercise" id="ex-trafficlight">
+					<div class="exercise__body">
+						<p>
+							Zeichnen Sie eine Verkehrsampel. Die drei Lampen sollen ihre
+							gemeinsamen Attribute von einer Gruppe erben.
+						</p>
+
+						<figure class="demo" style="max-width: 12rem">
+							<iframe data-src="traffic-light.svg" data-height="260"></iframe>
+							<figcaption>Das Ziel.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb20"
+							data-files="svg"
+							data-sol-svg="traffic-light.svg"
+							data-height="320"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="traffic-light.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/traffic-light.svg"
+											>traffic-light.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.21 -->
+				<section class="exercise" id="ex-defstriangle">
+					<div class="exercise__body">
+						<p>
+							Erstellen Sie eine SVG-Grafik, in der Sie ein Dreieck mit Hilfe
+							des <code>&lt;defs&gt;</code>-Tags definieren und 4-mal in
+							verschiedenen Farben wiederverwenden. Die Dreiecke sollen alle
+							verschoben und rotiert sein.
+						</p>
+
+						<div class="box box--note">
+							<p class="box__label">Hinweis</p>
+							<ul>
+								<li><a href="#listing-defs">Listing 10</a> auf dieser Seite.</li>
+								<li>
+									<a
+										href="https://www.w3schools.com/graphics/svg_transformations.asp"
+										>w3schools, SVG-Transformationen</a
+									>
+								</li>
+							</ul>
+						</div>
+
+						<div
+							class="workbench"
+							data-id="wb21"
+							data-files="svg"
+							data-height="320"
+						></div>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.22 -->
+				<section class="exercise" id="ex-flower">
+					<div class="exercise__body">
+						<p>
+							Zeichnen Sie eine Blume mit sechs gleichen Blütenblättern.
+							Definieren Sie ein Blütenblatt genau einmal und drehen Sie die
+							Kopien um die Blütenmitte.
+						</p>
+
+						<div class="box box--note">
+							<p class="box__label">Hinweis</p>
+							<p>
+								Legen Sie die Blütenmitte in den Ursprung. Dann dreht
+								<code>rotate</code> von sich aus um den richtigen Punkt.
+							</p>
+						</div>
+
+						<figure class="demo" style="max-width: 18rem">
+							<iframe data-src="flower.svg" data-height="220"></iframe>
+							<figcaption>Das Ziel.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb22"
+							data-files="svg"
+							data-sol-svg="flower.svg"
+							data-height="320"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="flower.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/flower.svg"
+											>flower.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.23 -->
+				<section class="exercise" id="ex-olympic">
+					<div class="exercise__body">
+						<p>
+							Zeichnen Sie die olympischen Ringe. Definieren Sie dazu einen Ring
+							genau einmal und verwenden Sie ihn fünf Mal mit unterschiedlicher
+							Farbe.
+						</p>
+
+						<div class="box box--note">
+							<p class="box__label">Hinweis</p>
+							<p>
+								Ein Ring ist ein Kreis mit <code>fill="none"</code>. Die Farbe
+								geben Sie erst beim <code>&lt;use&gt;</code>-Tag an.
+							</p>
+						</div>
+
+						<figure class="demo" style="max-width: 26rem">
+							<iframe data-src="olympic-rings.svg" data-height="200"></iframe>
+							<figcaption>Das Ziel.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb23"
+							data-files="svg"
+							data-sol-svg="olympic-rings.svg"
+							data-height="320"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="olympic-rings.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/olympic-rings.svg"
+											>olympic-rings.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.24 -->
+				<section class="exercise" id="ex-intersection">
+					<div class="exercise__body">
+						<p>
+							Erstellen Sie das Bild der Schnittmenge von zwei Kreisen.
+						</p>
+
+						<figure class="demo" style="max-width: 20rem">
+							<iframe data-src="circle-intersection.svg" data-height="200"></iframe>
+							<figcaption>Das Ziel.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb24"
+							data-files="svg"
+							data-sol-svg="circle-intersection.svg"
+							data-height="320"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="circle-intersection.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/circle-intersection.svg"
+											>circle-intersection.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 5.25 -->
+				<section class="exercise" id="ex-starstripes">
+					<div class="exercise__body">
+						<p>
+							Zeichnen Sie fünf farbige waagrechte Streifen und beschneiden Sie
+							diese so, dass nur der Teil innerhalb eines Sterns sichtbar
+							bleibt. Der Stern soll zusätzlich mit einer schwarzen Umrisslinie
+							versehen sein.
+						</p>
+
+						<div class="box box--note">
+							<p class="box__label">Hinweis</p>
+							<p>
+								Definieren Sie den Stern in einem
+								<code>&lt;defs&gt;</code>-Tag. So können Sie ihn sowohl im
+								<code>&lt;clipPath&gt;</code> als auch für den Umriss verwenden.
+							</p>
+						</div>
+
+						<figure class="demo" style="max-width: 20rem">
+							<iframe data-src="star-stripes.svg" data-height="220"></iframe>
+							<figcaption>Das Ziel.</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb25"
+							data-files="svg"
+							data-sol-svg="star-stripes.svg"
+							data-height="320"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="star-stripes.svg"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/svg/star-stripes.svg"
+											>star-stripes.svg</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<nav class="pager">
+					<a href="01-grundformen.html">← Abschnitt 1 <b>Grundformen</b></a>
+					<a href="03-animation.html" style="text-align: right"
+						>Abschnitt 3 <b>Animationen →</b></a
+					>
+				</nav>
+			</div>
+
+			<aside class="minitoc">
+				<h2>Auf dieser Seite</h2>
+				<ol></ol>
+			</aside>
+		</main>
+
+		<script src="assets/examples.js"></script>
+		<script src="assets/editor.js"></script>
+		<script src="assets/site.js"></script>
+	</body>
+</html>

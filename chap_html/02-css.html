@@ -1,0 +1,2002 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>2 Webseiten gestalten: CSS</title>
+		<script>
+			/* Farbschema vor dem ersten Zeichnen setzen, damit beim Laden nichts
+			   aufblitzt. Dunkel ist der Standard, siehe assets/style.css. */
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.html.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="assets/style.css" />
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html">HTML und <span>CSS</span></a>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-html.html">1 HTML</a>
+				<a href="02-css.html">2 CSS</a>
+				<a href="03-projekt.html">3 Projekt</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main class="layout" data-ex-chapter="3" data-ex-offset="14">
+			<div class="content">
+				<p class="eyebrow">Abschnitt 2</p>
+				<h1>Webseiten gestalten: CSS</h1>
+
+				<div class="progress" data-progress>
+					<span class="meter"><i style="width: 0"></i></span>
+					<span data-progress-text>0 von 23 Übungen erledigt</span>
+					<button type="button" data-reset>zurücksetzen</button>
+				</div>
+
+				<h2 id="whatiscss">Was ist CSS?</h2>
+
+				<p>
+					CSS (<em>C</em>ascading <em>S</em>tyle <em>S</em>heets) ist eine
+					Sprache, die verwendet wird, um das Erscheinungsbild von Webseiten zu
+					gestalten. Sie gibt an, wie die Elemente von HTML aussehen,
+					einschliesslich ihrer Anordnung, Farben und Schriftarten.
+				</p>
+
+				<p>
+					CSS spart viel Arbeit. Es kann das Layout mehrerer Webseiten
+					gleichzeitig steuern und verändern. Externe Stylesheets werden in
+					CSS-Dateien gespeichert.
+				</p>
+
+				<p>
+					HTML war niemals dazu gedacht, Tags zur Formatierung einer Webseite zu
+					enthalten.
+				</p>
+
+				<p>
+					HTML wurde entwickelt, um den Inhalt einer Webseite zu beschreiben,
+					also um Überschriften, Paragraphen etc. festzulegen.
+				</p>
+
+				<p>
+					Als Tags wie <code>&lt;font&gt;</code> und Farbattribute zur
+					HTML-3.2-Spezifikation hinzugefügt wurden, begann ein Albtraum für
+					Webentwickler. Die Entwicklung grosser Webseiten, bei denen
+					Schriftarten und Farbinformationen auf jeder einzelnen Seite
+					hinzugefügt wurden, wurde zu einem langen und teuren Prozess.
+				</p>
+
+				<p>
+					Um dieses Problem zu lösen, hat das World Wide Web Consortium (W3C)
+					CSS entwickelt. Damit wurde die Formatierung aus dem HTML-Dokument
+					herausgelöst und von CSS übernommen.
+				</p>
+
+				<h2 id="zusammenspiel">Zusammenspiel von HTML und CSS</h2>
+
+				<p>
+					Wenn ein Browser ein Stylesheet liest, wird er das HTML-Dokument
+					gemäss den Informationen im Stylesheet formatieren. Es gibt drei
+					Möglichkeiten, um ein Stylesheet einzufügen.
+				</p>
+
+				<p>
+					Wir schauen uns nun alle drei Varianten an, um die HTML-Seite von
+					<a href="01-html.html#listing-first">Listing 1</a> so zu formatieren, wie es
+					die folgende Vorschau zeigt.
+				</p>
+
+				<figure class="demo">
+					<iframe
+						data-src="firstcss/first-css-example.html"
+						data-css="firstcss/style.css"
+						data-height="320"
+					></iframe>
+					<figcaption>Die Webseite mit CSS.</figcaption>
+				</figure>
+
+				<dl class="deflist">
+					<div>
+						<dt>Inline CSS</dt>
+						<dd>
+							<p>
+								Dabei wird innerhalb eines Eröffnungstags das
+								<code>style</code>-Attribut verwendet, um den Inhalt des
+								Elements zu formatieren. Diese Variante wird schnell
+								unübersichtlich und sollte vermieden werden.
+							</p>
+							<figure class="listing" id="listing-inline">
+								<pre
+									data-src="firstcss/inline.html"
+									data-lines="9-21"
+									data-linenos
+									data-hl="9,10"
+								></pre>
+								<figcaption>
+									<b>Listing 12.</b> Beispiel von Inline CSS hervorgehoben
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/firstcss/inline.html"
+										>firstcss/inline.html</a
+									>)
+								</figcaption>
+							</figure>
+						</dd>
+					</div>
+					<div>
+						<dt>Internes CSS</dt>
+						<dd>
+							<p>
+								Dabei wird mit einem <code>&lt;style&gt;</code>-Tag gearbeitet.
+								Dieses wird innerhalb der HTML-Datei im Header eingefügt. Diese
+								Variante ist etwas besser als Inline CSS. Jedoch ist es am
+								sinnvollsten, die Struktur (HTML) und die Gestaltung (CSS) zu
+								trennen.
+							</p>
+							<figure class="listing">
+								<pre
+									data-src="firstcss/style-tag.html"
+									data-lines="3-18"
+									data-linenos
+									data-hl="6-16"
+								></pre>
+								<figcaption>
+									<b>Listing 13.</b> Beispiel eines internen
+									<code>&lt;style&gt;</code>-Tags hervorgehoben
+								</figcaption>
+							</figure>
+						</dd>
+					</div>
+					<div>
+						<dt>Externes CSS</dt>
+						<dd>
+							<p>
+								Um eine saubere Trennung von Struktur (HTML) und Gestaltung
+								(CSS) zu erreichen, können Stylesheets als externe Dateien in
+								Webseiten eingebunden werden. Damit können Styles auch auf
+								mehreren Webseiten angewendet werden und müssen nicht immer
+								wiederholt werden.
+							</p>
+							<p>
+								Um eine CSS-Datei namens <code>style.css</code> einzubinden,
+								fügen wir im «<code>&lt;head&gt;</code>» die in Listing 14
+								hervorgehobene Zeile hinzu.
+							</p>
+							<p>
+								Die Datei <code>style.css</code> ist eine Textdatei mit
+								Anweisungen darüber, wie die einzelnen HTML-Elemente dargestellt
+								werden sollen.
+							</p>
+							<div class="split">
+								<figure class="listing">
+									<pre
+										data-src="firstcss/first-css-example.html"
+										data-lines="3-8"
+										data-linenos
+										data-hl="6"
+									></pre>
+									<figcaption>
+										<b>Listing 14.</b> Externe CSS-Datei einbinden
+									</figcaption>
+								</figure>
+								<figure class="listing">
+									<pre data-src="firstcss/style.css"></pre>
+									<figcaption>
+										<b>Listing 15.</b> Externe CSS-Datei
+										<code>style.css</code>
+									</figcaption>
+								</figure>
+							</div>
+							<p>Wir werden ab sofort immer mit dieser Variante arbeiten.</p>
+						</dd>
+					</div>
+				</dl>
+
+				<div class="box box--note">
+					<p class="box__label">In der Werkbank</p>
+					<p>
+						Die Werkbank auf dieser Seite arbeitet genau so: Der Reiter
+						<code>style.css</code> ist die externe Datei, und das
+						<code>&lt;link rel="stylesheet" href="style.css"&gt;</code> im
+						<code>&lt;head&gt;</code> bindet sie ein. Nehmen Sie das
+						<code>&lt;link&gt;</code>-Tag heraus, wirkt das CSS nicht mehr –
+						genau wie auf einem echten Webserver.
+					</p>
+				</div>
+
+				<!-- ============================================== Übung 3.15 -->
+				<section class="exercise" id="ex-externalcss">
+					<div class="exercise__body">
+						<p>
+							In <a href="#listing-inline">Listing 12</a> wird die Seite mit
+							Inline CSS gestaltet. Schreiben Sie diese Seite so um, dass die
+							ganze Gestaltung in einer externen Datei
+							<code>style.css</code> steht.
+						</p>
+						<ol class="tasks">
+							<li>
+								Erstellen Sie die beiden Dateien und binden Sie das Stylesheet
+								im <code>&lt;head&gt;</code> ein.
+							</li>
+							<li>
+								Verschieben Sie die beiden <code>style</code>-Attribute in die
+								CSS-Datei. In der HTML-Datei darf danach kein
+								<code>style</code>-Attribut mehr vorkommen.
+							</li>
+							<li>
+								Der zweite Paragraph soll zusätzlich dunkelrot und fett
+								dargestellt werden. Verwenden Sie dafür eine Klasse.
+							</li>
+							<li>Nennen Sie zwei Vorteile von externem CSS gegenüber Inline CSS.</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb15"
+							data-files="html,css"
+							data-seed-html="firstcss/inline.html"
+							data-sol-html="external-css/external-css.html"
+							data-sol-css="external-css/style.css"
+							data-height="380"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<div class="split">
+									<figure class="listing">
+										<pre data-src="external-css/external-css.html"></pre>
+										<figcaption>
+											Lösungsvorschlag (external-css/external-css.html)
+										</figcaption>
+									</figure>
+									<figure class="listing">
+										<pre data-src="external-css/style.css"></pre>
+										<figcaption>
+											Lösungsvorschlag (external-css/style.css)
+										</figcaption>
+									</figure>
+								</div>
+								<p>
+									Erstens lässt sich dasselbe Stylesheet auf beliebig vielen
+									Seiten einbinden, ohne dass die Regeln wiederholt werden
+									müssen. Zweitens sind Struktur und Gestaltung getrennt, was
+									die HTML-Datei viel lesbarer macht.
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<h2 id="grundstruktur">Die Grundstruktur von CSS</h2>
+
+				<p>
+					CSS ist, von der Syntax her, eine sehr einfache Sprache. CSS hat
+					Regeln, die immer auf gleiche Art und Weise aufgebaut sind.
+				</p>
+
+				<figure class="listing">
+					<pre data-lang="css">
+selector {
+  property: value;
+}</pre
+					>
+					<figcaption><b>Listing 16.</b> Struktur einer CSS-Regel</figcaption>
+				</figure>
+
+				<p>
+					Die Teile im Deklarationsblock sind selbsterklärend: mit
+					<code>property</code> sagt man, welche Eigenschaft man verändern
+					möchte, mit <code>value</code> wird der Wert für diese Eigenschaft
+					festgelegt.
+				</p>
+
+				<p>
+					Eine grüne Schriftfarbe erreicht man zum Beispiel mit
+					<code>color: green;</code>.
+				</p>
+
+				<p>
+					Wichtig sind dabei die drei Satzzeichen: Nach dem Selektor folgt eine
+					geschweifte Klammer, zwischen Property und Wert steht ein Doppelpunkt,
+					und jede Deklaration wird mit einem Strichpunkt abgeschlossen. Fehlt
+					eines davon, so ignoriert der Browser die Regel stillschweigend.
+				</p>
+
+				<p>
+					Die Liste an möglichen Properties ist lang und wir werden nur einen
+					Bruchteil davon nutzen. Eine Liste von möglichen Properties finden Sie
+					hier:
+				</p>
+
+				<ul class="linkrow">
+					<li>
+						<a href="https://www.w3schools.com/cssref/index.php"
+							>w3schools: CSS Reference</a
+						>
+					</li>
+				</ul>
+
+				<!-- ============================================== Übung 3.16 -->
+				<section class="exercise" id="ex-csssyntax">
+					<div class="exercise__body">
+						<p>
+							Die CSS-Datei von Listing 17 enthält vier Syntaxfehler. Finden Sie
+							die Fehler und korrigieren Sie sie. Der fehlerhafte Code steht im
+							Reiter <code>style.css</code> der Werkbank.
+						</p>
+
+						<figure class="listing">
+							<pre data-lang="text" data-linenos>
+h1
+  color: blue
+}
+
+.wichtig {
+  color = red;
+}
+
+#titel {
+  font-size: 2rem</pre
+							>
+							<figcaption>
+								<b>Listing 17.</b> Eine CSS-Datei mit Syntaxfehlern
+							</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb16"
+							data-files="html,css"
+							data-height="380"
+						>
+							<template data-seed="html">
+&lt;!doctype html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width" /&gt;
+    &lt;link rel="stylesheet" href="style.css" /&gt;
+    &lt;title&gt;CSS-Syntax&lt;/title&gt;
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    &lt;h1 id="titel"&gt;Ein Titel&lt;/h1&gt;
+    &lt;p class="wichtig"&gt;Ein wichtiger Abschnitt&lt;/p&gt;
+    &lt;p&gt;Ein normaler Abschnitt&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+							</template>
+							<template data-seed="css">
+h1
+  color: blue
+}
+
+.wichtig {
+  color = red;
+}
+
+#titel {
+  font-size: 2rem
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<ol class="tasks">
+									<li>
+										Nach dem Selektor <code>h1</code> fehlt die öffnende
+										geschweifte Klammer.
+									</li>
+									<li>
+										Nach <code>color: blue</code> fehlt der Strichpunkt.
+									</li>
+									<li>
+										In der Klasse <code>.wichtig</code> steht ein
+										Gleichheitszeichen anstelle eines Doppelpunkts.
+									</li>
+									<li>
+										Bei der letzten Regel fehlen der Strichpunkt und die
+										schliessende geschweifte Klammer.
+									</li>
+								</ol>
+								<figure class="listing">
+									<pre data-src="css-syntax/style.css"></pre>
+									<figcaption>Lösungsvorschlag (css-syntax/style.css)</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<h2 id="selektoren">CSS-Selektoren</h2>
+
+				<p>
+					Mit dem <code>selector</code> kann man angeben, für welche Elemente die
+					Eigenschaften (<code>property: value;</code>) gelten sollen. Wir haben
+					bereits in Listing 15 gesehen, wie dies für die Tags
+					(<code>&lt;body&gt;</code> und <code>&lt;h1&gt;</code>) allgemein
+					funktioniert. Neben dem Tag-Namen gibt es aber noch viele andere
+					Möglichkeiten, Elemente auszuwählen.
+				</p>
+
+				<p>
+					Wir behandeln hier bei Weitem nicht alle Möglichkeiten, die CSS bietet.
+					Eine vollständigere Liste an möglichen Selektoren finden Sie hier:
+				</p>
+
+				<ul class="linkrow">
+					<li>
+						<a href="https://www.w3schools.com/cssref/css_selectors.php"
+							>w3schools: CSS-Selektoren</a
+						>
+					</li>
+				</ul>
+
+				<h3 id="css-klassen">CSS-Klassen</h3>
+
+				<p>
+					Klassen werden in CSS vermutlich am häufigsten verwendet. Dazu wird in
+					HTML eine Klasse als Attribut gesetzt, wie zum Beispiel:
+				</p>
+
+				<figure class="listing">
+					<pre>&lt;p class="myclass"&gt;Sehr wichtig&lt;/p&gt;</pre>
+					<figcaption><b>Listing 18.</b> Tag mit Klassen-Attribut</figcaption>
+				</figure>
+
+				<p>
+					In CSS gibt uns das die Möglichkeit, Stile für alle mit
+					<code>myclass</code> versehenen Tags anzugeben.
+				</p>
+
+				<p>
+					Um in CSS zu sagen, dass es sich um eine Klasse handelt, müssen Sie
+					einfach einen Punkt vor den Klassennamen schreiben.
+				</p>
+
+				<figure class="listing">
+					<pre data-lang="css">
+.myclass {
+  border: 5px solid orange;
+}</pre
+					>
+					<figcaption>
+						<b>Listing 19.</b> CSS-Regel mit Klasse als Selektor
+					</figcaption>
+				</figure>
+
+				<h3 id="css-ids">CSS-IDs</h3>
+
+				<p>
+					Es können nicht nur Klassen, sondern auch IDs verwendet werden. Dies
+					wird oftmals gemacht, wenn es sich um ein eindeutiges Element handelt,
+					wie zum Beispiel eine Navigationsliste.
+				</p>
+
+				<p>
+					Ähnlich wie bei Klassen muss auch hier nur ein spezielles Zeichen vor
+					den Namen gestellt werden. Bei IDs wird das
+					<code>#</code>-Zeichen verwendet.
+				</p>
+
+				<figure class="listing">
+					<pre data-lang="css">
+#myid {
+  background-color: gray;
+}</pre
+					>
+					<figcaption>
+						<b>Listing 20.</b> CSS-Regel mit ID als Selektor
+					</figcaption>
+				</figure>
+
+				<!-- ============================================== Übung 3.17 -->
+				<section class="exercise" id="ex-important">
+					<div class="exercise__body">
+						<p>
+							Erstellen Sie eine CSS-Regel, die allen Tags mit dem
+							Klassen-Attribut <code>important</code> eine rote Schriftfarbe
+							zuweist.
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb17"
+							data-files="html,css"
+							data-seed-html="important/important.html"
+							data-sol-css="important/style.css"
+							data-height="320"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="important/style.css"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/important/style.css"
+											>important/style.css</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.18 -->
+				<section class="exercise" id="ex-simpleid">
+					<div class="exercise__body">
+						<p>
+							Geben Sie einem Element auf Ihrer Webseite von
+							<a href="01-html.html#ex-basehp">Übung 3.03</a> eine ID, und
+							erstellen Sie eine Regel für dieses Element.
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb18"
+							data-files="html,css"
+							data-sol-html="simple-id/simple-id.html"
+							data-sol-css="simple-id/style.css"
+							data-height="340"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<div class="split">
+									<figure class="listing">
+										<pre data-src="simple-id/simple-id.html" data-hl="12"></pre>
+										<figcaption>
+											Element mit ID
+											(<a
+												href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/simple-id/simple-id.html"
+												>simple-id/simple-id.html</a
+											>)
+										</figcaption>
+									</figure>
+									<figure class="listing">
+										<pre data-src="simple-id/style.css"></pre>
+										<figcaption>
+											CSS-Datei
+											(<a
+												href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/simple-id/style.css"
+												>simple-id/style.css</a
+											>)
+										</figcaption>
+									</figure>
+								</div>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<h3 id="attribut-selektor">Attribute als Selektor</h3>
+
+				<p>
+					Eine weitere Möglichkeit besteht darin, ein Attribut als Selektor zu
+					verwenden. Das heisst, dass alle Elemente, die ein bestimmtes Attribut
+					aufweisen, entsprechend dargestellt werden sollen.
+				</p>
+
+				<figure class="listing">
+					<pre data-src="attribute-selector/style.css"></pre>
+					<figcaption>
+						<b>Listing 21.</b> Attribut als Selektor
+						(<a
+							href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/attribute-selector/style.css"
+							>attribute-selector/style.css</a
+						>)
+					</figcaption>
+				</figure>
+
+				<p>
+					Um dies zu erreichen, muss in der CSS-Regel das entsprechende Attribut
+					in eckigen Klammern geschrieben werden.
+				</p>
+
+				<div class="split">
+					<figure class="listing">
+						<pre data-src="attribute-selector/attributes.html"></pre>
+						<figcaption>
+							<b>Listing 22.</b> HTML-Datei mit
+							<code>&lt;button&gt;</code>-Tags mit und ohne
+							<code>disabled</code>-Attribut
+						</figcaption>
+					</figure>
+					<figure class="demo">
+						<iframe
+							data-src="attribute-selector/attributes.html"
+							data-css="attribute-selector/style.css"
+							data-height="120"
+						></iframe>
+						<figcaption>Die Webseite von Listing 22 im Browser</figcaption>
+					</figure>
+				</div>
+
+				<!-- ============================================== Übung 3.19 -->
+				<section class="exercise" id="ex-attrselector">
+					<div class="exercise__body">
+						<p>
+							Mit dem Attribut <code>target="_blank"</code> wird ein Link in
+							einem neuen Tab geöffnet. Für die Besucher einer Webseite ist es
+							angenehm, wenn solche Links vorher als solche erkennbar sind.
+						</p>
+						<p>
+							Erstellen Sie eine CSS-Regel, die alle Links mit diesem Attribut
+							fett darstellt.
+						</p>
+
+						<div class="hint">
+							<p>
+								<em>Hinweis:</em> Mit
+								<code>a[target="_blank"]::after</code> und der Property
+								<code>content</code> können Sie zusätzlich noch ein Zeichen
+								hinter den Link einfügen.
+							</p>
+						</div>
+
+						<div
+							class="workbench"
+							data-id="wb19"
+							data-files="html,css"
+							data-sol-css="attribute-selector/blank-target.css"
+							data-height="320"
+						>
+							<template data-seed="html">
+&lt;!doctype html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width" /&gt;
+    &lt;link rel="stylesheet" href="style.css" /&gt;
+    &lt;title&gt;Links in neuen Tabs&lt;/title&gt;
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href="https://www.gym-muttenz.ch"&gt;Gleiches Tab&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;
+        &lt;a href="https://www.gym-muttenz.ch" target="_blank"&gt;Neues Tab&lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href="https://fsf.org" target="_blank"&gt;Auch neues Tab&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="attribute-selector/blank-target.css"></pre>
+									<figcaption>
+										Lösungsvorschlag (attribute-selector/blank-target.css)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<h3 id="pseudo-klassen">Pseudo-Klassen</h3>
+
+				<p>
+					In CSS gibt es bestimmte bereits vordefinierte Pseudo-Klassen. Diese
+					können zum Beispiel ein Element auswählen, das sich zurzeit gerade
+					unter dem Mauszeiger befindet.
+				</p>
+
+				<p>
+					Um einen Link besser hervorzuheben, können Sie die Schriftgrösse
+					anpassen, wenn der Mauszeiger über dem Link ist.
+				</p>
+
+				<figure class="listing">
+					<pre data-lang="css">
+a:hover {
+  font-size: 1.4rem;
+}</pre
+					>
+					<figcaption>
+						<b>Listing 23.</b> Schriftgrösse von Links vergrössern, wenn der
+						Mauszeiger darüber ist
+					</figcaption>
+				</figure>
+
+				<p>
+					Sie können das «<code>:hover</code>» zu jedem beliebigen Selektor
+					hinzufügen.
+				</p>
+
+				<p>
+					Im Zusammenhang mit <code>:hover</code> empfiehlt es sich oft, gleich
+					auch noch <code>:focus</code> hinzuzufügen.
+				</p>
+
+				<figure class="listing">
+					<pre data-lang="css">
+a:hover, a:focus {
+  font-size: 1.4rem;
+}</pre
+					>
+					<figcaption>
+						<b>Listing 24.</b> <code>:hover</code> und <code>:focus</code>
+					</figcaption>
+				</figure>
+
+				<p>
+					So erreichen Sie den gleichen Effekt auch für Personen, die den Browser
+					mit der Tastatur bedienen.
+				</p>
+
+				<p>
+					Pseudo-Klassen beginnen jeweils mit einem <code>:</code>, wie zum
+					Beispiel <code>:visited</code>.
+				</p>
+
+				<ul class="linkrow">
+					<li>
+						<a href="https://www.w3schools.com/css/css_pseudo_classes.asp"
+							>w3schools: CSS Pseudo-classes</a
+						>
+					</li>
+				</ul>
+
+				<h3 id="kombinieren">Selektoren kombinieren</h3>
+
+				<p>
+					Manchmal ist es praktisch, verschiedene Selektoren miteinander zu
+					kombinieren. Dazu gibt es mehrere Möglichkeiten. Hier ist ein Beispiel
+					des sogenannten «Descendant Selectors»:
+				</p>
+
+				<figure class="listing">
+					<pre data-src="combinator-selector/style.css"></pre>
+					<figcaption>
+						<b>Listing 25.</b> Descendant Selector
+						(<a
+							href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/combinator-selector/style.css"
+							>combinator-selector/style.css</a
+						>)
+					</figcaption>
+				</figure>
+
+				<p>
+					Diese Regel führt dazu, dass alle <code>&lt;li&gt;</code>-Elemente
+					innerhalb einer ungeordneten Liste ohne Serifen dargestellt werden. Die
+					Regel wird aber nicht auf <code>&lt;li&gt;</code>-Elemente in einer
+					geordneten Liste angewandt.
+				</p>
+
+				<ul class="linkrow">
+					<li>
+						<a href="https://www.w3schools.com/Css/css_combinators.asp"
+							>w3schools: CSS Combinators</a
+						>
+					</li>
+				</ul>
+
+				<!-- ============================================== Übung 3.20 -->
+				<section class="exercise" id="ex-hoverbutton">
+					<div class="exercise__body">
+						<p>
+							Erstellen Sie eine Webseite mit zwei Knöpfen
+							(<code>&lt;button&gt;</code>), die beide die Klasse
+							<code>knopf</code> haben.
+						</p>
+						<ol class="tasks">
+							<li>
+								Gestalten Sie die Knöpfe mit einem grünen Rand, grüner Schrift
+								und weissem Hintergrund.
+							</li>
+							<li>
+								Befindet sich der Mauszeiger über einem Knopf, sollen
+								Hintergrund- und Schriftfarbe getauscht werden.
+							</li>
+							<li>
+								Erreichen Sie denselben Effekt auch für Personen, die die Seite
+								mit der Tabulatortaste bedienen. Probieren Sie es aus, indem Sie
+								in der Vorschau mit <code>Tab</code> durch die Knöpfe gehen.
+							</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb20"
+							data-files="html,css"
+							data-sol-html="hover-button/hover-button.html"
+							data-sol-css="hover-button/style.css"
+							data-height="340"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<div class="split">
+									<figure class="listing">
+										<pre data-src="hover-button/hover-button.html"></pre>
+										<figcaption>
+											Lösungsvorschlag (hover-button/hover-button.html)
+										</figcaption>
+									</figure>
+									<figure class="listing">
+										<pre data-src="hover-button/style.css"></pre>
+										<figcaption>
+											Lösungsvorschlag (hover-button/style.css)
+										</figcaption>
+									</figure>
+								</div>
+								<p>
+									Die dritte Teilaufgabe wird mit <code>:focus</code> gelöst.
+									Diese Pseudo-Klasse trifft auf das Element zu, das gerade den
+									Tastaturfokus hat.
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.21 -->
+				<section class="exercise" id="ex-hidevisited">
+					<div class="exercise__body">
+						<p>
+							Normalerweise sind Links, die Sie bereits besucht haben, einfach
+							violett. Versuchen Sie mit der Pseudo-Klasse
+							<code>:visited</code> einen Link zu verstecken.
+						</p>
+
+						<div class="hint">
+							<p>
+								<em>Hinweis:</em> Aus Datenschutzgründen behandeln Browser
+								<code>:visited</code> speziell: Es wirken nur Farb-Properties,
+								und in der Vorschau dieser Seite zählt kein Link als besucht.
+								Testen Sie diese Übung darum mit den heruntergeladenen Dateien
+								in einem echten Browserfenster.
+							</p>
+						</div>
+
+						<div
+							class="workbench"
+							data-id="wb21"
+							data-files="html,css"
+							data-seed-html="hide-visited/index.html"
+							data-sol-css="hide-visited/style.css"
+							data-height="320"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="hide-visited/style.css"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/hide-visited/style.css"
+											>hide-visited/style.css</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.22 -->
+				<section class="exercise" id="ex-combselector" data-tag="Recherche">
+					<div class="exercise__body">
+						<p>
+							Recherchieren Sie und erklären Sie den Unterschied zwischen den
+							CSS-Regeln von Listing 26 und Listing 27.
+						</p>
+
+						<div class="split">
+							<figure class="listing">
+								<pre data-lang="css">
+div&gt;h2 {
+  font-size: xx-large;
+}</pre
+								>
+								<figcaption><b>Listing 26.</b> Child Selector</figcaption>
+							</figure>
+							<figure class="listing">
+								<pre data-lang="css">
+div h2 {
+  font-size: xx-large;
+}</pre
+								>
+								<figcaption><b>Listing 27.</b> Descendant Selector</figcaption>
+							</figure>
+						</div>
+
+						<p>
+							Erstellen Sie eine HTML-Seite, bei der die beiden Regeln
+							unterschiedliche Ergebnisse liefern.
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb22"
+							data-files="html,css"
+							data-sol-html="child-vs-descendant/child-vs-descendant.html"
+							data-sol-css="child-vs-descendant/style.css"
+							data-height="340"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>
+									Die Regel von Listing 26 wird nur auf
+									<code>&lt;h2&gt;</code>-Tags angewendet, die
+									<em>direkt</em> in einem
+									<code>&lt;div&gt;</code>-Element liegen.
+								</p>
+								<p>
+									Die Regel von Listing 27 wird auf <em>alle</em>
+									<code>&lt;h2&gt;</code>-Tags angewendet, die innerhalb eines
+									<code>&lt;div&gt;</code>-Elements (oder in einer tieferen
+									Ebene) liegen.
+								</p>
+								<figure class="listing">
+									<pre
+										data-src="child-vs-descendant/child-vs-descendant.html"
+									></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/child-vs-descendant/child-vs-descendant.html"
+											>child-vs-descendant/child-vs-descendant.html</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.23 -->
+				<section class="exercise" id="ex-cssdiner" data-tag="Spiel">
+					<div class="exercise__body">
+						<p>
+							Spielen Sie das Spiel «CSS Diner», um Ihre Kenntnisse über
+							CSS-Selektoren zu vertiefen.
+						</p>
+						<ul class="linkrow">
+							<li><a href="https://flukeout.github.io">CSS Diner</a></li>
+						</ul>
+					</div>
+				</section>
+
+				<h2 id="boxmodell">Das CSS-Box-Modell</h2>
+
+				<p>
+					Das Box-Modell in CSS beschreibt, welchen Platz die Elemente auf einer
+					Webseite einnehmen. Alle Elemente werden in vier Bereiche eingeteilt.
+				</p>
+
+				<dl class="deflist">
+					<div>
+						<dt><code>margin</code></dt>
+						<dd>Der äussere Rand, also der Abstand zu anderen Elementen.</dd>
+					</div>
+					<div>
+						<dt><code>border</code></dt>
+						<dd>
+							Der Rand eines Elements. Dieser ist normalerweise nicht sichtbar,
+							kann aber verwendet werden, um Elemente zu umranden.
+						</dd>
+					</div>
+					<div>
+						<dt><code>padding</code></dt>
+						<dd>
+							Der innere Rand, also der Abstand vom Inhalt zum
+							<code>border</code>.
+						</dd>
+					</div>
+					<div>
+						<dt><code>content</code></dt>
+						<dd>
+							Der Inhalt des Elements. Dessen Grösse wird normalerweise mit
+							<code>width</code> und <code>height</code> angegeben.
+						</dd>
+					</div>
+				</dl>
+
+				<p>
+					Damit das Box-Modell möglichst einfach angewendet werden kann, sollten
+					Sie immer die CSS-Regel von Listing 28 einfügen.
+				</p>
+
+				<div class="split">
+					<figure class="shot">
+						<img src="assets/img/boxmodell.svg" alt="Das CSS-Box-Modell" />
+						<figcaption>Das CSS-Box-Modell</figcaption>
+					</figure>
+					<figure class="listing">
+						<pre data-src="box-model/box-sizing.css"></pre>
+						<figcaption><b>Listing 28.</b> CSS-Regel</figcaption>
+					</figure>
+				</div>
+
+				<p>
+					Diese Regel bewirkt, dass <code>width</code> und
+					<code>height</code> die <em>gesamte</em> Breite beziehungsweise Höhe
+					des Elements angeben, also inklusive <code>padding</code> und
+					<code>border</code>. Ohne diese Regel bezeichnet
+					<code>width</code> nur die Breite des Inhalts, und der innere Rand
+					sowie der Rand kommen noch dazu.
+				</p>
+
+				<p>
+					Es ist auch möglich, einzelne Randteile separat anzusprechen. So können
+					Sie zum Beispiel die einzelnen Teile des <code>margin</code>s mit den
+					folgenden Properties ansprechen: <code>margin-left</code>,
+					<code>margin-right</code>, <code>margin-top</code> und
+					<code>margin-bottom</code>.
+				</p>
+
+				<!-- ============================================== Übung 3.24 -->
+				<section class="exercise" id="ex-boxmodell">
+					<div class="exercise__body">
+						<p>
+							Erstellen Sie ein Element mit der ID <code>box</code>. Spielen Sie
+							dann mit dem CSS-Code von Listing 29 herum, bis Sie verstehen, was
+							die einzelnen Teile tun.
+						</p>
+
+						<figure class="listing" id="listing-boxplay">
+							<pre data-src="box-model/play-with-box.css"></pre>
+							<figcaption>
+								<b>Listing 29.</b> CSS-Regel
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/box-model/play-with-box.css"
+									>box-model/play-with-box.css</a
+								>)
+							</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb24"
+							data-files="html,css"
+							data-seed-css="box-model/play-with-box.css"
+							data-height="360"
+						>
+							<template data-seed="html">
+&lt;!doctype html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width" /&gt;
+    &lt;link rel="stylesheet" href="style.css" /&gt;
+    &lt;title&gt;Box-Modell&lt;/title&gt;
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    &lt;div id="box"&gt;Der Inhalt der Box&lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+							</template>
+						</div>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.25 -->
+				<section class="exercise" id="ex-boxsizing">
+					<div class="exercise__body">
+						<p>
+							Betrachten Sie die CSS-Regel von
+							<a href="#listing-boxplay">Listing 29</a>.
+						</p>
+						<ol class="tasks">
+							<li>
+								Wie breit erscheint das Element auf dem Bildschirm, wenn die
+								Regel <code>box-sizing: border-box;</code> gesetzt ist?
+							</li>
+							<li>Wie breit erscheint es, wenn die Regel <em>nicht</em> gesetzt ist?</li>
+							<li>
+								Wie viel Platz braucht das Element in der zweiten Situation
+								insgesamt, wenn der <code>margin</code> mitgezählt wird?
+							</li>
+						</ol>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<ol class="tasks">
+									<li>
+										Mit <code>border-box</code> gibt <code>width</code> bereits
+										die ganze Breite an, das Element ist also 300 Pixel breit.
+										Für den Inhalt bleiben davon
+										300 − 2·10 − 2·2 = 276 Pixel.
+									</li>
+									<li>
+										Ohne die Regel gilt <code>width</code> nur für den Inhalt.
+										Dazu kommen links und rechts je 10 Pixel
+										<code>padding</code> und je 2 Pixel
+										<code>border</code>, also
+										300 + 2·10 + 2·2 = 324 Pixel.
+									</li>
+									<li>
+										Der <code>margin</code> von 50 Pixeln kommt auf beiden
+										Seiten dazu: 324 + 2·50 = 424 Pixel.
+									</li>
+								</ol>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.26 -->
+				<section class="exercise" id="ex-boxmodell2">
+					<div class="exercise__body">
+						<p>
+							Mit <code>border-left</code> können Sie nur den linken Rand
+							ansprechen. Erstellen Sie eine Klasse <code>danger</code>, die auf
+							der linken Seite einen roten Rand von 5 Pixeln hat.
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb26"
+							data-files="html,css"
+							data-seed-html="danger/danger.html"
+							data-sol-css="danger/style.css"
+							data-height="320"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="danger/style.css"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/danger/style.css"
+											>danger/style.css</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<h2 id="animationen">CSS-Animationen</h2>
+
+				<p>
+					Moderne Webseiten sind voll von Animationen. Viele davon lassen sich
+					leicht mit CSS erstellen. Die einfachste Art einer Animation ist ein
+					Übergang (<code>transition</code>). Damit können Effekte, die mit
+					<code>:hover</code> (oder anderen Pseudo-Klassen) erzeugt werden,
+					angenehmer gestaltet werden.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="transition/first-transition.css"></pre>
+							<figcaption>
+								<b>Listing 30.</b> Beispiel einer Transition
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/transition/first-transition.css"
+									>transition/first-transition.css</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe
+								data-src="transition/first-transition.html"
+								data-css="transition/first-transition.css"
+								data-height="140"
+							></iframe>
+							<figcaption>
+								Fahren Sie mit dem Mauszeiger über den Text.
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<p>
+					Für eine <code>transition</code> werden zwei Regeln benötigt. Die erste
+					ist jeweils für die Klasse und gibt das Timing der
+					<code>transition</code> an. Die zweite Regel gibt den Stil für das
+					Element an, wenn zum Beispiel der Mauszeiger auf dem Element ist.
+				</p>
+
+				<ul class="linkrow">
+					<li>
+						<a href="https://www.w3schools.com/css/css3_transitions.asp"
+							>w3schools: CSS Transitions</a
+						>
+					</li>
+				</ul>
+
+				<div class="box">
+					<p class="box__label">Beispiel</p>
+					<p>
+						Sie können ein pulsierendes Element einfach erstellen, indem Sie ein
+						Element vergrössern und wieder verkleinern. Der Code von Listing 31
+						lässt alle Elemente der Klasse <code>myclass</code> pulsieren.
+					</p>
+					<div class="split">
+						<figure class="listing">
+							<pre data-src="transition/pulsate.css"></pre>
+							<figcaption>
+								<b>Listing 31.</b> Pulsierendes Element
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/transition/pulsate.css"
+									>transition/pulsate.css</a
+								>)
+							</figcaption>
+						</figure>
+						<figure class="demo">
+							<iframe
+								data-src="transition/pulsate.html"
+								data-css="transition/pulsate.css"
+								data-height="200"
+							></iframe>
+							<figcaption>Pulsierendes Element</figcaption>
+						</figure>
+					</div>
+				</div>
+
+				<ul class="linkrow">
+					<li>
+						<a href="https://www.w3schools.com/css/css3_animations.asp"
+							>w3schools: CSS Animations</a
+						>
+					</li>
+				</ul>
+
+				<!-- ============================================== Übung 3.27 -->
+				<section class="exercise" id="ex-cssanim">
+					<div class="exercise__body">
+						<p>
+							Erstellen Sie eine <code>transition</code>, die ein Element um 90
+							Grad rotieren lässt.
+						</p>
+
+						<div class="hint">
+							<p><em>Hinweise:</em></p>
+							<ul>
+								<li>
+									Eine Rotation können Sie mit
+									«<code>transform: rotate(90deg);</code>» erreichen.
+								</li>
+								<li>Verwenden Sie «<code>position: absolute;</code>».</li>
+							</ul>
+						</div>
+
+						<div
+							class="workbench"
+							data-id="wb27"
+							data-files="html,css"
+							data-seed-html="rotation-transition/rotate.html"
+							data-sol-css="rotation-transition/style.css"
+							data-height="320"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="rotation-transition/style.css"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/rotation-transition/style.css"
+											>rotation-transition/style.css</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.28 -->
+				<section class="exercise" id="ex-cssanim2">
+					<div class="exercise__body">
+						<p>
+							Erstellen Sie eine Webseite, auf der zuerst der Text «Gymnasium
+							Muttenz» in blauer Farbe steht. Nach 3 Sekunden soll der Text
+							langsam um 400 Pixel nach rechts verschoben werden und
+							gleichzeitig soll die Farbe von Blau zu Rot wechseln. Die Bewegung
+							soll 5 Sekunden (insgesamt also 8 Sekunden) lang dauern.
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb28"
+							data-files="html,css"
+							data-sol-html="blue-to-red/blue-to-red.html"
+							data-sol-css="blue-to-red/style.css"
+							data-height="340"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<div class="split">
+									<figure class="listing">
+										<pre data-src="blue-to-red/blue-to-red.html"></pre>
+										<figcaption>
+											Lösungsvorschlag
+											(<a
+												href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/blue-to-red/blue-to-red.html"
+												>blue-to-red/blue-to-red.html</a
+											>)
+										</figcaption>
+									</figure>
+									<figure class="listing">
+										<pre data-src="blue-to-red/style.css"></pre>
+										<figcaption>
+											Lösungsvorschlag
+											(<a
+												href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/blue-to-red/style.css"
+												>blue-to-red/style.css</a
+											>)
+										</figcaption>
+									</figure>
+								</div>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.29 -->
+				<section class="exercise" id="ex-cssanimtutorial" data-tag="Tutorial">
+					<div class="exercise__body">
+						<p>Arbeiten Sie das Tutorial zu CSS-Animationen durch.</p>
+						<ul class="linkrow">
+							<li><a href="https://css-animations.io/">CSS Animations</a></li>
+						</ul>
+					</div>
+				</section>
+
+				<h2 id="bilder">Mit Bildern umgehen</h2>
+
+				<p>
+					Bilder werden in HTML wie Text behandelt oder, genauer gesagt, wie
+					Inlineelemente. Sie werden einfach in den Textfluss eingebaut und die
+					Zeile danach wird nicht umgebrochen. Möchten Sie also ein Bild alleine
+					und zentriert haben, müssen Sie es in einen eigenen
+					<em>Container</em> packen und diesen dann gestalten.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiele</p>
+					<ol>
+						<li>
+							<p>
+								Um ein einzelnes Bild zu zentrieren, können Sie die Vorlage von
+								Listing 32 nutzen.
+							</p>
+							<div class="split">
+								<figure class="listing">
+									<pre data-src="center-image/center-image-template.html"></pre>
+									<figcaption>
+										<b>Listing 32.</b> HTML-Vorlage zum Zentrieren eines Bildes
+									</figcaption>
+								</figure>
+								<figure class="listing">
+									<pre data-src="center-image/center-image.css"></pre>
+									<figcaption>
+										<b>Listing 33.</b> CSS-Code zum Zentrieren eines Bildes
+									</figcaption>
+								</figure>
+							</div>
+							<p>
+								Der CSS-Code von Listing 33 liefert uns dann das entsprechende
+								Design. Dafür braucht es 2 Regeln, eine für den Container und
+								eine für die Breite des Bildes selbst.
+							</p>
+							<p>
+								Die zweite CSS-Regel wird hier nicht unbedingt benötigt. Es kann
+								aber praktisch sein, wenn Bilder nicht ganz so breit wie der
+								Text sein sollen.
+							</p>
+						</li>
+						<li>
+							<p>
+								Bilderecken können auch abgerundet werden. Dadurch können
+								spannende Bildformen erreicht werden. Mit dem folgenden Code
+								können Sie die Ecken von einem Bild abrunden.
+							</p>
+							<p>
+								Die Intensität der Abrundung kann durch die Property
+								<code>border-radius</code> eingestellt werden. Um sich damit
+								vertraut zu machen, ist es sinnvoll, hier mit diversen Werten zu
+								experimentieren.
+							</p>
+							<figure class="listing">
+								<pre data-src="center-image/rounded-corners.css"></pre>
+								<figcaption>
+									<b>Listing 34.</b> Ecken von Bildern abrunden
+								</figcaption>
+							</figure>
+						</li>
+					</ol>
+				</div>
+
+				<!-- ============================================== Übung 3.30 -->
+				<section class="exercise" id="ex-centerimages">
+					<div class="exercise__body">
+						<ol class="tasks">
+							<li>
+								Erstellen Sie eine Webseite mit drei verschiedenen Bildern, die
+								alle zentriert dargestellt werden. Nutzen Sie dazu die Methode
+								aus «<a href="#bilder">Mit Bildern umgehen</a>».
+							</li>
+							<li>
+								Runden Sie die Ecken der Bilder ab. Spielen Sie dabei etwas mit
+								dem Wert der Property <code>border-radius</code> herum.
+								Probieren Sie auch die Werte 2 % oder 50 %.
+							</li>
+							<li>
+								Jedes zentrierte Bild soll nun auch noch einen schwarzen Rahmen
+								bekommen.
+							</li>
+							<li>
+								Ergänzen Sie Ihren CSS-Code mit einer
+								<code>transition</code>, so dass der Abrundungseffekt langsam
+								aufgehoben wird, wenn man mit dem Mauszeiger über dem Bild ist.
+							</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb30"
+							data-files="html,css"
+							data-sol-html="center-image/center-images.html"
+							data-sol-css="center-image/style.css"
+							data-height="400"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="center-image/center-images.html"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/center-image/center-images.html"
+											>center-image/center-images.html</a
+										>)
+									</figcaption>
+								</figure>
+								<figure class="listing">
+									<pre data-src="center-image/style.css"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/center-image/style.css"
+											>center-image/style.css</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<h2 id="hintergrund">Hintergrundbilder setzen</h2>
+
+				<p>
+					Die CSS-Regeln im Zusammenhang mit <code>background</code> erlauben es,
+					den Hintergrund von HTML-Elementen zu konfigurieren. Insbesondere
+					lassen sich damit auch Hintergrundbilder setzen.
+				</p>
+
+				<div class="split">
+					<figure class="listing">
+						<pre data-src="background-image/background-simple.css"></pre>
+						<figcaption>
+							<b>Listing 35.</b> Einfache CSS-Regel für ein Hintergrundbild
+						</figcaption>
+					</figure>
+					<figure class="demo">
+						<iframe
+							data-src="background-image/background-simple.html"
+							data-css="background-image/background-simple.css"
+							data-height="220"
+						></iframe>
+						<figcaption>Webseite mit Hintergrundbild</figcaption>
+					</figure>
+				</div>
+
+				<ul class="linkrow">
+					<li>
+						<a href="https://www.w3schools.com/cssref/css3_pr_background.php"
+							>w3schools: CSS Background Properties</a
+						>
+					</li>
+				</ul>
+
+				<!-- ============================================== Übung 3.31 -->
+				<section class="exercise" id="ex-smileys">
+					<div class="exercise__body">
+						<p>
+							Erstellen Sie eine Webseite mit drei Blöcken, die jeweils als
+							Hintergrundbild ein Smiley enthalten.
+						</p>
+						<p>
+							Wenn sich der Mauszeiger über einem Smiley befindet, soll dieses
+							zu einem zwinkernden Smiley werden.
+						</p>
+
+						<figure class="shot">
+							<iframe src="assets/sites/smiley/smiley.html" height=210 height=210></iframe>
+							<!-- <img src="assets/img/smileywebsite.png" alt="Webseite mit Smileys" /> -->
+							<figcaption>Webseite mit Smileys</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb31"
+							data-files="html,css"
+							data-sol-html="background-image/smiley.html"
+							data-sol-css="background-image/smiley.css"
+							data-height="360"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<div class="split">
+									<figure class="listing">
+										<pre data-src="background-image/smiley.html"></pre>
+										<figcaption>
+											Lösungsvorschlag
+											(<a
+												href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/background-image/smiley.html"
+												>background-image/smiley.html</a
+											>)
+										</figcaption>
+									</figure>
+									<figure class="listing">
+										<pre data-src="background-image/smiley.css"></pre>
+										<figcaption>
+											Lösungsvorschlag
+											(<a
+												href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/background-image/smiley.css"
+												>background-image/smiley.css</a
+											>)
+										</figcaption>
+									</figure>
+								</div>
+								<p>
+									Beachten Sie: Die Datei <code>smiley.html</code> bindet das
+									Stylesheet unter dem Namen <code>smiley.css</code> ein. In der
+									Werkbank heisst die CSS-Datei immer
+									<code>style.css</code>.
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<h2 id="grid">Das Grid-Layout</h2>
+
+				<p>
+					Beim Erstellen einer Webseite kommt es immer mal wieder vor, dass man
+					zwei Teile (Container) nebeneinander platzieren möchte. Eine
+					Möglichkeit, dies zu bewerkstelligen, ist das sogenannte
+					<em>Grid-Layout</em>.
+				</p>
+
+				<p>Als Beispiel möchten wir einen Text neben einem Bild platzieren.</p>
+
+				<figure class="listing">
+					<pre
+						data-src="grid-layout/image-text.html"
+						data-lines="11-20"
+						data-linenos
+					></pre>
+					<figcaption><b>Listing 36.</b> Bild neben Text (HTML)</figcaption>
+				</figure>
+
+				<figure class="listing">
+					<pre data-src="grid-layout/image-text.css"></pre>
+					<figcaption><b>Listing 37.</b> Bild neben Text (CSS)</figcaption>
+				</figure>
+
+				<figure class="demo">
+					<iframe
+						data-src="grid-layout/image-text.html"
+						data-css="grid-layout/image-text.css"
+						data-height="300"
+					></iframe>
+					<figcaption>Bild neben Text</figcaption>
+				</figure>
+
+				<p>
+					Es können auch mehrere Spalten eingefügt werden. Diese müssen nur mit
+					der gewünschten Breite bei
+					<code>grid-template-columns</code> eingefügt werden.
+				</p>
+
+				<ul class="linkrow">
+					<li>
+						<a href="https://www.w3schools.com/css/css_grid.asp"
+							>w3schools: CSS Grid Layout Module</a
+						>
+					</li>
+				</ul>
+
+				<!-- ============================================== Übung 3.32 -->
+				<section class="exercise" id="ex-gridlayout">
+					<div class="exercise__body">
+						<p>Gegeben ist der folgende HTML-Code:</p>
+
+						<figure class="listing">
+							<pre
+								data-src="grid-layout/grid-exercise.html"
+								data-lines="11-18"
+							></pre>
+							<figcaption>
+								<b>Listing 38.</b> HTML-Code zu dieser Übung
+								(<a
+									href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/grid-layout/grid-exercise.html"
+									>grid-layout/grid-exercise.html</a
+								>)
+							</figcaption>
+						</figure>
+
+						<p>
+							Ergänzen Sie diesen Code mit einer CSS-Datei, so dass das Resultat
+							wie im folgenden Bild aussieht. Nutzen Sie das Grid-Layout.
+						</p>
+
+						<figure class="shot">
+							<img
+								src="assets/img/grid-exercise.png"
+								alt="Zielresultat der Grid-Übung"
+							/>
+							<figcaption>Das Ziel dieser Übung</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb32"
+							data-files="html,css"
+							data-seed-html="grid-layout/grid-exercise.html"
+							data-sol-css="grid-layout/grid-exercise.css"
+							data-height="380"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="grid-layout/grid-exercise.css"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/grid-layout/grid-exercise.css"
+											>grid-layout/grid-exercise.css</a
+										>)
+									</figcaption>
+								</figure>
+								<p>
+									Beachten Sie: Die HTML-Datei bindet das Stylesheet unter dem
+									Namen <code>grid-exercise.css</code> ein. In der Werkbank
+									heisst die CSS-Datei immer <code>style.css</code>.
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.33 -->
+				<section class="exercise" id="ex-gridcolumns">
+					<div class="exercise__body">
+						<p>
+							Geben Sie für die folgenden Layouts jeweils den Wert von
+							<code>grid-template-columns</code> an.
+						</p>
+						<ol class="tasks">
+							<li>Drei Spalten, die alle genau gleich breit sind.</li>
+							<li>
+								Eine Spalte von 200 Pixeln links, danach eine Spalte, die den
+								restlichen Platz einnimmt.
+							</li>
+							<li>
+								Vier Spalten, wobei die erste und die letzte halb so breit sind
+								wie die beiden in der Mitte.
+							</li>
+						</ol>
+
+						<div class="hint">
+							<p>
+								<em>Hinweis:</em> Die Einheit <code>fr</code> gibt einen Anteil
+								am verfügbaren Platz an.
+							</p>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<ol class="tasks">
+									<li>
+										<code>grid-template-columns: 1fr 1fr 1fr;</code>
+										<p>Kürzer geht es mit <code>repeat(3, 1fr)</code>.</p>
+									</li>
+									<li>
+										<code>grid-template-columns: 200px auto;</code>
+										<p>
+											Anstelle von <code>auto</code> kann auch
+											<code>1fr</code> verwendet werden.
+										</p>
+									</li>
+									<li><code>grid-template-columns: 1fr 2fr 2fr 1fr;</code></li>
+								</ol>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.34 -->
+				<section class="exercise" id="ex-gridgarden" data-tag="Spiel">
+					<div class="exercise__body">
+						<p>Spielen Sie das Spiel «Grid Garden» durch.</p>
+						<ul class="linkrow">
+							<li><a href="https://cssgridgarden.com/#de">Grid Garden</a></li>
+						</ul>
+					</div>
+				</section>
+
+				<h2 id="flexbox">Das Flexbox-Modell</h2>
+
+				<p>
+					Oft möchte man mehrere Elemente in Zeilen oder Spalten angeordnet
+					haben, die alle gleich breit sind und deren Abstände sich automatisch
+					anpassen. Solche einfachen Layouts sind dank des
+					<em>Flexbox-Modells</em> einfach zu realisieren.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Beispiele</p>
+					<ol>
+						<li>
+							<div class="split">
+								<figure class="listing">
+									<pre data-src="flexbox/grid.html" data-lines="11-23"></pre>
+									<figcaption>
+										<b>Listing 39.</b> Beispiel zu Flexbox (HTML)
+									</figcaption>
+								</figure>
+								<figure class="listing" id="listing-gridcss">
+									<pre data-src="flexbox/grid.css"></pre>
+									<figcaption>
+										<b>Listing 40.</b> Beispiel zu Flexbox (CSS)
+									</figcaption>
+								</figure>
+							</div>
+							<figure class="demo">
+								<iframe
+									data-src="flexbox/grid.html"
+									data-css="flexbox/grid.css"
+									data-height="280"
+								></iframe>
+								<figcaption>Beispiel zu Flexbox</figcaption>
+							</figure>
+						</li>
+						<li>
+							<p>
+								Eine typische Anwendung für Flexbox ist eine Navigationsleiste.
+							</p>
+							<div class="split">
+								<figure class="listing">
+									<pre data-src="flexbox/navbar.html" data-lines="11-18"></pre>
+									<figcaption>
+										<b>Listing 41.</b> Navigationsleiste (HTML)
+									</figcaption>
+								</figure>
+								<figure class="listing" id="listing-navbarcss">
+									<pre data-src="flexbox/navbar.css" data-lines="1-11"></pre>
+									<figcaption>
+										<b>Listing 42.</b> Navigationsleiste (CSS)
+									</figcaption>
+								</figure>
+							</div>
+							<figure class="demo">
+								<iframe
+									data-src="flexbox/navbar.html"
+									data-css="flexbox/navbar.css"
+									data-height="120"
+								></iframe>
+								<figcaption>Die Navigationsleiste im Browser</figcaption>
+							</figure>
+						</li>
+					</ol>
+					<p>
+						In <a href="#ex-navbar">Übung 3.36</a> werden Sie diesen Code noch
+						erweitern, so dass die Navigationslinks anders dargestellt werden.
+					</p>
+				</div>
+
+				<ul class="linkrow">
+					<li>
+						<a href="https://www.w3schools.com/csS/css3_flexbox.asp"
+							>w3schools: CSS Flexbox</a
+						>
+					</li>
+				</ul>
+
+				<!-- ============================================== Übung 3.35 -->
+				<section class="exercise" id="ex-reversecolumn">
+					<div class="exercise__body">
+						<p>
+							Passen Sie das Beispiel von
+							<a href="#listing-gridcss">Listing 40</a> so an, dass die Elemente
+							nach Spalten von unten nach oben angeordnet werden, wie im
+							folgenden Bild.
+						</p>
+
+						<figure class="shot">
+							<img
+								src="assets/img/flexbox-reverse.png"
+								alt="Elemente nach Spalten von unten nach oben angeordnet"
+							/>
+							<figcaption>
+								Elemente nach Spalten von unten nach oben angeordnet
+							</figcaption>
+						</figure>
+
+						<div class="hint">
+							<p>
+								<em>Hinweis:</em> Sie brauchen dafür die Property
+								<code>flex-direction</code>.
+							</p>
+						</div>
+
+						<div
+							class="workbench"
+							data-id="wb35"
+							data-files="html,css"
+							data-seed-html="flexbox/grid.html"
+							data-seed-css="flexbox/grid.css"
+							data-sol-css="flexbox/grid-reverse-column.css"
+							data-height="400"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="flexbox/grid-reverse-column.css"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/flexbox/grid-reverse-column.css"
+											>flexbox/grid-reverse-column.css</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.36 -->
+				<section class="exercise" id="ex-navbar">
+					<div class="exercise__body">
+						<p>
+							Ergänzen Sie den Code von
+							<a href="#listing-navbarcss">Listing 42</a>, so dass die
+							Navigationsleiste wie im folgenden Bild aussieht:
+						</p>
+						<ol class="tasks">
+							<li>
+								Die Navigationslinks sollen weiss und nicht mehr unterstrichen
+								dargestellt werden.
+							</li>
+							<li>
+								Ist der Mauszeiger über einem Navigationslink, sollen sich die
+								Farben entsprechend ändern.
+							</li>
+							<li>
+								Zusätzlich soll noch erreicht werden, dass die Navigationsleiste
+								immer oben sichtbar bleibt, auch wenn die Seite nach unten
+								gescrollt wird.
+							</li>
+						</ol>
+
+						<figure class="shot">
+							<img src="assets/img/navbar.png" alt="Navigationsleiste" />
+							<figcaption>Navigationsleiste</figcaption>
+						</figure>
+
+						<div class="hint">
+							<p><em>Hinweise:</em></p>
+							<ul>
+								<li>
+									Um den Stil der Links anzupassen, können Sie den Selektor
+									«<code>.navbar &gt; li &gt; a</code>» verwenden.
+								</li>
+								<li>
+									<a
+										href="https://gomakethings.com/how-to-create-a-sticky-navigation-with-only-css/"
+										>How to create a sticky navigation with only CSS</a
+									>
+								</li>
+							</ul>
+						</div>
+
+						<div
+							class="workbench"
+							data-id="wb36"
+							data-files="html,css"
+							data-seed-html="flexbox/navbar.html"
+							data-seed-css="flexbox/navbar.css"
+							data-sol-css="flexbox/navbar-sticky.css"
+							data-height="400"
+						></div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="listing">
+									<pre data-src="flexbox/navbar-sticky.css"></pre>
+									<figcaption>
+										Lösungsvorschlag
+										(<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html/flexbox/navbar-sticky.css"
+											>flexbox/navbar-sticky.css</a
+										>)
+									</figcaption>
+								</figure>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.37 -->
+				<section class="exercise" id="ex-flexboxfroggy" data-tag="Spiel">
+					<div class="exercise__body">
+						<p>Spielen Sie das Spiel «Flexbox Froggy» durch.</p>
+						<ul class="linkrow">
+							<li><a href="https://flexboxfroggy.com/#de">Flexbox Froggy</a></li>
+						</ul>
+					</div>
+				</section>
+
+				<nav class="pager">
+					<a href="01-html.html">← <b>1 Die Struktur von Webseiten: HTML</b></a>
+					<a href="03-projekt.html" style="text-align: right"
+						>Abschnitt 3 <b>Eine eigene Webseite →</b></a
+					>
+				</nav>
+			</div>
+
+			<aside class="minitoc">
+				<h2>Auf dieser Seite</h2>
+				<ol></ol>
+			</aside>
+		</main>
+
+		<script src="assets/examples.js"></script>
+		<script src="assets/editor.js"></script>
+		<script src="assets/site.js"></script>
+	</body>
+</html>

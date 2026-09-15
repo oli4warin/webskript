@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>HTML und CSS – Gymnasium Muttenz</title>
+		<meta
+			name="description"
+			content="Webversion des Kapitels HTML und CSS aus dem Informatik-Skript des Gymnasiums Muttenz."
+		/>
+		<script>
+			/* Farbschema vor dem ersten Zeichnen setzen, damit beim Laden nichts
+			   aufblitzt. Dunkel ist der Standard, siehe assets/style.css. */
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.html.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="assets/style.css" />
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html"
+				>HTML und <span>CSS</span></a
+			>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-html.html">1 HTML</a>
+				<a href="02-css.html">2 CSS</a>
+				<a href="03-projekt.html">3 Projekt</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main>
+			<div class="hero">
+				<p class="eyebrow">Informatik · Gymnasium Muttenz</p>
+				<h1>HTML und CSS</h1>
+				<p class="lead">
+					Dieses Kapitel zeigt, wie eine Webseite aufgebaut ist und wie sie
+					gestaltet wird. Sie brauchen dazu keinen Editor und kein Programm zu
+					installieren: Jede Übung hat eine
+					<strong>Werkbank</strong> mit Editor und Vorschau direkt in dieser
+					Seite.
+				</p>
+
+				<div class="box box--note">
+					<p class="box__label">So arbeiten Sie mit dieser Seite</p>
+					<ul>
+						<li>
+							Schreiben Sie Ihren Code links in die Werkbank. Die Vorschau
+							rechts aktualisiert sich automatisch, mit
+							<code>Ctrl</code>/<code>⌘</code> + <code>Enter</code> sofort.
+						</li>
+						<li>
+							Braucht eine Übung zwei Dateien, hat die Werkbank die Reiter
+							<code>index.html</code> und <code>style.css</code>. Das
+							<code>&lt;link&gt;</code>-Tag verbindet die beiden, genau wie auf
+							einem echten Webserver.
+						</li>
+						<li>
+							Ihr Code bleibt in diesem Browser gespeichert, auch wenn Sie die
+							Seite schliessen. Mit <em>Herunterladen</em> holen Sie eine Datei
+							auf den Computer.
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<ul class="cards">
+				<li>
+					<a class="card" href="01-html.html" data-page="01-html.html" data-total="14">
+						<span class="card__no">Abschnitt 1</span>
+						<h2>Die Struktur von Webseiten: HTML</h2>
+						<p>
+							Tags, Elemente und der DOM. Überschriften, Abschnitte, Listen,
+							Bilder und Links. Seiten sinnvoll strukturieren, Attribute, IDs
+							und Klassen.
+						</p>
+						<span class="card__meter">
+							<span class="meter"><i style="width: 0"></i></span>
+							<span data-count>0 / 14 Übungen erledigt</span>
+						</span>
+					</a>
+				</li>
+				<li>
+					<a class="card" href="02-css.html" data-page="02-css.html" data-total="23">
+						<span class="card__no">Abschnitt 2</span>
+						<h2>Webseiten gestalten: CSS</h2>
+						<p>
+							Regeln und Selektoren, das Box-Modell, Animationen, Bilder und
+							Hintergründe sowie die Layouts mit Grid und Flexbox.
+						</p>
+						<span class="card__meter">
+							<span class="meter"><i style="width: 0"></i></span>
+							<span data-count>0 / 23 Übungen erledigt</span>
+						</span>
+					</a>
+				</li>
+				<li>
+					<a
+						class="card"
+						href="03-projekt.html"
+						data-page="03-projekt.html"
+						data-total="2"
+					>
+						<span class="card__no">Abschnitt 3</span>
+						<h2>Eine eigene Webseite</h2>
+						<p>
+							Das Schlussprojekt: eine vollständige Webseite zu einem Thema, das
+							Sie interessiert – mit allem aus diesem Kapitel.
+						</p>
+						<span class="card__meter">
+							<span class="meter"><i style="width: 0"></i></span>
+							<span data-count>0 / 2 Übungen erledigt</span>
+						</span>
+					</a>
+				</li>
+			</ul>
+
+			<div class="hero" style="padding-top: 3rem">
+				<h2 id="nachschlagen">Zum Nachschlagen</h2>
+				<p>
+					Die folgenden Adressen werden im Kapitel immer wieder erwähnt. Sie
+					lohnen sich auch später, wenn Sie eine eigene Seite bauen.
+				</p>
+				<ul class="linkrow">
+					<li><a href="https://www.w3schools.com/html/default.asp">HTML-Tutorial (w3schools)</a></li>
+					<li><a href="https://www.w3schools.com/cssref/index.php">CSS Reference</a></li>
+					<li><a href="https://www.w3schools.com/cssref/css_selectors.php">CSS-Selektoren</a></li>
+					<li><a href="https://validator.w3.org/">W3C-Validator</a></li>
+					<li><a href="https://wiki.selfhtml.org/wiki/HTML/Tutorials/Einstieg">SelfHTML-Einstieg</a></li>
+				</ul>
+
+				<h2 id="spiele">Spiele zum Üben</h2>
+				<ul class="linkrow">
+					<li><a href="https://flukeout.github.io">CSS Diner – Selektoren</a></li>
+					<li><a href="https://cssgridgarden.com/#de">Grid Garden – Grid-Layout</a></li>
+					<li><a href="https://flexboxfroggy.com/#de">Flexbox Froggy – Flexbox</a></li>
+					<li><a href="https://css-animations.io/">CSS Animations – Tutorial</a></li>
+				</ul>
+			</div>
+		</main>
+
+		<footer class="pagefoot">
+			<p>
+				Webversion des Kapitels <em>HTML und CSS</em> aus dem Informatik-Skript
+				des Gymnasiums Muttenz. Alle Listings und Lösungsvorschläge stammen aus
+				dem Repository
+				<a href="https://codeberg.org/oli4warin/gyminf/src/branch/main/html"
+					>oli4warin/gyminf</a
+				>.
+			</p>
+			<p>
+				Ihre Eingaben und Häkchen werden nur in diesem Browser gespeichert und
+				nirgends hochgeladen.
+			</p>
+		</footer>
+
+		<script src="assets/examples.js"></script>
+		<script src="assets/editor.js"></script>
+		<script src="assets/site.js"></script>
+	</body>
+</html>
