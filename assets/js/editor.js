@@ -47,6 +47,8 @@
 		'  <circle cx="50" cy="50" r="40" fill="red" />\n' +
 		"</svg>\n";
 
+	var SKELETON_PYTHON = "# Schreiben Sie hier Ihren Code hin\n";
+
 	/* ------------------------------------------------------------------
 	   Emmet-Kürzel (HTML- und SVG-Reiter). Kein fertiges Emmet eingebunden --
 	   die Seite muss auch offline über file:// laufen (siehe README).
@@ -493,6 +495,7 @@
 		});
 		var wantsCSS = names.indexOf("css") !== -1;
 		var wantsSVG = names.indexOf("svg") !== -1;
+		var wantsPython = names.indexOf("python") !== -1;
 
 		/* Startcode: aus dem Submodul (data-seed-*) oder als <template
 		   data-seed="html|css"> im Element selbst. */
@@ -515,11 +518,15 @@
 			svg: root.dataset.seedSvg
 				? window.SITE.fileContent(root.dataset.seedSvg)
 				: templateSeed("svg"),
+			python: root.dataset.seedPython
+				? window.SITE.fileContent(root.dataset.seedPython)
+				: templateSeed("python"),
 		};
 		if (seeds.html == null)
 			seeds.html = wantsCSS ? SKELETON_LINKED : SKELETON_PLAIN;
 		if (seeds.css == null) seeds.css = SKELETON_CSS;
 		if (seeds.svg == null) seeds.svg = SKELETON_SVG;
+		if (seeds.python == null) seeds.python = SKELETON_PYTHON;
 
 		root.querySelectorAll("template[data-seed]").forEach(function (t) {
 			t.remove();
@@ -535,6 +542,9 @@
 			svg: root.dataset.solSvg
 				? window.SITE.fileContent(root.dataset.solSvg)
 				: null,
+			python: root.dataset.solPython
+				? window.SITE.fileContent(root.dataset.solPython)
+				: null,
 		};
 		/* Der Knopf «Loesung laden» erscheint nur, wenn die Loesungen
 		   eingeschaltet sind (?loesungen=1, siehe site.js). */
@@ -544,7 +554,12 @@
 				return solutions[which] != null;
 			});
 
-		var fileLabel = { html: "index.html", css: "style.css", svg: "bild.svg" };
+		var fileLabel = {
+			html: "index.html",
+			css: "style.css",
+			svg: "bild.svg",
+			python: "aufgabe.py",
+		};
 		var storeKey = function (which) {
 			return "code." + page + "." + id + "." + which;
 		};
@@ -619,13 +634,24 @@
 		editorPane.appendChild(stack);
 
 		var previewPane = el("div", "wb__preview");
-		var frame = document.createElement("iframe");
-		frame.setAttribute(
-			"sandbox",
-			"allow-scripts allow-popups allow-popups-to-escape-sandbox allow-modals allow-forms"
-		);
-		frame.setAttribute("title", "Vorschau");
-		previewPane.appendChild(frame);
+		var frame = null;
+		var consoleOut = null;
+		var imagesWrap = null;
+		if (wantsPython) {
+			previewPane.classList.add("wb__preview--console");
+			consoleOut = el("pre", "wb__console", "");
+			imagesWrap = el("div", "wb__images");
+			previewPane.appendChild(consoleOut);
+			previewPane.appendChild(imagesWrap);
+		} else {
+			frame = document.createElement("iframe");
+			frame.setAttribute(
+				"sandbox",
+				"allow-scripts allow-popups allow-popups-to-escape-sandbox allow-modals allow-forms"
+			);
+			frame.setAttribute("title", "Vorschau");
+			previewPane.appendChild(frame);
+		}
 
 		panes.appendChild(editorPane);
 		panes.appendChild(previewPane);
@@ -651,7 +677,7 @@
 		if (root.dataset.height) {
 			var h = root.dataset.height + "px";
 			editorPane.style.height = h;
-			frame.style.minHeight = h;
+			if (frame) frame.style.minHeight = h;
 		}
 
 		/* ---------------------------------------------------------- Verhalten */
@@ -672,7 +698,7 @@
 
 			var lines = window.SITE.highlight(
 				code.value,
-				active === "css" ? "css" : "html"
+				active === "css" ? "css" : active === "python" ? "python" : "html"
 			);
 			/* Eine Zeile Reserve: die gefaerbte Ebene darf hoeher sein als das
 			   Textfeld, aber nie niedriger -- sonst klemmt ihr scrollTop und die
@@ -682,7 +708,48 @@
 			syncScroll();
 		}
 
+		var runBtn = null;
+
+		function showPythonPlaceholder() {
+			consoleOut.textContent =
+				'Noch nicht ausgeführt. Klicken Sie auf "Ausführen" oder ' +
+				"drücken Sie Ctrl/⌘ + Enter.";
+			consoleOut.classList.remove("wb__console--error");
+			imagesWrap.innerHTML = "";
+		}
+
+		function runPython() {
+			consoleOut.textContent = "läuft …";
+			consoleOut.classList.remove("wb__console--error");
+			imagesWrap.innerHTML = "";
+			if (runBtn) runBtn.disabled = true;
+			window.PyRunner.run(buffers.python, function (msg) {
+				if (msg.type === "status") {
+					consoleOut.textContent = msg.text;
+					return;
+				}
+				var text = msg.output || "";
+				if (!msg.ok) {
+					text += (text ? "\n\n" : "") + "Fehler:\n" + msg.error;
+				}
+				consoleOut.textContent = text || "(keine Ausgabe)";
+				consoleOut.classList.toggle("wb__console--error", !msg.ok);
+				imagesWrap.innerHTML = "";
+				(msg.images || []).forEach(function (b64) {
+					var img = document.createElement("img");
+					img.src = "data:image/png;base64," + b64;
+					img.alt = "Grafik-Ausgabe (matplotlib)";
+					imagesWrap.appendChild(img);
+				});
+				if (runBtn) runBtn.disabled = false;
+			});
+		}
+
 		function run() {
+			if (wantsPython) {
+				runPython();
+				return;
+			}
 			var body = wantsSVG ? buffers.svg : buffers.html;
 			var css = wantsCSS && buffers.css != null ? buffers.css : "";
 			if (wantsSVG) css = window.SITE.svgDemoCSS + css;
@@ -696,8 +763,13 @@
 			buffers[active] = code.value;
 			redraw();
 
-			clearTimeout(runTimer);
-			runTimer = setTimeout(run, 700);
+			/* Bei Python nicht automatisch bei jedem Tastendruck ausfuehren --
+			   das Laden/Rechnen mit Pyodide ist zu teuer dafuer. Nur Ctrl/Cmd
+			   + Enter oder der Knopf loesen einen Lauf aus. */
+			if (!wantsPython) {
+				clearTimeout(runTimer);
+				runTimer = setTimeout(run, 700);
+			}
 
 			clearTimeout(saveTimer);
 			saveTimer = setTimeout(function () {
@@ -785,11 +857,16 @@
 			}
 		});
 
-		addBtn("Ausführen", "wb__btn--primary", "Vorschau neu aufbauen", function () {
-			clearTimeout(runTimer);
-			buffers[active] = code.value;
-			run();
-		});
+		runBtn = addBtn(
+			"Ausführen",
+			"wb__btn--primary",
+			wantsPython ? "Code ausführen" : "Vorschau neu aufbauen",
+			function () {
+				clearTimeout(runTimer);
+				buffers[active] = code.value;
+				run();
+			}
+		);
 
 		if (hasSolution) {
 			addBtn(
@@ -812,7 +889,8 @@
 					});
 					code.value = buffers[active];
 					redraw();
-					run();
+					if (wantsPython) showPythonPlaceholder();
+					else run();
 				}
 			);
 		}
@@ -826,7 +904,8 @@
 			code.value = buffers[active];
 			statusLeft.textContent = "";
 			redraw();
-			run();
+			if (wantsPython) showPythonPlaceholder();
+			else run();
 		});
 
 		addBtn("Herunterladen", null, "Aktuelle Datei speichern", function () {
@@ -862,7 +941,13 @@
 		});
 		redraw();
 		updateHint();
-		run();
+		if (wantsPython) {
+			/* Nicht sofort beim Laden der Seite ausfuehren: das wuerde bei
+			   jedem Seitenaufruf ungefragt Pyodide (und scipy) herunterladen. */
+			showPythonPlaceholder();
+		} else {
+			run();
+		}
 	}
 
 	window.Workbench = {

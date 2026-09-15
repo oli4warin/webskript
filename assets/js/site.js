@@ -328,6 +328,112 @@
 		return out;
 	}
 
+	function tagSet(list) {
+		return list.split(" ").reduce(function (set, t) {
+			set[t] = true;
+			return set;
+		}, {});
+	}
+
+	var PY_KEYWORDS = tagSet(
+		"False None True and as assert async await break class continue def " +
+		"del elif else except finally for from global if import in is lambda " +
+		"nonlocal not or pass raise return try while with yield"
+	);
+
+	/* Tokenisiert Python. Kein Anspruch auf einen vollstaendigen Parser --
+	   wie bei CSS/HTML reicht ein einfacher, in sich geschlossener Scanner
+	   fuer Kommentare, Strings (inkl. Praefixe f/r/b und Dreifachquotes),
+	   Zahlen, Schluesselwoerter und Funktionsnamen (Bezeichner vor "("). */
+	function tokenizePython(src) {
+		var out = [];
+		var i = 0;
+		var n = src.length;
+
+		function push(cls, text) {
+			if (text) out.push([cls, text]);
+		}
+
+		while (i < n) {
+			var c = src[i];
+
+			if (c === "#") {
+				var end = src.indexOf("\n", i);
+				end = end === -1 ? n : end;
+				push("t-com", src.slice(i, end));
+				i = end;
+				continue;
+			}
+
+			var prefixMatch = /^(rb|br|rf|fr|[rRuUbBfF])(?=["'])/.exec(
+				src.slice(i, i + 3)
+			);
+			var prefixLen = prefixMatch ? prefixMatch[0].length : 0;
+			var qc = src[i + prefixLen];
+			if (qc === '"' || qc === "'") {
+				var triple = src.slice(i + prefixLen, i + prefixLen + 3) === qc + qc + qc;
+				var q = triple ? qc + qc + qc : qc;
+				var from = i + prefixLen + q.length;
+				var stop;
+				if (triple) {
+					stop = src.indexOf(q, from);
+					stop = stop === -1 ? n : stop + q.length;
+				} else {
+					var k = from;
+					while (k < n && src[k] !== qc && src[k] !== "\n") {
+						if (src[k] === "\\") k++;
+						k++;
+					}
+					stop = k < n && src[k] === qc ? k + 1 : k;
+				}
+				push("t-str", src.slice(i, stop));
+				i = stop;
+				continue;
+			}
+
+			if (WS.test(c)) {
+				var j = i;
+				while (j < n && WS.test(src[j])) j++;
+				push("", src.slice(i, j));
+				i = j;
+				continue;
+			}
+
+			if (/[0-9]/.test(c)) {
+				var numm = /^[0-9][0-9_]*(\.[0-9_]+)?([eE][+-]?[0-9]+)?[jJ]?/.exec(
+					src.slice(i)
+				);
+				push("t-num", numm[0]);
+				i += numm[0].length;
+				continue;
+			}
+
+			if (c === "@" && /[A-Za-z_]/.test(src[i + 1] || "")) {
+				var decm = /^@[A-Za-z_][A-Za-z0-9_.]*/.exec(src.slice(i));
+				push("t-attr", decm[0]);
+				i += decm[0].length;
+				continue;
+			}
+
+			if (/[A-Za-z_]/.test(c)) {
+				var idm = /^[A-Za-z_][A-Za-z0-9_]*/.exec(src.slice(i));
+				var word = idm[0];
+				i += word.length;
+				var la = i;
+				while (la < n && src[la] === " ") la++;
+				if (PY_KEYWORDS[word]) push("t-kw", word);
+				else if (src[la] === "(") push("t-fn", word);
+				else push("", word);
+				continue;
+			}
+
+			push("t-punct", c);
+			i++;
+		}
+
+		return out;
+	}
+
 	/* Baut aus Tokens Zeilen-HTML. Keine Span kreuzt einen Zeilenumbruch, damit
 	   Zeilennummern und Hervorhebungen funktionieren. */
 	function tokensToLines(tokens) {
@@ -363,13 +469,19 @@
 	}
 
 	function highlight(code, lang) {
-		var tokens = lang === "css" ? tokenizeCSS(code) : tokenizeHTML(code);
+		var tokens =
+			lang === "css"
+				? tokenizeCSS(code)
+				: lang === "python"
+				? tokenizePython(code)
+				: tokenizeHTML(code);
 		return tokensToLines(tokens);
 	}
 
 	function langOf(el, file) {
 		if (el.dataset.lang) return el.dataset.lang;
 		if (file && /\.css$/.test(file)) return "css";
+		if (file && /\.py$/.test(file)) return "python";
 		return "html";
 	}
 

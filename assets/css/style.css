@@ -90,6 +90,27 @@ body {
 	font-size: 1.0625rem;
 	line-height: 1.62;
 	-webkit-text-size-adjust: 100%;
+	/* Sanftes Ueberblenden beim Umschalten des Farbschemas statt eines
+	   harten Schnitts. */
+	transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Dezentes Eintreten beim Laden der Seite: die Hauptbloecke (".content" +
+   ".minitoc", oder ".hero" + ".cards" auf den Uebersichtsseiten) blenden
+   einmalig sanft ein, statt abrupt zu erscheinen. */
+@keyframes fade-rise {
+	from {
+		opacity: 0;
+		transform: translateY(6px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+main > * {
+	animation: fade-rise 0.4s ease-out both;
 }
 
 /* --- Kopfleiste ---------------------------------------------------------- */
@@ -106,6 +127,7 @@ body {
 	background: color-mix(in srgb, var(--paper) 88%, transparent);
 	backdrop-filter: blur(10px);
 	border-bottom: 1px solid var(--line-soft);
+	transition: background-color 0.25s ease, border-color 0.25s ease;
 }
 
 .topbar__home {
@@ -158,11 +180,16 @@ body {
 	font-size: 0.95rem;
 	cursor: pointer;
 	line-height: 1;
+	transition: color 0.15s ease, border-color 0.15s ease, transform 0.2s ease;
 }
 
 .themetoggle:hover {
 	color: var(--ink);
 	border-color: var(--ink-faint);
+}
+
+.themetoggle:active {
+	transform: scale(0.88) rotate(-12deg);
 }
 
 /* --- Grundraster --------------------------------------------------------- */
@@ -236,6 +263,7 @@ body {
 	display: block;
 	padding: 0.12rem 0;
 	border-radius: 3px;
+	transition: color 0.15s ease;
 }
 
 .minitoc a:hover {
@@ -490,6 +518,13 @@ pre .hl {
 .t-num {
 	color: var(--code-string);
 }
+.t-kw {
+	color: var(--code-tag);
+	font-weight: 600;
+}
+.t-fn {
+	color: var(--code-prop);
+}
 
 /* --- Zwei Spalten (Code + Bild / HTML + CSS) ---------------------------- */
 
@@ -648,6 +683,7 @@ figure.diagram figcaption {
 	padding: 0.7rem 1.1rem;
 	background: var(--paper-soft);
 	border-bottom: 1px solid var(--line-soft);
+	transition: background-color 0.25s ease;
 }
 
 .exercise__no {
@@ -678,6 +714,7 @@ figure.diagram figcaption {
 	cursor: pointer;
 	user-select: none;
 	white-space: nowrap;
+	transition: color 0.2s ease;
 }
 
 .exercise__done input {
@@ -685,6 +722,12 @@ figure.diagram figcaption {
 	width: 1rem;
 	height: 1rem;
 	cursor: pointer;
+	transition: transform 0.15s ease;
+}
+
+/* Kleiner "Pop" beim Abhaken, statt dass das Haekchen kommentarlos auftaucht. */
+.exercise__done input:checked {
+	transform: scale(1.15);
 }
 
 .exercise[data-done="1"] .exercise__head {
@@ -825,6 +868,8 @@ details.sol > summary:hover {
 	background: none;
 	color: var(--ink-soft);
 	cursor: pointer;
+	transition: background-color 0.15s ease, color 0.15s ease,
+		border-color 0.15s ease;
 }
 
 .wb__tab:hover {
@@ -855,6 +900,13 @@ details.sol > summary:hover {
 	color: var(--ink-soft);
 	cursor: pointer;
 	white-space: nowrap;
+	transition: background-color 0.15s ease, color 0.15s ease,
+		border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.wb__btn:disabled {
+	opacity: 0.6;
+	cursor: default;
 }
 
 .wb__btn:hover {
@@ -867,6 +919,7 @@ details.sol > summary:hover {
 	border-color: var(--accent);
 	color: #fff;
 	font-weight: 600;
+	transition: filter 0.15s ease, opacity 0.15s ease;
 }
 
 .wb__btn--primary:hover {
@@ -978,6 +1031,50 @@ details.sol > summary:hover {
 	background: #fff;
 }
 
+/* Ausgabe-Konsole der Python-Werkbank: dunkel wie der Editor, kein weisses
+   Vorschau-"Papier" -- hier steht kein Dokument, sondern stdout/stderr. */
+.wb__preview--console {
+	background: var(--code-bg);
+}
+
+.wb__console {
+	flex: 1 1 auto;
+	margin: 0;
+	padding: 0.75rem;
+	min-height: 17rem;
+	overflow: auto;
+	font-family: var(--mono);
+	font-size: 0.8rem;
+	line-height: 1.55;
+	white-space: pre-wrap;
+	word-break: break-word;
+	color: var(--ink-soft);
+	transition: color 0.2s ease;
+}
+
+.wb__console--error {
+	color: var(--flag);
+}
+
+.wb__images {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	padding: 0 0.75rem 0.75rem;
+}
+
+.wb__images:empty {
+	padding: 0;
+}
+
+.wb__images img {
+	display: block;
+	max-width: 100%;
+	background: #fff;
+	border-radius: 4px;
+	animation: fade-rise 0.3s ease-out both;
+}
+
 .wb__status {
 	font-size: 0.72rem;
 	padding: 0.25rem 0.6rem;
@@ -1068,13 +1165,14 @@ details.sol > summary:hover {
 	background: var(--paper-soft);
 	text-decoration: none;
 	color: var(--ink);
-	transition: border-color 0.15s, transform 0.15s;
+	transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
 }
 
 .card:hover,
 .card:focus-visible {
 	border-color: var(--accent);
 	transform: translateY(-2px);
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
 .card__no {
@@ -1276,6 +1374,7 @@ details.sol > summary:hover {
 	text-decoration: none;
 	color: var(--ink-soft);
 	background: var(--paper);
+	transition: border-color 0.15s ease, color 0.15s ease;
 }
 
 .linkrow a:hover {
@@ -1339,5 +1438,18 @@ table.data th {
 
 	details.sol > .sol__body {
 		display: block !important;
+	}
+}
+
+/* Wer keine Bewegung sehen will, bekommt keine -- die Uebergaenge oben sind
+   Zierde, keine Informationstraeger, es geht also nichts verloren. */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.001ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.001ms !important;
+		scroll-behavior: auto !important;
 	}
 }
