@@ -1,0 +1,1141 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>1 Testen mit Python – Hypothesentests</title>
+		<script>
+			/* Farbschema vor dem ersten Zeichnen setzen, damit beim Laden nichts
+			   aufblitzt. Dunkel ist der Standard, siehe ../assets/css/style.css. */
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.hypothesen.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="../assets/css/style.css" />
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html"
+				>Hypothesen<span>tests</span></a
+			>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-python.html">1 Testen mit Python</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main class="layout" data-ex-chapter="3" data-ex-offset="13">
+			<div class="content">
+				<p class="eyebrow">Abschnitt 1</p>
+				<h1>Hypothesentests mit Python</h1>
+
+				<div class="progress" data-progress>
+					<span class="meter"><i style="width: 0"></i></span>
+					<span data-progress-text>0 von 7 Übungen erledigt</span>
+					<button type="button" data-reset>zurücksetzen</button>
+				</div>
+
+				<p>
+					In der modernen Praxis berechnet man Teststatistiken und
+					p-Werte nur noch selten von Hand oder mit einer Tabelle im
+					Umschlag einer Formelsammlung. Wir nutzen hierzu Python und
+					die Bibliothek <code>scipy.stats</code>, welche eine
+					riesige Palette an Werkzeugen für Zufallsgrössen und
+					statistische Tests bereitstellt. Für Berechnungen mit
+					Feldern von Messwerten verwenden wir <code>numpy</code>
+					(als <code>np</code> importiert) und zur Visualisierung
+					die bereits eingeführte Bibliothek
+					<code>matplotlib.pyplot</code> (als <code>plt</code>
+					importiert).
+				</p>
+
+				<div class="box box--note">
+					<p class="box__label">Vorteil gegenüber Formelsammlung/Taschenrechner</p>
+					<p>
+						Python rechnet direkt mit den <em>rohen Messdaten</em>
+						(einer Liste von Zahlen), nicht nur mit bereits
+						zusammengefassten Kennzahlen wie <i>n</i>, <i>x̄</i>
+						oder <i>s</i>. Ausserdem lassen sich beliebige
+						Situationen simulieren, für die es gar keine fertige
+						Formel gibt (siehe
+						<a href="#simulation">Simulation statt Tabelle</a>).
+					</p>
+					<p>
+						Auch die Code-Beispiele im Theorieteil stehen in
+						einer Werkbank: Sie lassen sich frei verändern und
+						mit <em>Ausführen</em> starten, genau wie bei den
+						Übungen weiter unten. Erzeugt der Code einen Plot,
+						erscheint er unter der Ausgabe.
+					</p>
+				</div>
+
+				<h2 id="scipy-stats"><code>scipy.stats</code> für Zufallsgrössen</h2>
+				<p>
+					Für jede bekannte Verteilung stellt <code>scipy.stats</code>
+					ein Objekt zur Verfügung. Die wichtigsten für uns sind:
+				</p>
+				<dl class="deflist">
+					<div>
+						<dt><code>stats.binom(n, p)</code></dt>
+						<dd>Binomialverteilung (diskret)</dd>
+					</div>
+					<div>
+						<dt><code>stats.norm(loc, scale)</code></dt>
+						<dd>
+							Normalverteilung mit μ (<code>loc</code>) und σ
+							(<code>scale</code>) (stetig)
+						</dd>
+					</div>
+					<div>
+						<dt><code>stats.uniform(loc, scale)</code></dt>
+						<dd>
+							Uniformverteilung auf [<code>loc</code>,
+							<code>loc + scale</code>] (stetig)
+						</dd>
+					</div>
+					<div>
+						<dt><code>stats.expon(scale)</code></dt>
+						<dd>
+							Exponentialverteilung mit λ = 1 / <code>scale</code>
+							(stetig)
+						</dd>
+					</div>
+				</dl>
+
+				<p>Diese Objekte verfügen über Methoden zur Berechnung von Wahrscheinlichkeiten:</p>
+				<dl class="deflist">
+					<div>
+						<dt><code>pmf(k)</code></dt>
+						<dd>Wahrscheinlichkeitsfunktion P(X = k) (nur für diskrete Verteilungen).</dd>
+					</div>
+					<div>
+						<dt><code>pdf(x)</code></dt>
+						<dd>Dichtefunktion f(x) (nur für stetige Verteilungen).</dd>
+					</div>
+					<div>
+						<dt><code>cdf(x)</code></dt>
+						<dd>Verteilungsfunktion F(x) = P(X ≤ x).</dd>
+					</div>
+					<div>
+						<dt><code>ppf(q)</code></dt>
+						<dd>
+							Prozentpunktfunktion (Inverse CDF). Liefert das
+							<i>x</i>, für das P(X ≤ x) = q gilt.
+						</dd>
+					</div>
+					<div>
+						<dt><code>rvs(size)</code></dt>
+						<dd>Generiert Zufallswerte (<em>Random Variates</em>) dieser Verteilung.</dd>
+					</div>
+				</dl>
+
+				<p class="hint"><b>Beispiel.</b> Nutzung von Zufallsgrössen-Objekten in SciPy</p>
+				<div class="workbench" data-id="wbex1" data-files="python" data-height="160">
+					<template data-seed="python">
+from scipy import stats
+
+# Definition einer normalverteilten Zufallsgrösse X ~ N(176, 6)
+X = stats.norm(loc=176, scale=6)
+
+# P(X &lt;= 170)
+prob_cdf = X.cdf(170)
+print(f"P(X &lt;= 170) = {prob_cdf:.4f}") # 0.1587
+
+# Welcher Wert wird von 95% der Werte unterschritten?
+wert_95 = X.ppf(0.95)
+print(f"95%-Quantil: {wert_95:.2f} cm") # 185.87 cm
+					</template>
+				</div>
+
+				<h2 id="p-wert">Vom Datensatz zur Entscheidung: der p-Wert</h2>
+				<p>
+					Bisher kannten wir alle Parameter (zum Beispiel <i>p</i>
+					bei der Binomialverteilung) bereits im Voraus. In der
+					Praxis liegen uns aber meistens nur <em>Messdaten</em> vor
+					(eine Stichprobe), aus denen wir schliessen wollen, ob
+					eine Vermutung (H₁) haltbar ist. Genau dafür sind
+					statistische Tests da.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Definition: der p-Wert</p>
+					<p>
+						Der <em>p-Wert</em> ist die Wahrscheinlichkeit, unter
+						der Annahme der Nullhypothese H₀ ein mindestens so
+						extremes Testergebnis wie das tatsächlich beobachtete
+						zu erhalten.
+					</p>
+					<p>Es gilt die fundamentale Entscheidungsregel für ein vorgegebenes Signifikanzniveau α:</p>
+					<p>
+						<b>Falls p-Wert ≤ α ⟹ H₀ ablehnen (Entscheidung für H₁)</b><br />
+						<b>Falls p-Wert &gt; α ⟹ H₀ beibehalten (nicht genügend Evidenz für H₁)</b>
+					</p>
+				</div>
+
+				<div class="hint">
+					<p>
+						Jede Funktion in <code>scipy.stats</code>, die einen
+						Test durchführt, übernimmt für uns genau die Rolle,
+						die früher eine Tabelle oder eine von Hand
+						hergeleitete Formel hatte: Sie bestimmt die Verteilung
+						der Teststatistik unter H₀ und liest daraus den
+						p-Wert ab. Wir müssen diese Verteilung nicht mehr
+						selbst kennen.
+					</p>
+				</div>
+
+				<h2 id="tests-python">Statistische Tests in Python</h2>
+				<p>
+					Wir betrachten nun fünf fundamentale Hypothesentests und
+					implementieren diese mit konkreten, anwendungsnahen
+					Beispielen in Python.
+				</p>
+
+				<h3 id="t-test-1">1. Der Einstichproben-t-Test (1-sample t-test)</h3>
+				<p>
+					Der t-Test prüft, ob der Erwartungswert μ einer
+					(annähernd normalverteilten) Grundgesamtheit von einem
+					vorgegebenen Sollwert μ₀ abweicht.
+				</p>
+				<div class="box box--note">
+					<p>
+						Ein Abfüller behauptet, dass seine Kaffeepackungen im
+						Mittel μ₀ = 500 g Kaffee enthalten. Wir wiegen 10
+						Packungen und erhalten die Stichprobe:
+						[495, 496, 502, 498, 492, 497, 501, 493, 495, 499].
+						Weicht das Gewicht signifikant nach unten ab?
+					</p>
+					<p>H₀: μ ≥ 500 g &nbsp;vs.&nbsp; H₁: μ &lt; 500 g (einseitiger Test)</p>
+				</div>
+				<p class="hint"><b>Beispiel.</b> Einstichproben-t-Test in Python</p>
+				<div class="workbench" data-id="wbex2" data-files="python" data-height="260">
+					<template data-seed="python">
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+daten = np.array([495, 496, 502, 498, 492, 497, 501, 493, 495, 499])
+mu_0 = 500
+
+# Einseitiger t-Test (Alternative 'less' für H_1: mu &lt; mu_0)
+t_stat, p_val = stats.ttest_1samp(daten, popmean=mu_0, alternative='less')
+
+print(f"Mittelwert der Stichprobe: {np.mean(daten):.2f}g")
+print(f"t-Statistik: {t_stat:.4f}, p-Wert: {p_val:.4f}")
+
+# Visualisierung
+plt.figure(figsize=(8, 4))
+plt.hist(daten, bins=5, color='skyblue', edgecolor='black', alpha=0.7)
+plt.axvline(mu_0, color='red', linestyle='dashed', linewidth=2, label="Sollwert (500g)")
+plt.axvline(np.mean(daten), color='blue', linestyle='solid', linewidth=2, label="Stichproben-Mittel")
+plt.title("1-Sample t-Test: Füllgewichte von Kaffee")
+plt.xlabel("Gewicht (g)")
+plt.ylabel("Häufigkeit")
+plt.legend()
+plt.show()
+					</template>
+				</div>
+				<p>
+					Der berechnete p-Wert ist ca. 0.0055. Da 0.0055 ≤ 0.05,
+					lehnen wir die Nullhypothese ab. Die Kaffeepackungen sind
+					signifikant unterfüllt.
+				</p>
+
+				<h3 id="t-test-2">2. Der Zweistichproben-t-Test (2-sample t-test)</h3>
+				<p>Er vergleicht die Mittelwerte zweier unabhängiger Gruppen auf signifikante Unterschiede.</p>
+				<div class="box box--note">
+					<p>
+						Wir wollen wissen, ob Tomatenpflanzen mit einem neuen
+						Dünger (Gruppe A) höher wachsen als mit dem
+						Standarddünger (Gruppe B).
+					</p>
+					<p>H₀: μ<sub>A</sub> ≤ μ<sub>B</sub> &nbsp;vs.&nbsp; H₁: μ<sub>A</sub> &gt; μ<sub>B</sub> (einseitig)</p>
+				</div>
+				<p class="hint"><b>Beispiel.</b> Zweistichproben-t-Test mit Boxplot-Visualisierung</p>
+				<div class="workbench" data-id="wbex3" data-files="python" data-height="260">
+					<template data-seed="python">
+from scipy import stats
+import numpy as np
+import matplotlib.pyplot as plt
+
+gruppe_A = np.array([85, 88, 79, 92, 84, 90, 81, 86])
+gruppe_B = np.array([78, 82, 80, 85, 75, 79, 81, 77])
+
+# t-Test für unabhängige Stichproben (einseitig: A &gt; B)
+t_stat, p_val = stats.ttest_ind(gruppe_A, gruppe_B, alternative='greater')
+
+print(f"p-Wert: {p_val:.4f}")
+
+# Visualisierung als Boxplot
+plt.figure(figsize=(6, 4))
+plt.boxplot([gruppe_A, gruppe_B], labels=['Neuer Dünger (A)', 'Standard (B)'])
+plt.title("Wuchshöhe der Tomatenpflanzen")
+plt.ylabel("Höhe (cm)")
+plt.show()
+					</template>
+				</div>
+
+				<h3 id="t-test-3">3. Der gepaarte t-Test (paired t-test)</h3>
+				<p>
+					Manchmal werden <em>dieselben</em> Objekte oder Personen
+					zweimal gemessen (zum Beispiel vorher/nachher). Dann sind
+					die beiden Stichproben nicht unabhängig, sondern paarweise
+					verbunden. In diesem Fall betrachtet man einfach die
+					Differenzen der Paare und testet, ob deren Erwartungswert
+					von 0 abweicht.
+				</p>
+				<div class="box box--note">
+					<p>
+						Zehn Schülerinnen und Schüler absolvieren einen
+						Vokabeltest, üben danach vier Wochen mit einer
+						Lern-App und schreiben denselben Test nochmals. Hat
+						die App etwas gebracht?
+					</p>
+					<p>H₀: μ<sub>nachher</sub> ≤ μ<sub>vorher</sub> &nbsp;vs.&nbsp; H₁: μ<sub>nachher</sub> &gt; μ<sub>vorher</sub> (einseitig)</p>
+				</div>
+				<p class="hint"><b>Beispiel.</b> Gepaarter t-Test in Python</p>
+				<div class="workbench" data-id="wbex4" data-files="python" data-height="160">
+					<template data-seed="python">
+from scipy import stats
+import numpy as np
+
+vorher  = np.array([11, 9, 14, 8, 12, 10, 13, 9, 11, 10])
+nachher = np.array([13, 12, 15, 10, 14, 12, 14, 12, 13, 12])
+
+# Gepaarter t-Test (einseitig: nachher &gt; vorher)
+t_stat, p_val = stats.ttest_rel(nachher, vorher, alternative='greater')
+
+print(f"Mittlere Verbesserung: {np.mean(nachher - vorher):.2f} Punkte")
+print(f"t-Statistik: {t_stat:.4f}, p-Wert: {p_val:.6f}")
+					</template>
+				</div>
+				<p>Der p-Wert ist verschwindend klein (p ≈ 0.000003). Die Verbesserung ist hochsignifikant.</p>
+
+				<h3 id="binomialtest">4. Der Binomialtest</h3>
+				<p>
+					Diskrete Variante für dichotome Variablen
+					(Erfolg/Misserfolg). Er testet die hypothetische
+					Erfolgswahrscheinlichkeit <i>p</i> bei <i>n</i> Versuchen
+					exakt, ganz ohne Normalapproximation.
+				</p>
+				<div class="box box--note">
+					<p>
+						Ein fehlerhafter Münzwurfautomat liefert bei n=20
+						Würfen genau 17 Mal Kopf. Weicht die Münze signifikant
+						von einer fairen Münze (p₀=0.5) ab?
+					</p>
+					<p>H₀: p = 0.5 &nbsp;vs.&nbsp; H₁: p ≠ 0.5 (zweiseitig)</p>
+				</div>
+				<p class="hint"><b>Beispiel.</b> Binomialtest mit grafischer Darstellung der Extrembereiche</p>
+				<div class="workbench" data-id="wbex5" data-files="python" data-height="260">
+					<template data-seed="python">
+from scipy import stats
+import matplotlib.pyplot as plt
+import numpy as np
+
+n, k, p_null = 20, 17, 0.5
+p_val = stats.binomtest(k, n, p=p_null, alternative='two-sided').pvalue
+print(f"Zweiseitiger p-Wert des Binomialtests: {p_val:.4f}")
+
+# Visualisierung der Nullverteilung
+x = np.arange(0, n + 1)
+y = stats.binom.pmf(x, n, p_null)
+
+plt.figure(figsize=(8, 4))
+bars = plt.bar(x, y, color='lightgray', edgecolor='black')
+# Hebe die extremen Werte (&gt;=17 und &lt;=3) rot hervor
+for i in x:
+    if i &gt;= k or i &lt;= (n - k):
+        bars[i].set_color('red')
+
+plt.title(f"Binomialverteilung unter H0 (n=20, p=0.5). Rot = Extremwerte")
+plt.xlabel("Anzahl Erfolge")
+plt.ylabel("Wahrscheinlichkeit")
+plt.xticks(x)
+plt.show()
+					</template>
+				</div>
+				<p>Der p-Wert beträgt hier ca. 0.0026. Da 0.0026 ≤ 0.05, ist die Münze signifikant unfair.</p>
+
+				<h3 id="chi-quadrat">5. Der Chi-Quadrat-Test</h3>
+				<p>Damit lassen sich zwei verwandte Fragestellungen beantworten:</p>
+				<ul>
+					<li>
+						<em>Anpassungstest</em> (<em>goodness of fit</em>):
+						Passt eine beobachtete Häufigkeitsverteilung über
+						<em>mehrere</em> Kategorien zu einer erwarteten
+						(theoretischen) Verteilung? (<code>stats.chisquare</code>)
+					</li>
+					<li>
+						<em>Unabhängigkeitstest</em>: Sind zwei kategoriale
+						Variablen (z. B. Geschlecht und bevorzugtes Schulfach)
+						unabhängig voneinander?
+						(<code>stats.chi2_contingency</code>)
+					</li>
+				</ul>
+				<div class="box box--note">
+					<p>
+						Wir bestimmen, ob die Wahl des Lieblingshaustiers
+						(Hund/Katze) vom Wohnort (Stadt/Land) abhängt. Die
+						erhobenen Daten werden in einer Kontingenztabelle
+						erfasst:
+					</p>
+					<table class="data">
+						<thead>
+							<tr><th></th><th>Hund</th><th>Katze</th></tr>
+						</thead>
+						<tbody>
+							<tr><td>Stadtbewohner</td><td>45</td><td>55</td></tr>
+							<tr><td>Landbewohner</td><td>70</td><td>30</td></tr>
+						</tbody>
+					</table>
+					<p>
+						H₀: Wohnort und Haustierwahl sind unabhängig
+						voneinander.<br />
+						H₁: Wohnort und Haustierwahl hängen voneinander ab.
+					</p>
+				</div>
+				<p class="hint"><b>Beispiel.</b> Chi-Quadrat-Unabhängigkeitstest in Python</p>
+				<div class="workbench" data-id="wbex6" data-files="python" data-height="200">
+					<template data-seed="python">
+import numpy as np
+from scipy import stats
+
+# Kontingenztabelle als Matrix
+tabelle = np.array([[45, 55],
+                    [70, 30]])
+
+chi2, p_val, dof, erwartet = stats.chi2_contingency(tabelle)
+
+print(f"Chi2-Statistik: {chi2:.4f}")
+print(f"p-Wert: {p_val:.4f}")
+print("Erwartete Häufigkeiten unter H0:")
+print(erwartet)
+					</template>
+				</div>
+				<p>
+					Der p-Wert ist extrem klein (p ≈ 0.0006). Wir lehnen H₀
+					ab. Die Haustierpräferenz unterscheidet sich signifikant
+					zwischen Stadt und Land.
+				</p>
+
+				<h2 id="konfidenz">Vertrauensintervalle mit Python</h2>
+				<p>
+					Mit <code>scipy.stats</code> können wir ein
+					Konfidenzintervall direkt aus Rohdaten berechnen, ohne
+					die zugrundeliegende Formel selbst auswendig zu kennen.
+					Eine besonders vielseitige, moderne Methode dazu ist das
+					<em>Bootstrap</em>-Verfahren: Aus der vorhandenen
+					Stichprobe wird (mit Zurücklegen) sehr oft neu gezogen,
+					jedes Mal der Mittelwert berechnet, und aus der so
+					entstandenen Verteilung von Mittelwerten das Intervall
+					abgelesen.
+				</p>
+				<div class="box box--note">
+					<p>
+						Eine Umfrage bei 15 Jugendlichen ergibt die folgende
+						tägliche Bildschirmzeit (in Minuten): [210, 245, 190,
+						260, 300, 175, 220, 255, 230, 205, 280, 195, 240, 265,
+						215]. Wie lautet ein 95%-Konfidenzintervall für die
+						durchschnittliche Bildschirmzeit aller Jugendlichen?
+					</p>
+				</div>
+				<p class="hint"><b>Beispiel.</b> Bootstrap-Konfidenzintervall in Python</p>
+				<div class="workbench" data-id="wbex7" data-files="python" data-height="180">
+					<template data-seed="python">
+import numpy as np
+from scipy import stats
+
+daten = np.array([210, 245, 190, 260, 300, 175, 220, 255,
+                   230, 205, 280, 195, 240, 265, 215])
+
+ergebnis = stats.bootstrap((daten,), np.mean, confidence_level=0.95,
+                            n_resamples=10000, method='percentile')
+
+print(f"Mittelwert: {np.mean(daten):.1f} Minuten")
+print(f"95%-Konfidenzintervall: {ergebnis.confidence_interval}")
+					</template>
+				</div>
+				<p>
+					Wir erhalten ungefähr das Intervall [216, 250] Minuten.
+					Bei wiederholter Umfrage würden etwa 95% der so
+					berechneten Intervalle die wahre durchschnittliche
+					Bildschirmzeit aller Jugendlichen enthalten.
+				</p>
+
+				<h2 id="simulation">Simulation statt Tabelle: p-Werte durch Zufallsexperimente schätzen</h2>
+				<p>
+					Der eigentliche Sinn eines p-Wertes ist einfach: «Wie
+					wahrscheinlich ist ein mindestens so extremes Resultat,
+					wenn H₀ stimmt?» Diese Frage lässt sich <em>immer</em>
+					beantworten, indem man H₀ am Computer sehr oft simuliert
+					und nachzählt — ganz ohne Formel, Tabelle oder
+					eingebaute Testfunktion. Das ist besonders nützlich, wenn
+					(wie oft im echten Leben) keine passende Testfunktion
+					existiert.
+				</p>
+				<p>Wir überprüfen dies am Münzbeispiel von oben (n=20, k=17, p₀=0.5) nochmals nach:</p>
+				<p class="hint"><b>Beispiel.</b> Schätzung eines p-Wertes durch Simulation (Monte-Carlo-Methode)</p>
+				<div class="workbench" data-id="wbex8" data-files="python" data-height="180">
+					<template data-seed="python">
+import numpy as np
+
+rng = np.random.default_rng()
+n, k, p_null = 20, 17, 0.5
+anzahl_simulationen = 100_000
+
+# 100'000 Mal 20 faire Münzwürfe simulieren
+simulationen = rng.binomial(n, p_null, size=anzahl_simulationen)
+
+# Wie oft ist das simulierte Ergebnis mindestens so extrem wie k=17?
+# "Extrem" heisst hier: mindestens so weit von n/2=10 entfernt wie 17.
+extrem = np.abs(simulationen - n * p_null) &gt;= abs(k - n * p_null)
+p_simuliert = np.mean(extrem)
+
+print(f"Simulierter p-Wert: {p_simuliert:.4f}")  # ca. 0.0025
+					</template>
+				</div>
+				<p>
+					Der simulierte p-Wert (≈ 0.0025) stimmt (bis auf den
+					unvermeidlichen Simulationsfehler) mit dem exakten Wert
+					von <code>stats.binomtest</code> (≈ 0.0026) überein.
+					Diese Technik heisst <em>Monte-Carlo-Simulation</em> und
+					funktioniert für praktisch jede denkbare Fragestellung,
+					solange man weiss, wie man H₀ simulieren kann.
+				</p>
+				<div class="hint">
+					<p>
+						Genau aus diesem Grund braucht man in der Praxis keine
+						gedruckten Wahrscheinlichkeitstabellen mehr: Statt
+						eine Verteilung nachzuschlagen, lässt man den
+						Computer die Situation unter H₀ nachbauen (simulieren
+						oder exakt berechnen) und liest den p-Wert direkt ab.
+					</p>
+				</div>
+
+				<h2 id="checkliste">Checkliste: Welchen Test verwende ich?</h2>
+				<ul>
+					<li>Ein Mittelwert soll mit einem festen Sollwert verglichen werden → <em>Einstichproben-t-Test</em> (<code>ttest_1samp</code>).</li>
+					<li>Zwei <em>unabhängige</em> Gruppen sollen bezüglich ihres Mittelwerts verglichen werden → <em>Zweistichproben-t-Test</em> (<code>ttest_ind</code>).</li>
+					<li>Dieselben Objekte/Personen wurden zweimal gemessen (vorher/nachher) → <em>Gepaarter t-Test</em> (<code>ttest_rel</code>).</li>
+					<li>Ein Anteil (eine Erfolgswahrscheinlichkeit p) soll mit einem festen Sollwert verglichen werden → <em>Binomialtest</em> (<code>binomtest</code>).</li>
+					<li>Beobachtete Häufigkeiten mehrerer Kategorien sollen mit erwarteten Häufigkeiten verglichen werden → <em>Chi-Quadrat-Anpassungstest</em> (<code>chisquare</code>).</li>
+					<li>Zwei kategoriale Variablen sollen auf Zusammenhang untersucht werden (Kontingenztabelle) → <em>Chi-Quadrat-Unabhängigkeitstest</em> (<code>chi2_contingency</code>).</li>
+					<li>Für nichts davon gibt es eine passende Funktion, oder man möchte die Bedeutung des p-Wertes nachvollziehen → <em>Simulation/Monte-Carlo-Methode</em> (siehe <a href="#simulation">oben</a>).</li>
+				</ul>
+
+				<h2 id="uebungen">Übungen</h2>
+				<p>
+					Lösen Sie die folgenden Aufgaben mit Python (also mit
+					<code>scipy.stats</code>/<code>numpy</code>), nicht von
+					Hand und nicht mit einer Wahrscheinlichkeitstabelle. Geben
+					Sie jeweils Nullhypothese und Alternativhypothese an
+					(auf Papier oder im Kommentar Ihres Codes), lesen Sie den
+					p-Wert ab und formulieren Sie einen Antwortsatz.
+				</p>
+
+				<!-- ============================================== Übung 3.14 -->
+				<section class="exercise" id="ex-lootbox">
+					<div class="exercise__body">
+						<p>
+							Ein Mobile-Game verkauft «Beutekisten» mit je einem
+							von 5 Charakter-Skins. Der Hersteller wirbt damit,
+							dass alle 5 Skins gleich wahrscheinlich (je 20%)
+							seien. Eine Spielerin öffnet 200 Kisten und erhält
+							folgende Häufigkeiten:
+						</p>
+						<table class="data">
+							<thead>
+								<tr><th>Skin</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+							</thead>
+							<tbody>
+								<tr><td>Häufigkeit</td><td>50</td><td>38</td><td>45</td><td>42</td><td>25</td></tr>
+							</tbody>
+						</table>
+						<p>Ist diese Verteilung mit der Werbeaussage des Herstellers verträglich (Niveau α = 5%)?</p>
+						<p class="hint"><em>Hinweis:</em> <code>stats.chisquare</code>.</p>
+
+						<div
+							class="workbench"
+							data-id="wb14"
+							data-files="python"
+							data-sol-python="hypothesen/lootbox.py"
+							data-height="220"
+						>
+							<template data-seed="python">
+import numpy as np
+from scipy import stats
+
+beobachtet = np.array([50, 38, 45, 42, 25])
+erwartet = np.full(5, beobachtet.sum() / 5)  # je 40 erwartet
+
+# TODO: Führen Sie einen Chi-Quadrat-Anpassungstest durch (stats.chisquare)
+# und drucken Sie chi2 und den p-Wert.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>
+									Wir testen mit einem
+									Chi-Quadrat-Anpassungstest, ob die
+									beobachteten Häufigkeiten zu der
+									behaupteten Gleichverteilung (je 40 von
+									200) passen:
+								</p>
+								<p>
+									H₀: Alle 5 Skins sind gleich
+									wahrscheinlich. &nbsp;vs.&nbsp; H₁: Die
+									Skins sind nicht gleich wahrscheinlich.
+								</p>
+								<div
+									class="workbench"
+									data-id="sollootbox"
+									data-files="python"
+									data-seed-python="hypothesen/lootbox.py"
+									data-height="200"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/hypothesen/lootbox.py"
+										>lootbox.py</a
+									>)
+								</p>
+								<p>
+									Dies liefert p-Wert ≈ 0.0624. Da 0.0624 >
+									0.05, behalten wir H₀ bei: Die
+									Abweichungen sind (knapp) noch mit einer
+									Gleichverteilung verträglich, auch wenn
+									Skin E auffällig selten vorkam.
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.15 -->
+				<section class="exercise" id="ex-abtest">
+					<div class="exercise__body">
+						<p>
+							Ein Online-Shop testet zwei Layouts seiner
+							Bestellseite gegeneinander (A/B-Test). Von 1000
+							Besuchenden mit Layout A schliessen 120 einen Kauf
+							ab, von 1000 Besuchenden mit Layout B sind es 158.
+							Unterscheiden sich die beiden Layouts bezüglich
+							der Kaufwahrscheinlichkeit signifikant (Niveau α =
+							5%)?
+						</p>
+						<p class="hint">
+							<em>Hinweis:</em> Stellen Sie die Daten als
+							2×2-Kontingenztabelle (gekauft/nicht gekauft) dar
+							und benutzen Sie <code>stats.chi2_contingency</code>.
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb15"
+							data-files="python"
+							data-sol-python="hypothesen/abtest.py"
+							data-height="220"
+						>
+							<template data-seed="python">
+import numpy as np
+from scipy import stats
+
+# Zeile 1: Layout A, Zeile 2: Layout B; Spalte 1: gekauft, Spalte 2: nicht gekauft
+tabelle = np.array([[120, 880],
+                     [158, 842]])
+
+# TODO: Führen Sie einen Chi-Quadrat-Unabhängigkeitstest durch
+# (stats.chi2_contingency) und drucken Sie chi2 und den p-Wert.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>
+									Wir bilden die Kontingenztabelle der Käufe
+									und Nicht-Käufe pro Layout und testen auf
+									Unabhängigkeit von Layout und Kaufentscheid.
+									Die erste Zeile steht für Layout A, die
+									zweite für Layout B; die erste Spalte zählt
+									die Käufe, die zweite die Nicht-Käufe:
+								</p>
+								<p>
+									H₀: Layout und Kaufentscheid sind
+									unabhängig (gleiche Conversion-Rate).
+									&nbsp;vs.&nbsp; H₁: Sie hängen zusammen.
+								</p>
+								<div
+									class="workbench"
+									data-id="solabtest"
+									data-files="python"
+									data-seed-python="hypothesen/abtest.py"
+									data-height="200"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/hypothesen/abtest.py"
+										>abtest.py</a
+									>)
+								</p>
+								<p>
+									Dies liefert p-Wert ≈ 0.0140. Da 0.0140 ≤
+									0.05, lehnen wir H₀ ab: Layout B hat eine
+									signifikant höhere Conversion-Rate (15.8%
+									statt 12.0%).
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.16 -->
+				<section class="exercise" id="ex-schritte">
+					<div class="exercise__body">
+						<p>
+							Eine Fitness-App wirbt damit, dass Nutzende, die
+							dem eingebauten Trainingsplan folgen, im
+							Durchschnitt <em>mindestens</em> 10'000 Schritte
+							pro Tag erreichen. Der Konsumentenschutz vermutet,
+							dass die tatsächliche durchschnittliche
+							Schrittzahl darunter liegt, und lässt 10 zufällig
+							ausgewählte Nutzende ihre über eine Woche
+							gemittelte tägliche Schrittzahl protokollieren:
+						</p>
+						<p>
+							[9800, 9200, 10100, 8950, 9400, 9600, 9300, 10050,
+							8800, 9500]
+						</p>
+						<p>Ist die Werbeaussage auf dem Niveau α = 5% widerlegt?</p>
+						<p class="hint">
+							<em>Hinweis:</em> einseitiger
+							Einstichproben-t-Test,
+							<code>stats.ttest_1samp</code>.
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb16"
+							data-files="python"
+							data-sol-python="hypothesen/schritte.py"
+							data-height="220"
+						>
+							<template data-seed="python">
+import numpy as np
+from scipy import stats
+
+schritte = np.array([9800, 9200, 10100, 8950, 9400,
+                      9600, 9300, 10050, 8800, 9500])
+
+# TODO: Führen Sie einen einseitigen Einstichproben-t-Test gegen
+# popmean=10000 durch (stats.ttest_1samp, alternative='less') und
+# drucken Sie t und den p-Wert.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>
+									Wir setzen H₀: μ ≥ 10'000 (Werbeaussage
+									stimmt) &nbsp;vs.&nbsp; H₁: μ &lt; 10'000
+									(Werbeaussage ist übertrieben).
+								</p>
+								<div
+									class="workbench"
+									data-id="solschritte"
+									data-files="python"
+									data-seed-python="hypothesen/schritte.py"
+									data-height="200"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/hypothesen/schritte.py"
+										>schritte.py</a
+									>)
+								</p>
+								<p>
+									Der Mittelwert der Stichprobe beträgt 9470
+									Schritte, und es ergibt sich p-Wert ≈
+									0.0019. Da 0.0019 ≤ 0.05, lehnen wir H₀ ab:
+									Die durchschnittliche Schrittzahl liegt
+									signifikant unter den beworbenen 10'000.
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.17 -->
+				<section class="exercise" id="ex-vokabelapp">
+					<div class="exercise__body">
+						<p>
+							Zehn Schülerinnen und Schüler schreiben einen
+							Vokabeltest (max. 20 Punkte), üben danach vier
+							Wochen lang mit einer neuen Lern-App und schreiben
+							denselben Test nochmals:
+						</p>
+						<table class="data">
+							<thead>
+								<tr>
+									<th></th>
+									<th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
+									<th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Vorher</td>
+									<td>11</td><td>9</td><td>14</td><td>8</td><td>12</td>
+									<td>10</td><td>13</td><td>9</td><td>11</td><td>10</td>
+								</tr>
+								<tr>
+									<td>Nachher</td>
+									<td>13</td><td>12</td><td>15</td><td>10</td><td>14</td>
+									<td>12</td><td>14</td><td>12</td><td>13</td><td>12</td>
+								</tr>
+							</tbody>
+						</table>
+						<p>Hat die App auf dem Niveau α = 5% zu einer signifikanten Verbesserung geführt?</p>
+						<p class="hint">
+							<em>Hinweis:</em> Dieselben Personen werden
+							zweimal gemessen – gepaarter t-Test,
+							<code>stats.ttest_rel</code>.
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb17"
+							data-files="python"
+							data-sol-python="hypothesen/vokabelapp.py"
+							data-height="220"
+						>
+							<template data-seed="python">
+import numpy as np
+from scipy import stats
+
+vorher  = np.array([11, 9, 14, 8, 12, 10, 13, 9, 11, 10])
+nachher = np.array([13, 12, 15, 10, 14, 12, 14, 12, 13, 12])
+
+# TODO: Führen Sie einen gepaarten, einseitigen t-Test durch
+# (stats.ttest_rel, alternative='greater') und drucken Sie t und den p-Wert.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>
+									Da dieselben Schülerinnen und Schüler
+									zweimal getestet wurden, sind die
+									Stichproben nicht unabhängig. Wir
+									verwenden einen gepaarten, einseitigen
+									t-Test: H₀: μ<sub>nachher</sub> ≤
+									μ<sub>vorher</sub> &nbsp;vs.&nbsp; H₁:
+									μ<sub>nachher</sub> > μ<sub>vorher</sub>.
+								</p>
+								<div
+									class="workbench"
+									data-id="solvokabelapp"
+									data-files="python"
+									data-seed-python="hypothesen/vokabelapp.py"
+									data-height="200"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/hypothesen/vokabelapp.py"
+										>vokabelapp.py</a
+									>)
+								</p>
+								<p>
+									Der p-Wert ist verschwindend klein (p ≈
+									0.0000028). Wir lehnen H₀ klar ab: Die
+									Verbesserung um durchschnittlich 2 Punkte
+									ist hochsignifikant.
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.18 -->
+				<section class="exercise" id="ex-esport">
+					<div class="exercise__body">
+						<p>
+							In einem E-Sport-Verein wird vermutet, dass
+							Spielerinnen und Spieler mit der Maus schneller
+							reagieren als solche mit dem Controller. Man misst
+							die Reaktionszeit (in Millisekunden, tiefer ist
+							schneller) bei je 8 unabhängigen Personen:
+						</p>
+						<table class="data">
+							<thead>
+								<tr>
+									<th></th>
+									<th>1</th><th>2</th><th>3</th><th>4</th>
+									<th>5</th><th>6</th><th>7</th><th>8</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Maus</td>
+									<td>210</td><td>198</td><td>205</td><td>215</td>
+									<td>190</td><td>200</td><td>208</td><td>195</td>
+								</tr>
+								<tr>
+									<td>Controller</td>
+									<td>230</td><td>225</td><td>240</td><td>220</td>
+									<td>235</td><td>245</td><td>228</td><td>232</td>
+								</tr>
+							</tbody>
+						</table>
+						<p>Bestätigt sich die Vermutung auf dem Niveau α = 5%?</p>
+						<p class="hint">
+							<em>Hinweis:</em> zwei unabhängige Gruppen –
+							Zweistichproben-t-Test, <code>stats.ttest_ind</code>.
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb18"
+							data-files="python"
+							data-sol-python="hypothesen/esport.py"
+							data-height="220"
+						>
+							<template data-seed="python">
+import numpy as np
+from scipy import stats
+
+maus       = np.array([210, 198, 205, 215, 190, 200, 208, 195])
+controller = np.array([230, 225, 240, 220, 235, 245, 228, 232])
+
+# TODO: Führen Sie einen einseitigen Zweistichproben-t-Test durch
+# (stats.ttest_ind, alternative='less') und drucken Sie t und den p-Wert.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>
+									Die beiden Gruppen bestehen aus
+									unterschiedlichen Personen und sind daher
+									unabhängig. Da eine <em>tiefere</em>
+									Reaktionszeit «schneller» bedeutet, lautet
+									der einseitige Test: H₀:
+									μ<sub>Maus</sub> ≥ μ<sub>Controller</sub>
+									&nbsp;vs.&nbsp; H₁: μ<sub>Maus</sub> &lt;
+									μ<sub>Controller</sub>.
+								</p>
+								<div
+									class="workbench"
+									data-id="solesport"
+									data-files="python"
+									data-seed-python="hypothesen/esport.py"
+									data-height="200"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/hypothesen/esport.py"
+										>esport.py</a
+									>)
+								</p>
+								<p>
+									Es ergibt sich p-Wert ≈ 0.0000026. Wir
+									lehnen H₀ klar ab: Mit der Maus wird
+									hochsignifikant schneller reagiert als mit
+									dem Controller.
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.19 -->
+				<section class="exercise" id="ex-bildschirmzeit">
+					<div class="exercise__body">
+						<p>
+							Eine Umfrage bei 15 zufällig ausgewählten
+							Jugendlichen ergibt die folgende tägliche
+							Bildschirmzeit am Smartphone (in Minuten):
+						</p>
+						<p>
+							[210, 245, 190, 260, 300, 175, 220, 255, 230, 205,
+							280, 195, 240, 265, 215]
+						</p>
+						<p>
+							Bestimmen Sie mit dem Bootstrap-Verfahren ein
+							95%-Konfidenzintervall für die durchschnittliche
+							Bildschirmzeit aller Jugendlichen.
+						</p>
+						<p class="hint"><em>Hinweis:</em> <code>stats.bootstrap</code>.</p>
+
+						<div
+							class="workbench"
+							data-id="wb19"
+							data-files="python"
+							data-sol-python="hypothesen/bildschirmzeit.py"
+							data-height="220"
+						>
+							<template data-seed="python">
+import numpy as np
+from scipy import stats
+
+daten = np.array([210, 245, 190, 260, 300, 175, 220, 255,
+                   230, 205, 280, 195, 240, 265, 215])
+
+# TODO: Bestimmen Sie mit stats.bootstrap ein 95%-Konfidenzintervall
+# für den Mittelwert (method='percentile', n_resamples=10000) und
+# drucken Sie Mittelwert und Intervall.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>
+									Wir ziehen sehr oft (mit Zurücklegen) neue
+									Stichproben aus den vorhandenen Daten,
+									berechnen jeweils den Mittelwert und lesen
+									aus der so entstandenen Verteilung das
+									Konfidenzintervall ab:
+								</p>
+								<div
+									class="workbench"
+									data-id="solbildschirmzeit"
+									data-files="python"
+									data-seed-python="hypothesen/bildschirmzeit.py"
+									data-height="200"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/hypothesen/bildschirmzeit.py"
+										>bildschirmzeit.py</a
+									>)
+								</p>
+								<p>
+									Der Mittelwert der Stichprobe beträgt 232.3
+									Minuten, das 95%-Konfidenzintervall liegt
+									bei ungefähr [216, 250] Minuten. Wegen der
+									zufälligen Ziehung beim
+									Bootstrap-Verfahren kann Ihr Resultat
+									leicht abweichen.
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 3.20 -->
+				<section class="exercise" id="ex-montecarlo">
+					<div class="exercise__body">
+						<p>
+							Eine App simuliert einen «fairen» Münzwurf. Bei
+							100 Würfen erhält man 62 Mal «Kopf». Schätzen Sie
+							den zweiseitigen p-Wert für H₀: p=0.5 <em>durch
+							eine eigene Simulation</em> (nicht mit
+							<code>stats.binomtest</code>!) und vergleichen Sie
+							anschliessend mit dem exakten Wert von
+							<code>stats.binomtest</code>.
+						</p>
+						<p class="hint">
+							<em>Hinweis:</em> Simulieren Sie sehr oft 100
+							faire Münzwürfe mit
+							<code>rng.binomial(100, 0.5, size=...)</code> und
+							zählen Sie, wie oft das Ergebnis mindestens so
+							weit von 50 entfernt ist wie die beobachteten 62.
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb20"
+							data-files="python"
+							data-sol-python="hypothesen/montecarlo.py"
+							data-height="260"
+						>
+							<template data-seed="python">
+import numpy as np
+from scipy import stats
+
+rng = np.random.default_rng()
+n, k, p_null = 100, 62, 0.5
+anzahl_simulationen = 200_000
+
+# TODO: Simulieren Sie anzahl_simulationen Mal n faire Münzwürfe mit
+# rng.binomial(n, p_null, size=anzahl_simulationen), zählen Sie, wie oft
+# das Ergebnis mindestens so weit von n*p_null entfernt ist wie die
+# beobachteten k, und drucken Sie den simulierten p-Wert.
+#
+# Vergleichen Sie danach mit dem exakten Wert von stats.binomtest.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>
+									Statt eine fertige Testfunktion zu
+									benutzen, bauen wir die Definition des
+									p-Wertes direkt als Simulation nach:
+								</p>
+								<div
+									class="workbench"
+									data-id="solmontecarlo"
+									data-files="python"
+									data-seed-python="hypothesen/montecarlo.py"
+									data-height="200"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/hypothesen/montecarlo.py"
+										>montecarlo.py</a
+									>)
+								</p>
+								<p>
+									Beide Methoden liefern (bis auf den
+									kleinen Simulationsfehler) denselben Wert:
+									p ≈ 0.021. Da 0.021 ≤ 0.05, ist die Münze
+									auf dem 5%-Niveau signifikant unfair. Die
+									Simulation zeigt, dass man für diese Frage
+									gar keine eingebaute Testfunktion braucht,
+									sondern nur die Definition des p-Wertes
+									direkt nachbauen muss.
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<nav class="pager">
+					<a href="index.html">← <b>Übersicht</b></a>
+				</nav>
+			</div>
+
+			<aside class="minitoc">
+				<h2>Auf dieser Seite</h2>
+				<ol></ol>
+			</aside>
+		</main>
+
+		<script src="assets/examples.js"></script>
+		<script src="../assets/js/editor.js"></script>
+		<script src="../assets/js/pyrunner.js"></script>
+		<script src="../assets/js/site.js"></script>
+	</body>
+</html>

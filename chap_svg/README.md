@@ -35,7 +35,7 @@ Alle Listings, Beispielbilder und Lösungsvorschläge kommen aus dem Submodul
 die zwei Portraits nach `assets/img/`:
 
 ```sh
-python3 chap_svg-web/build.py     # aus dem Repo-Wurzelverzeichnis
+python3 webskript/chap_svg/build.py     # aus dem Wurzelverzeichnis des Hauptrepos
 ```
 
 Nach jeder Änderung in `code/gyminf/svg/` neu ausführen. `assets/examples.js`
@@ -47,7 +47,7 @@ sie direkt per Doppelklick (`file://`) geöffnet wird.
 ## Anschauen
 
 ```sh
-python3 -m http.server 8000     # aus dem Repo-Wurzelverzeichnis
+python3 -m http.server 8000     # aus dem Wurzelverzeichnis des Submoduls webskript
 ```
 
 Dann <http://localhost:8000/chap_svg/>. Über `file://` funktioniert alles

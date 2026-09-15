@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Hypothesentests – Gymnasium Muttenz</title>
+		<meta
+			name="description"
+			content="Webversion des Python-Teils aus dem Kapitel Hypothesentests des AM-Profil-B-Skripts des Gymnasiums Muttenz."
+		/>
+		<script>
+			/* Farbschema vor dem ersten Zeichnen setzen, damit beim Laden nichts
+			   aufblitzt. Dunkel ist der Standard, siehe ../assets/css/style.css. */
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.hypothesen.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="../assets/css/style.css" />
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html"
+				>Hypothesen<span>tests</span></a
+			>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-python.html">1 Testen mit Python</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main>
+			<div class="hero">
+				<p class="eyebrow">Angewandte Mathematik Profil B · Gymnasium Muttenz</p>
+				<h1>Hypothesentests</h1>
+				<p class="lead">
+					Diese Seite deckt nur den Python-Teil des Kapitels ab: den
+					Abschnitt <em>«Hypothesentests mit Python»</em> samt den
+					dazugehörigen Übungen 3.14–3.20. Die übrigen Abschnitte
+					(Zufallsgrössen, berühmte Verteilungen, Tests von Hand mit
+					Wahrscheinlichkeitstabelle oder Taschenrechner) enthalten
+					keinen Code und bringen als Webseite keinen Mehrwert
+					gegenüber dem gedruckten Skript.
+				</p>
+
+				<div class="box box--note">
+					<p class="box__label">So arbeiten Sie mit dieser Seite</p>
+					<ul>
+						<li>
+							Jede Übung hat eine <strong>Werkbank</strong> mit
+							Python-Editor. Mit <em>Ausführen</em> oder
+							<code>Ctrl</code>/<code>⌘</code> + <code>Enter</code>
+							läuft Ihr Code, die Ausgabe erscheint rechts.
+						</li>
+						<li>
+							Der Code läuft wirklich in Ihrem Browser (mit
+							<a href="https://pyodide.org/">Pyodide</a>, inklusive
+							<code>numpy</code>, <code>scipy</code> und für
+							Plots <code>matplotlib</code>) – dafür lädt
+							die Werkbank beim ersten <em>Ausführen</em> auf einer
+							Seite eine Python-Umgebung aus dem Internet nach.
+							Das dauert je nach Verbindung bis zu einer Minute;
+							danach ist es für den Rest des Seitenaufrufs schnell.
+							Ohne Internetverbindung funktioniert das Ausführen
+							nicht.
+						</li>
+						<li>
+							Ihr Code bleibt in diesem Browser gespeichert, auch
+							wenn Sie die Seite schliessen. Mit
+							<em>Herunterladen</em> holen Sie eine Datei auf den
+							Computer.
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<ul class="cards">
+				<li>
+					<a
+						class="card"
+						href="01-python.html"
+						data-page="01-python.html"
+						data-total="7"
+					>
+						<span class="card__no">Abschnitt 1</span>
+						<h2>Hypothesentests mit Python</h2>
+						<p>
+							<code>scipy.stats</code> für Verteilungen, der p-Wert,
+							fünf fundamentale Tests (t-Test, Chi-Quadrat,
+							Bootstrap-Konfidenzintervalle), Simulation statt
+							Tabelle.
+						</p>
+						<span class="card__meter">
+							<span class="meter"><i style="width: 0"></i></span>
+							<span data-count>0 / 7 Übungen erledigt</span>
+						</span>
+					</a>
+				</li>
+			</ul>
+
+			<div class="hero" style="padding-top: 3rem">
+				<blockquote>
+					<p>
+						«The future mathematical statistician needs early contacts
+						with experimental sciences. He needs them because, at this
+						stage of the development of statistics, the experimental
+						sciences are sources of theoretical problems.»
+					</p>
+					<p>
+						<img
+							src="assets/img/neyman.jpg"
+							alt="Jerzy Neyman"
+							width="90"
+							style="border-radius: 6px; vertical-align: middle"
+						/>
+						Jerzy Neyman (1894–1981), zitiert nach
+						<a href="https://en.wikiquote.org/wiki/Jerzy_Neyman"
+							>Wikiquote</a
+						>
+					</p>
+					<p class="credit">
+						Foto: Wikimedia Commons,
+						<a
+							rel="license"
+							href="https://creativecommons.org/licenses/by-sa/2.0/de/deed.de"
+							>CC BY-SA 2.0 DE</a
+						>
+					</p>
+				</blockquote>
+
+				<h2 id="nachschlagen">Zum Nachschlagen</h2>
+				<ul class="linkrow">
+					<li>
+						<a href="https://docs.scipy.org/doc/scipy/reference/stats.html"
+							>scipy.stats – Referenz</a
+						>
+					</li>
+					<li>
+						<a href="https://numpy.org/doc/stable/reference/random/generator.html"
+							>numpy.random – Zufallszahlen</a
+						>
+					</li>
+					<li><a href="https://pyodide.org/">Pyodide</a></li>
+				</ul>
+			</div>
+		</main>
+
+		<footer class="pagefoot">
+			<p>
+				Webversion des Python-Teils aus dem Kapitel
+				<em>Hypothesentests</em> des AM-Profil-B-Skripts des Gymnasiums
+				Muttenz. Die Lösungsvorschläge stammen aus dem Repository
+				<a
+					href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/hypothesen"
+					>oli4warin/gyminf</a
+				>.
+			</p>
+			<p>
+				Ihre Eingaben und Häkchen werden nur in diesem Browser
+				gespeichert und nirgends hochgeladen. Ihr Python-Code wird zum
+				Ausführen an keinen Server geschickt – er läuft direkt im
+				Browser (Pyodide/WebAssembly); geladen wird nur die
+				Python-Umgebung selbst, von einem CDN.
+			</p>
+		</footer>
+
+		<script src="assets/examples.js"></script>
+		<script src="../assets/js/editor.js"></script>
+		<script src="../assets/js/site.js"></script>
+	</body>
+</html>
