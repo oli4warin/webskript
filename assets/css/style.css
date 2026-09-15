@@ -110,7 +110,11 @@ body {
 }
 
 main > * {
-	animation: fade-rise 0.4s ease-out both;
+	/* Kein fill-mode "both": der waere nach Ablauf weiterhin "aktiv" und
+	   liesse transform: translateY(0) auf .content stehen -- das erzeugt
+	   einen neuen Containing Block fuer position:fixed-Nachfahren und
+	   bricht damit das Vollbild der Werkbank (.workbench.is-full). */
+	animation: fade-rise 0.4s ease-out;
 }
 
 /* --- Kopfleiste ---------------------------------------------------------- */
