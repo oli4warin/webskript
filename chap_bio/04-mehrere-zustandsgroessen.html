@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>4 Mehrere Zustandsgrössen – Dynamische Systeme</title>
+		<script>
+			/* Farbschema vor dem ersten Zeichnen setzen, damit beim Laden nichts
+			   aufblitzt. Dunkel ist der Standard, siehe ../assets/css/style.css. */
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.bio.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="../assets/css/style.css" />
+		<link
+			rel="icon"
+			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235fc9ae'/%3E%3Ctext x='16' y='23' font-family='system-ui,sans-serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230f1f1b'%3EW%3C/text%3E%3C/svg%3E"
+		/>
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html"
+				>Dynamische<span>Systeme</span></a
+			>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-python-matplotlib.html">1 Python und Matplotlib</a>
+				<a href="02-iterationen.html">2 Iterationen</a>
+				<a href="03-wachstumsmodelle.html">3 Wachstumsmodelle</a>
+				<a href="04-mehrere-zustandsgroessen.html">4 Mehrere Zustandsgrössen</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main class="layout" data-ex-chapter="2" data-ex-offset="13">
+			<div class="content">
+				<p class="eyebrow">Abschnitt 4</p>
+				<h1>Modelle mit mehreren Zustandsgrössen</h1>
+
+				<div class="progress" data-progress>
+					<span class="meter"><i style="width: 0"></i></span>
+					<span data-progress-text>0 von 9 Übungen erledigt</span>
+					<button type="button" data-reset>zurücksetzen</button>
+				</div>
+
+				<h2 id="raeuber-beute">Das Räuber-Beute-Modell</h2>
+				<p>
+					Zwei zunächst voneinander unabhängige Phänomene waren
+					ausschlaggebend für die Entwicklung von Modellen für
+					Räuber-Beute-Systeme. Zum einen war das die Beobachtung, dass
+					nach dem Ersten Weltkrieg der Raubfischbestand in der Adria
+					wesentlich höher war als in den Jahren davor, während der
+					Beutefischbestand im Wesentlichen gleich blieb. Natürlich
+					liess sich das teilweise mit dem Krieg erklären, in dem die
+					Fischerei weitgehend eingestellt wurde. Es blieb aber die
+					Frage offen, warum dieser Umstand die Raubfische viel stärker
+					begünstigt hatte als die Beutefische.
+				</p>
+
+				<figure class="shot">
+					<img src="assets/img/volterra.jpg" alt="Porträt von Vito Volterra" width="160" />
+					<figcaption>
+						Vito Volterra (1860–1940)
+						<span class="credit">
+							Foto: Wikimedia Commons,
+							<a href="https://commons.wikimedia.org/wiki/File:Vito_Volterra.jpg"
+								>Vito Volterra</a
+							>, Public Domain
+						</span>
+					</figcaption>
+				</figure>
+				<p>
+					Das veranlasste unabhängig voneinander die beiden Mathematiker
+					Alfred James Lotka und Vito Volterra zu einer mathematischen
+					Beschreibung der Beziehung zwischen Räubern und Beutetieren.
+					Das Ergebnis waren die sogenannten
+					<em>Lotka-Volterra-Differenzialgleichungen</em>, die in der
+					Folge sehr berühmt werden sollten.
+				</p>
+				<p>
+					Mit diesem Modell konnte auch das zweite beobachtete Phänomen
+					erklärt werden, nämlich die periodischen Schwankungen in den
+					Luchs- bzw. Schneehasenpopulationen, die von der Hudson's Bay
+					Company im Zeitraum 1843 bis 1935 aufgezeichnet wurden.
+				</p>
+
+				<p>Wir betrachten das Räuber-Beute-Modell rein iterativ:</p>
+				<p>
+					H<sub>t</sub> = H<sub>t−1</sub> + a · H<sub>t−1</sub> − b ·
+					H<sub>t−1</sub> · L<sub>t−1</sub><br />
+					L<sub>t</sub> = L<sub>t−1</sub> − c · L<sub>t−1</sub> + d ·
+					H<sub>t−1</sub> · L<sub>t−1</sub>
+				</p>
+
+				<h2 id="uebungen-rb">Übungen</h2>
+
+				<!-- ============================================== Übung 2.14 -->
+				<section class="exercise" id="ex-raeuber-beute-simulieren">
+					<div class="exercise__body">
+						<p>Simulieren Sie das Räuber-Beute-Modell</p>
+						<p>
+							H<sub>t</sub> = H<sub>t−1</sub> + a · H<sub>t−1</sub> − b ·
+							H<sub>t−1</sub> · L<sub>t−1</sub><br />
+							L<sub>t</sub> = L<sub>t−1</sub> − c · L<sub>t−1</sub> + d ·
+							H<sub>t−1</sub> · L<sub>t−1</sub>
+						</p>
+						<p>
+							indem Sie von folgenden Werten ausgehen: H₀=100, L₀=30,
+							a=0.05, b=0.002, c=0.06, d=0.001. Stellen Sie die
+							Entwicklung der beiden Populationen über 300 Zeitschritte
+							dar. Vergleichen Sie Ihr Diagramm mit den Aufzeichnungen
+							der Hudson's Bay Company.
+						</p>
+
+						<figure class="shot">
+							<img
+								src="assets/img/hudson.jpg"
+								alt="Anzahl der an die Hudson's Bay Company verkauften Felle von Schneeschuhhasen und Kanadaluchsen, etwa 1845 bis 1935"
+							/>
+							<figcaption>
+								Anzahl der an die Hudson's Bay Company verkauften Felle von
+								Schneeschuhhasen (gelb, Hintergrund) und Kanadaluchsen
+								(schwarze Linie, Vordergrund).
+								<span class="credit">
+									Wikimedia Commons,
+									<a
+										href="https://commons.wikimedia.org/wiki/File:Milliers_fourrures_vendues_en_environ_90_ans_odum_1953_en.jpg"
+										>Milliers fourrures vendues en environ 90 ans (odum 1953)</a
+									>,
+									<a
+										rel="license"
+										href="https://creativecommons.org/licenses/by-sa/4.0/deed.de"
+										>CC BY-SA 4.0</a
+									>
+								</span>
+							</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb14"
+							data-files="python"
+							data-sol-python="dynamic-systems/lotka-volterra.py"
+							data-height="260"
+						>
+							<template data-seed="python">
+import matplotlib.pyplot as plt
+
+def lotka_volterra_map(h, l, a, b, c, d):
+    return [h + a * h - b * h * l, l - c * l + d * h * l]
+
+def simulate(h0, l0, a, b, c, d, steps):
+    h = [h0]
+    l = [l0]
+    for _ in range(steps):
+        next_step = lotka_volterra_map(h[-1], l[-1], a, b, c, d)
+        h.append(next_step[0])
+        l.append(next_step[1])
+    return [h, l]
+
+# TODO: simulate(...) aufrufen und h, l gegen die Zeit plotten.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<div
+									class="workbench"
+									data-id="sol14"
+									data-files="python"
+									data-seed-python="dynamic-systems/lotka-volterra.py"
+									data-height="260"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/dynamic-systems/lotka-volterra.py"
+										>lotka-volterra.py</a
+									>) — die Werkbank führt die ganze Datei aus, das erzeugt
+									vier Diagramme (siehe auch Übungen 2.17 und 2.18 unten).
+								</p>
+								<p>
+									Wie bei den Hudson's-Bay-Aufzeichnungen pendeln beide
+									Populationen periodisch, mit der Hasenpopulation der
+									Luchspopulation leicht vorauseilend.
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 2.15 -->
+				<section class="exercise" id="ex-raeuber-beute-parameter">
+					<div class="exercise__body">
+						<p>
+							Experimentieren Sie mit den Parametern a, b, c und d im
+							Räuber-Beute-Modell
+						</p>
+						<p>
+							H<sub>t</sub> = H<sub>t−1</sub> + a · H<sub>t−1</sub> − b ·
+							H<sub>t−1</sub> · L<sub>t−1</sub><br />
+							L<sub>t</sub> = L<sub>t−1</sub> − c · L<sub>t−1</sub> + d ·
+							H<sub>t−1</sub> · L<sub>t−1</sub>
+						</p>
+						<p>
+							Lassen sich Aussagen machen, wie «Je grösser der Parameter
+							a gewählt wird, desto …» usw.?
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb15"
+							data-files="python"
+							data-seed-python="dynamic-systems/lotka-volterra.py"
+							data-height="260"
+						></div>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 2.16 -->
+				<section class="exercise" id="ex-raeuber-beute-fixpunkte">
+					<div class="exercise__body">
+						<p>Berechnen Sie alle Fixpunkte des Räuber-Beute-Modells</p>
+						<p>
+							H<sub>t</sub> = H<sub>t−1</sub> + a · H<sub>t−1</sub> − b ·
+							H<sub>t−1</sub> · L<sub>t−1</sub><br />
+							L<sub>t</sub> = L<sub>t−1</sub> − c · L<sub>t−1</sub> + d ·
+							H<sub>t−1</sub> · L<sub>t−1</sub>
+						</p>
+						<p>mit den Parametern a=0.05, b=0.002, c=0.06 und d=0.001.</p>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>Es gibt zwei Fixpunkte:</p>
+								<ul>
+									<li>H=60 und L=25</li>
+									<li>H=0 und L=0 (trivial)</li>
+								</ul>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 2.17 -->
+				<section class="exercise" id="ex-raeuber-beute-startwerte">
+					<div class="exercise__body">
+						<p>
+							Betrachten Sie nochmals das Modell aus Übung 2.14. Wie
+							sieht das Diagramm aus, wenn Sie die Fixpunkte als
+							Startwerte verwenden? Wie sieht es aus, wenn Sie
+							Startwerte verwenden, die nahe bei den Fixpunkten liegen?
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb17"
+							data-files="python"
+							data-sol-python="dynamic-systems/lotka-volterra.py"
+							data-height="260"
+						>
+							<template data-seed="python">
+import matplotlib.pyplot as plt
+
+def lotka_volterra_map(h, l, a, b, c, d):
+    return [h + a * h - b * h * l, l - c * l + d * h * l]
+
+def simulate(h0, l0, a, b, c, d, steps):
+    h = [h0]
+    l = [l0]
+    for _ in range(steps):
+        next_step = lotka_volterra_map(h[-1], l[-1], a, b, c, d)
+        h.append(next_step[0])
+        l.append(next_step[1])
+    return [h, l]
+
+def plot_lotka_volterra(h0, l0, a, b, c, d, steps):
+    [h, l] = simulate(h0, l0, a, b, c, d, steps)
+    plt.plot(h, label="Hasen")
+    plt.plot(l, label="Luchse")
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
+# TODO: einmal genau am Fixpunkt (60, 25) starten,
+# einmal knapp daneben (z.B. 59, 26) -- und vergleichen.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<div
+									class="workbench"
+									data-id="sol17"
+									data-files="python"
+									data-height="260"
+								>
+									<template data-seed="python">
+import matplotlib.pyplot as plt
+
+def lotka_volterra_map(h, l, a, b, c, d):
+    return [h + a * h - b * h * l, l - c * l + d * h * l]
+
+def simulate(h0, l0, a, b, c, d, steps):
+    h = [h0]
+    l = [l0]
+    for _ in range(steps):
+        next_step = lotka_volterra_map(h[-1], l[-1], a, b, c, d)
+        h.append(next_step[0])
+        l.append(next_step[1])
+    return [h, l]
+
+def plot_lotka_volterra(h0, l0, a, b, c, d, steps):
+    [h, l] = simulate(h0, l0, a, b, c, d, steps)
+    plt.plot(h, label="Hasen")
+    plt.plot(l, label="Luchse")
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
+# Startwert genau beim Fixpunkt (60, 25):
+plot_lotka_volterra(60, 25, 0.05, 0.002, 0.06, 0.001, 300)
+# Startwert knapp daneben (59, 26):
+plot_lotka_volterra(59, 26, 0.05, 0.002, 0.06, 0.001, 300)
+									</template>
+								</div>
+								<p class="hint">
+									Lösungsvorschlag, angepasst aus
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/dynamic-systems/lotka-volterra.py"
+										>lotka-volterra.py</a
+									>)
+								</p>
+								<p>
+									Genau am Fixpunkt bleiben beide Populationen für immer
+									konstant. Schon ein winziger Abstand vom Fixpunkt genügt
+									aber, damit die vertraute periodische Schwankung wieder
+									einsetzt — der Fixpunkt ist also nicht stabil im Sinne
+									einer Anziehung.
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<h3 id="phasendiagramm">Das Phasendiagramm</h3>
+				<p>
+					Bis jetzt haben wir Populationsgrössen auf der y-Achse in
+					Abhängigkeit von der Zeit auf der x-Achse dargestellt. Im Fall
+					von zwei (gekoppelten) Populationen bietet sich jedoch auch
+					ein sogenanntes <em>Phasendiagramm</em> an: Man verzichtet auf
+					die Zeitachse, stattdessen wird auf jede Achse eine
+					Populationsgrösse aufgetragen. Ein Punkt in diesem
+					Koordinatensystem entspricht dann einem Wertepaar, das die
+					Populationsgrössen der beiden Spezies zu einem gewissen
+					Zeitpunkt angibt. Mit Phasendiagrammen kann die
+					längerfristige Entwicklung der Populationsgrössen häufig
+					besser abgelesen werden als mit den bisherigen Diagrammen.
+				</p>
+
+				<!-- ============================================== Übung 2.18 -->
+				<section class="exercise" id="ex-phasendiagramm">
+					<div class="exercise__body">
+						<p>
+							Erstellen Sie mit Hilfe des Computers ein Phasendiagramm
+							für die Simulation aus Übung 2.14. Die x-Achse sei den
+							Hasen zugeordnet.
+						</p>
+						<ol class="tasks">
+							<li>
+								Werden dem Phasendiagramm mit fortlaufender Zeit
+								Punkte im Uhrzeiger- oder Gegenuhrzeigersinn
+								hinzugefügt?
+							</li>
+							<li>
+								Beide Spezies haben über den Zeitraum von 300
+								Zeiteinheiten mehrere Hochs und Tiefs. Zeichnen Sie im
+								Phasendiagramm an, wo man diese ablesen kann.
+							</li>
+							<li>
+								Angenommen die Populationsgrössen stabilisieren sich
+								in einem Fixpunkt, wie sieht dann das zugehörige
+								Phasendiagramm aus? Wie sieht das herkömmliche
+								Diagramm aus?
+							</li>
+							<li>
+								Angenommen die Populationsgrössen verhalten sich
+								genau zyklisch, d.h. nach einer gewissen Zeit ist
+								wieder der Anfangszustand erreicht und alles beginnt
+								wieder von vorne. Wie sieht dann das zugehörige
+								Phasendiagramm aus?
+							</li>
+							<li>
+								Wo liegen im Phasendiagramm die Punkte mit der
+								Eigenschaft, dass es mehr Luchse als Hasen gibt?
+							</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb18"
+							data-files="python"
+							data-sol-python="dynamic-systems/lotka-volterra.py"
+							data-height="260"
+						>
+							<template data-seed="python">
+import matplotlib.pyplot as plt
+
+def lotka_volterra_map(h, l, a, b, c, d):
+    return [h + a * h - b * h * l, l - c * l + d * h * l]
+
+def simulate(h0, l0, a, b, c, d, steps):
+    h = [h0]
+    l = [l0]
+    for _ in range(steps):
+        next_step = lotka_volterra_map(h[-1], l[-1], a, b, c, d)
+        h.append(next_step[0])
+        l.append(next_step[1])
+    return [h, l]
+
+# TODO: simulate(...) aufrufen und l gegen h plotten (statt gegen die Zeit).
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<div
+									class="workbench"
+									data-id="sol18"
+									data-files="python"
+									data-height="260"
+								>
+									<template data-seed="python">
+import matplotlib.pyplot as plt
+
+def lotka_volterra_map(h, l, a, b, c, d):
+    return [h + a * h - b * h * l, l - c * l + d * h * l]
+
+def simulate(h0, l0, a, b, c, d, steps):
+    h = [h0]
+    l = [l0]
+    for _ in range(steps):
+        next_step = lotka_volterra_map(h[-1], l[-1], a, b, c, d)
+        h.append(next_step[0])
+        l.append(next_step[1])
+    return [h, l]
+
+def plot_lotka_volterra_phase_diagram(h0, l0, a, b, c, d, steps):
+    [h, l] = simulate(h0, l0, a, b, c, d, steps)
+    plt.plot(h, l)
+    plt.tight_layout()
+    plt.xlabel("Hasen")
+    plt.ylabel("Luchse")
+    plt.show()
+
+plot_lotka_volterra_phase_diagram(100, 30, 0.05, 0.002, 0.06, 0.001, 300)
+									</template>
+								</div>
+								<p class="hint">
+									Lösungsvorschlag, angepasst aus
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/dynamic-systems/lotka-volterra.py"
+										>lotka-volterra.py</a
+									>)
+								</p>
+								<ol class="tasks">
+									<li>Im Gegenuhrzeigersinn.</li>
+									<li>
+										Im Phasendiagramm kommen nach dem Stabilisieren im
+										Fixpunkt keine neuen Punkte mehr dazu. Im
+										herkömmlichen Diagramm bleiben ab dort beide Linien
+										horizontal.
+									</li>
+									<li>Ein einzelner, unveränderlicher Punkt.</li>
+									<li>Wir sehen dann im Phasendiagramm eine geschlossene Kurve.</li>
+									<li>Das sind alle Punkte, die oberhalb der ersten Winkelhalbierenden liegen.</li>
+								</ol>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 2.19 -->
+				<section class="exercise" id="ex-adria">
+					<div class="exercise__body">
+						<p>
+							Berechnen Sie zur Frage, warum die Raubfischbestände durch
+							das Einstellen der Fischerei anstiegen, während die
+							Beutefischpopulation leicht schrumpfte, die Fixpunkte des
+							allgemeinen Räuber-Beute-Modells
+						</p>
+						<p>
+							B<sub>t</sub> = B<sub>t−1</sub> + a · B<sub>t−1</sub> − b ·
+							B<sub>t−1</sub> · R<sub>t−1</sub><br />
+							R<sub>t</sub> = R<sub>t−1</sub> − c · R<sub>t−1</sub> + d ·
+							B<sub>t−1</sub> · R<sub>t−1</sub>
+						</p>
+						<p>
+							Wir nehmen an, dass vor dem Einstellen der Fischerei
+							stabile Populationen in der Adria gelebt haben
+							(Fixpunkt). Was passiert jetzt mit dem Fixpunkt, wenn
+							die Fischerei eingestellt wird? Lässt sich die obige
+							Frage nun klären?
+						</p>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>Der nicht-triviale Fixpunkt liegt bei</p>
+								<p>B = c/d und R = a/b</p>
+								<p>
+									Wenn die Fischerei eingestellt wird, erhöht sich der
+									Wert von a und der Wert von c verringert sich. Dadurch
+									wird der Fixpunktwert für B kleiner und der für R
+									grösser.
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<h2 id="si-modell">Das SI-Modell</h2>
+				<p>
+					Wir betrachten eine ansteckbare Krankheit, an der man
+					mehrmals erkranken kann, und führen die folgenden
+					Bezeichnungen ein.
+				</p>
+				<dl class="deflist">
+					<div>
+						<dt>S<sub>t</sub></dt>
+						<dd>Anzahl gesunde Individuen zum Zeitpunkt t (<em>S</em>usceptible individuals)</dd>
+					</div>
+					<div>
+						<dt>I<sub>t</sub></dt>
+						<dd>Anzahl kranke Individuen zum Zeitpunkt t (<em>I</em>nfectious individuals)</dd>
+					</div>
+				</dl>
+				<p>
+					Wir nehmen zur Vereinfachung weiter an, dass I+S konstant ist,
+					d.h. die Grösse der betrachteten Population bleibt immer
+					gleich. Geburten und Sterbefälle werden also nicht
+					berücksichtigt.
+				</p>
+				<p>
+					Wir nehmen weiter an, dass in jedem Zeitschritt ein fixer
+					Anteil a an Gesunden infiziert und ein fixer Anteil b an
+					Kranken gesund und wieder ansteckbar wird:
+				</p>
+				<p>
+					S<sub>t</sub> = S<sub>t−1</sub> − a·S<sub>t−1</sub> +
+					b·I<sub>t−1</sub><br />
+					I<sub>t</sub> = I<sub>t−1</sub> + a·S<sub>t−1</sub> −
+					b·I<sub>t−1</sub>
+				</p>
+				<p>
+					Dieses grob vereinfachende Modell blendet einen
+					beträchtlichen Teil der Komplexität der realen Gegebenheiten
+					aus und konzentriert sich auf das Grundgerüst eines simplen
+					mathematischen Modells, das den Kern präziserer Modelle
+					darstellt.
+				</p>
+
+				<h3 id="uebungen-si">Übungen</h3>
+
+				<!-- ============================================== Übung 2.20 -->
+				<section class="exercise" id="ex-si-simulieren">
+					<div class="exercise__body">
+						<p>Gegeben ist das SI-Modell:</p>
+						<p>
+							S<sub>t</sub> = S<sub>t−1</sub> − a·S<sub>t−1</sub> +
+							b·I<sub>t−1</sub><br />
+							I<sub>t</sub> = I<sub>t−1</sub> + a·S<sub>t−1</sub> −
+							b·I<sub>t−1</sub>
+						</p>
+						<p>
+							Stellen Sie dieses Modell für 50 Zeitschritte, die
+							Anfangswerte S₀=1500 und I₀=0 sowie die Parameterwerte
+							a=0.05 und b=0.1 auf dem Computer dar.
+						</p>
+						<ol class="tasks">
+							<li>
+								Simulieren Sie dieses Modell für 50 Zeitschritte und
+								erstellen Sie ein normales und ein Phasendiagramm.
+							</li>
+							<li>
+								Lesen Sie aus der Darstellung den anziehenden Fixpunkt
+								ab und weisen Sie den entsprechenden Wert rechnerisch
+								nach.
+							</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb20"
+							data-files="python"
+							data-height="260"
+						>
+							<template data-seed="python">
+import matplotlib.pyplot as plt
+
+def si_map(s, i, a, b):
+    return [s - a * s + b * i, i + a * s - b * i]
+
+def simulate(s0, i0, a, b, steps):
+    s = [s0]
+    i = [i0]
+    for _ in range(steps):
+        next_step = si_map(s[-1], i[-1], a, b)
+        s.append(next_step[0])
+        i.append(next_step[1])
+    return [s, i]
+
+# TODO: simulate(1500, 0, 0.05, 0.1, 50) aufrufen; normales und Phasendiagramm plotten.
+							</template>
+						</div>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 2.21 -->
+				<section class="exercise" id="ex-si-raten">
+					<div class="exercise__body">
+						<ol class="tasks">
+							<li>
+								Angenommen wir betrachten mit dem SI-Modell eine
+								Bevölkerung von N=50'000 Individuen und wissen, dass
+								sich in dieser Population ein stationärer Zustand mit
+								etwa S=45'000 und I=5'000 eingestellt hat. Versuchen
+								Sie herauszufinden, wie die Infektionsrate a bzw. die
+								Genesungsrate b gewählt werden müssen, damit das
+								SI-Modell die vorliegende Situation gut beschreibt.
+							</li>
+							<li>
+								Gibt es Werte für a und b, so dass der Fixpunkt des
+								SI-Modells nicht anziehend ist?
+							</li>
+						</ol>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<ol class="tasks">
+									<li>Die Genesungsrate muss etwa 9-mal grösser als die Infektionsrate sein.</li>
+									<li>Ja. Zum Beispiel wenn a=b=1.</li>
+								</ol>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<h2 id="sir-modell">Das SIR-Modell</h2>
+				<p>
+					Das obige SI-Modell lässt völlig ausser Acht, dass es in
+					Wirklichkeit darauf ankommt, in welchem Ausmass Ansteckbare
+					(S) mit infizierten Individuen (I) in Kontakt treten. Wir
+					müssen also das obige Modell erweitern. Zu Neuansteckungen
+					kann es nur dann kommen, wenn es zu Kontakten zwischen diesen
+					zwei Gruppen kommt. Solche Kontakte können nur schwer zu
+					Stande kommen, wenn es fast nur Ansteckbare (S) oder fast nur
+					Infizierte (I) gibt. Die Anzahl der Neuansteckungen wird also
+					insgesamt proportional zu S<sub>t−1</sub> und I<sub>t−1</sub>
+					sein.
+				</p>
+				<p>
+					Ein aussagekräftiges Modell zur Ausbreitung von Epidemien
+					muss neben den Ansteckbaren (S) und Infizierten (I) noch eine
+					weitere Personengruppe beschreiben: Man bezeichnet
+					Individuen, die aus einem Epidemieprozess aus diversen
+					Gründen ausscheiden (z.&nbsp;B. durch Tod, Immunität usw.), in
+					der Fachliteratur als «<em>R</em>emoved». Das Zusammenfassen
+					aller dieser Personen zu einer einzigen Gruppe ist deshalb
+					vernünftig, weil sie alle keinen Einfluss mehr auf die
+					Entwicklung der Ansteckbaren bzw. Infizierten haben.
+				</p>
+				<p>
+					Der einzig neue Übergang soll nun jener von den Infizierten
+					zu den Removed sein. Es ist naheliegend, auch für diesen
+					Übergang wieder einen fixen Prozentsatz c anzunehmen.
+				</p>
+				<p>Wir erhalten das sogenannte <em>SIR-Modell</em>:</p>
+				<p>
+					S<sub>t</sub> = S<sub>t−1</sub> − a·S<sub>t−1</sub>·I<sub>t−1</sub>
+					+ b·I<sub>t−1</sub><br />
+					I<sub>t</sub> = I<sub>t−1</sub> + a·S<sub>t−1</sub>·I<sub>t−1</sub>
+					− b·I<sub>t−1</sub> − c·I<sub>t−1</sub><br />
+					R<sub>t</sub> = R<sub>t−1</sub> + c·I<sub>t−1</sub>
+				</p>
+
+				<div class="box">
+					<p class="box__label">Definition: Basisreproduktionszahl</p>
+					<p>
+						Ob eine Epidemie überhaupt ausbricht, hängt vom
+						Startzustand ab. Aus der Gleichung für I<sub>t</sub> folgt
+					</p>
+					<p>
+						I<sub>t</sub> = I<sub>t−1</sub> · (1 + a·S<sub>t−1</sub> − b − c),
+					</p>
+					<p>
+						die Zahl der Infizierten wächst also nur, solange
+						a·S<sub>t−1</sub> &gt; b + c gilt. Man nennt die Grösse
+					</p>
+					<p>R₀ = (a·S₀) / (b + c)</p>
+					<p>
+						die <em>Basisreproduktionszahl</em>: Sie gibt an, wie
+						viele weitere Personen eine einzelne infizierte Person zu
+						Beginn im Mittel ansteckt. Ist R₀ &gt; 1, breitet sich die
+						Krankheit zunächst aus, ist R₀ &lt; 1, stirbt sie gleich
+						wieder aus.
+					</p>
+				</div>
+
+				<h3 id="uebung-sir">Übung</h3>
+
+				<!-- ============================================== Übung 2.22 -->
+				<section class="exercise" id="ex-sir">
+					<div class="exercise__body">
+						<p>Implementieren Sie das SIR-Modell auf dem Computer. Wählen Sie dazu</p>
+						<p>a=0.0002, b=0.1, c=0.03, S₀=990, I₀=10 und (als Anfangswert der Removed-Gruppe) R(0)=0.</p>
+						<ol class="tasks">
+							<li>Warum spricht man landläufig oft von einer «Grippewelle»?</li>
+							<li>Gibt es in diesem Modell einen stationären Endzustand?</li>
+							<li>Was passiert auf lange Sicht im Unterschied zum SI-Modell?</li>
+							<li>
+								Versuchen Sie, den aus dem Diagramm ablesbaren
+								stationären Zustand algebraisch nachzuweisen. Wie
+								lässt sich Ihr Ergebnis erklären?
+							</li>
+							<li>
+								Was passiert, wenn durch die Verwendung eines neuen
+								Medikaments die Genesungsrate b von 0.1 auf 0.11
+								angehoben werden kann?
+							</li>
+							<li>
+								Was geschieht langfristig gesehen, wenn die Rate c
+								statt 0.03 den Wert 0.04 annimmt? Wie ist das dabei
+								auftretende Phänomen zu erklären?
+							</li>
+						</ol>
+						<p class="hint">
+							<em>Hinweis:</em> Die Basisreproduktionszahl R₀ = a·S₀ /
+							(b+c) hilft bei (2) und (4) — setzen Sie die gegebenen
+							Werte ein.
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb22"
+							data-files="python"
+							data-sol-python="dynamic-systems/sir.py"
+							data-height="280"
+						>
+							<template data-seed="python">
+import matplotlib.pyplot as plt
+
+def sir_map(s, i, r, a, b, c):
+    return [s - a * s * i + b * i, i + a * s * i - b * i - c * i, r + c * i]
+
+def simulate(s0, i0, r0, a, b, c, steps):
+    s = [s0]
+    i = [i0]
+    r = [r0]
+    for _ in range(steps):
+        next_step = sir_map(s[-1], i[-1], r[-1], a, b, c)
+        s.append(next_step[0])
+        i.append(next_step[1])
+        r.append(next_step[2])
+    return [s, i, r]
+
+# TODO: simulate(990, 10, 0, 0.0002, 0.1, 0.03, 300) aufrufen und s, i, r plotten.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<div
+									class="workbench"
+									data-id="sol22"
+									data-files="python"
+									data-seed-python="dynamic-systems/sir.py"
+									data-height="280"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/dynamic-systems/sir.py"
+										>sir.py</a
+									>) — die Werkbank führt drei Simulationen nacheinander
+									aus: die Grundeinstellung, dann mit b=0.11 und dann mit
+									c=0.04.
+								</p>
+								<ol class="tasks">
+									<li>
+										Weil die Gruppe der Infizierten I in der Simulation
+										einen «Peak» (bzw. eine «Welle») beschreibt und
+										danach gegen Null geht.
+									</li>
+									<li>Ja.</li>
+									<li>
+										Anders als beim SI-Modell pendelt sich hier kein
+										gemeinsamer, von Null verschiedener Endzustand für
+										S und I ein — I geht gegen 0, während sich S und R
+										auf einem festen Niveau &gt; 0 stabilisieren (nicht
+										die ganze Population wird krank).
+									</li>
+									<li>
+										Im stationären Zustand gilt I=0. Aus der
+										S-Gleichung folgt dann S = beliebig (jeder
+										verbleibende S-Wert ist stationär, sobald I=0
+										ist) — welcher Wert sich einstellt, hängt vom
+										ganzen Verlauf ab, nicht nur von a, b, c.
+									</li>
+									<li>
+										Eine höhere Genesungsrate b senkt R₀ = a·S₀/(b+c)
+										und verkleinert damit den «Peak» der Welle bzw.
+										kann sie ganz verhindern.
+									</li>
+									<li>
+										Eine höhere Rate c senkt R₀ ebenfalls: Infizierte
+										verlassen die ansteckende Gruppe schneller, was die
+										Welle abschwächt oder verhindert (Phänomen der
+										<em>Durchseuchungsschwelle</em>/«Herdenimmunität»
+										durch schnelleres Ausscheiden statt durch mehr
+										Angesteckte).
+									</li>
+								</ol>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<nav class="pager">
+					<a href="03-wachstumsmodelle.html">← <b>Abschnitt 3 Das Schaefer'sche Modell</b></a>
+				</nav>
+			</div>
+
+			<aside class="minitoc">
+				<h2>Auf dieser Seite</h2>
+				<ol></ol>
+			</aside>
+		</main>
+
+		<script src="assets/examples.js"></script>
+		<script src="../assets/js/editor.js"></script>
+		<script src="../assets/js/pyrunner.js"></script>
+		<script src="../assets/js/site.js"></script>
+	</body>
+</html>

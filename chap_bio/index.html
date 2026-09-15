@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Diskrete dynamische Systeme – Gymnasium Muttenz</title>
+		<meta
+			name="description"
+			content="Webversion des Kapitels Diskrete dynamische Systeme des AM-Skripts des Gymnasiums Muttenz: Iterationen, Wachstumsmodelle und Räuber-Beute-Systeme live in Python simulieren."
+		/>
+		<script>
+			/* Farbschema vor dem ersten Zeichnen setzen, damit beim Laden nichts
+			   aufblitzt. Dunkel ist der Standard, siehe ../assets/css/style.css. */
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.bio.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="../assets/css/style.css" />
+		<link
+			rel="icon"
+			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235fc9ae'/%3E%3Ctext x='16' y='23' font-family='system-ui,sans-serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230f1f1b'%3EW%3C/text%3E%3C/svg%3E"
+		/>
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html"
+				>Dynamische<span>Systeme</span></a
+			>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-python-matplotlib.html">1 Python und Matplotlib</a>
+				<a href="02-iterationen.html">2 Iterationen</a>
+				<a href="03-wachstumsmodelle.html">3 Wachstumsmodelle</a>
+				<a href="04-mehrere-zustandsgroessen.html">4 Mehrere Zustandsgrössen</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main>
+			<div class="hero">
+				<p class="eyebrow">Angewandte Mathematik · Gymnasium Muttenz</p>
+				<h1>Diskrete dynamische Systeme</h1>
+				<p class="lead">
+					Wie sich Populationen, Epidemien und andere Grössen von einem
+					Zeitschritt zum nächsten entwickeln — als Python-Simulation statt
+					als starre Formel. Jede Übung hat eine Werkbank, in der Sie Code
+					direkt im Browser schreiben, ausführen und verändern können,
+					inklusive der erzeugten Diagramme.
+				</p>
+
+				<div class="box box--note">
+					<p class="box__label">So arbeiten Sie mit dieser Seite</p>
+					<ul>
+						<li>
+							Jede Übung hat eine <strong>Werkbank</strong> mit
+							Python-Editor. Mit <em>Ausführen</em> oder
+							<code>Ctrl</code>/<code>⌘</code> + <code>Enter</code>
+							läuft Ihr Code, Konsolenausgabe und erzeugte
+							<code>matplotlib</code>-Diagramme erscheinen darunter.
+						</li>
+						<li>
+							Der Code läuft wirklich in Ihrem Browser (mit
+							<a href="https://pyodide.org/">Pyodide</a>, inklusive
+							<code>numpy</code> und <code>matplotlib</code>) — dafür
+							lädt die Werkbank beim ersten <em>Ausführen</em> auf
+							einer Seite eine Python-Umgebung aus dem Internet nach.
+							Das dauert je nach Verbindung bis zu einer Minute; danach
+							ist es für den Rest des Seitenaufrufs schnell. Ohne
+							Internetverbindung funktioniert das Ausführen nicht.
+						</li>
+						<li>
+							Ihr Code bleibt in diesem Browser gespeichert, auch wenn
+							Sie die Seite schliessen. Mit <em>Herunterladen</em>
+							holen Sie eine Datei auf den Computer.
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<ul class="cards">
+				<li>
+					<a
+						class="card"
+						href="01-python-matplotlib.html"
+						data-page="01-python-matplotlib.html"
+						data-total="1"
+					>
+						<span class="card__no">Abschnitt 1</span>
+						<h2>Python und Matplotlib</h2>
+						<p>
+							Listen, Indizes und Slicing, Schleifen und Funktionen —
+							die Werkzeuge, die die Simulationen dieses Kapitels
+							brauchen, dazu Linien- und Streudiagramme.
+						</p>
+						<span class="card__meter">
+							<span class="meter"><i style="width: 0"></i></span>
+							<span data-count>0 / 1 Übungen erledigt</span>
+						</span>
+					</a>
+				</li>
+				<li>
+					<a
+						class="card"
+						href="02-iterationen.html"
+						data-page="02-iterationen.html"
+						data-total="8"
+					>
+						<span class="card__no">Abschnitt 2</span>
+						<h2>Iterationen</h2>
+						<p>
+							Fixpunkte, Vorfixpunkte und Attraktoren, das
+							Spinnwebdiagramm, exponentielles und logistisches
+							Wachstum bis zum Feigenbaumdiagramm.
+						</p>
+						<span class="card__meter">
+							<span class="meter"><i style="width: 0"></i></span>
+							<span data-count>0 / 8 Übungen erledigt</span>
+						</span>
+					</a>
+				</li>
+				<li>
+					<a
+						class="card"
+						href="03-wachstumsmodelle.html"
+						data-page="03-wachstumsmodelle.html"
+						data-total="4"
+					>
+						<span class="card__no">Abschnitt 3</span>
+						<h2>Das Schaefer'sche Modell</h2>
+						<p>
+							Logistisches Wachstum unter Bejagung: Fischzucht, Rehe
+							und die optimale Jagdquote für einen nachhaltigen Ertrag.
+						</p>
+						<span class="card__meter">
+							<span class="meter"><i style="width: 0"></i></span>
+							<span data-count>0 / 4 Übungen erledigt</span>
+						</span>
+					</a>
+				</li>
+				<li>
+					<a
+						class="card"
+						href="04-mehrere-zustandsgroessen.html"
+						data-page="04-mehrere-zustandsgroessen.html"
+						data-total="9"
+					>
+						<span class="card__no">Abschnitt 4</span>
+						<h2>Mehrere Zustandsgrössen</h2>
+						<p>
+							Das Räuber-Beute-Modell von Lotka und Volterra,
+							Phasendiagramme, sowie die Epidemiemodelle SI und SIR
+							mit der Basisreproduktionszahl R₀.
+						</p>
+						<span class="card__meter">
+							<span class="meter"><i style="width: 0"></i></span>
+							<span data-count>0 / 9 Übungen erledigt</span>
+						</span>
+					</a>
+				</li>
+			</ul>
+
+			<div class="hero" style="padding-top: 3rem">
+				<blockquote>
+					<p>
+						«Calculating does not equal mathematics. It's a subsection of
+						it. In years gone by it was the limiting factor, but
+						computers now allow you to make the whole of mathematics
+						more intellectual.»
+					</p>
+					<p>
+						<img
+							src="assets/img/wolfram.jpg"
+							alt="Conrad Wolfram"
+							width="90"
+							style="border-radius: 6px; vertical-align: middle"
+						/>
+						Conrad Wolfram (*1970), zitiert nach
+						<a href="https://quotesgram.com/conrad-wolfram-quotes/"
+							>Quotes Gram</a
+						>
+					</p>
+					<p class="credit">
+						Foto: Wikimedia Commons,
+						<a
+							href="https://commons.wikimedia.org/wiki/File:WISE_2012_%E2%80%93_Conrad_Wolfram.jpg"
+							>WISE 2012 – Conrad Wolfram</a
+						>,
+						<a
+							rel="license"
+							href="https://creativecommons.org/licenses/by-sa/3.0/deed.de"
+							>CC BY-SA 3.0</a
+						>
+					</p>
+				</blockquote>
+
+				<h2 id="nachschlagen">Zum Nachschlagen</h2>
+				<ul class="linkrow">
+					<li>
+						<a href="https://matplotlib.org/stable/">matplotlib – Referenz</a>
+					</li>
+					<li><a href="https://pyodide.org/">Pyodide</a></li>
+				</ul>
+			</div>
+		</main>
+
+		<footer class="pagefoot">
+			<p>
+				Webversion des Kapitels <em>Diskrete dynamische Systeme</em> aus dem
+				AM-Skript des Gymnasiums Muttenz. Die Lösungsvorschläge stammen aus
+				dem Repository
+				<a
+					href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/dynamic-systems"
+					>oli4warin/gyminf</a
+				>.
+			</p>
+			<p>
+				Ihre Eingaben und Häkchen werden nur in diesem Browser gespeichert
+				und nirgends hochgeladen. Ihr Python-Code wird zum Ausführen an
+				keinen Server geschickt — er läuft direkt im Browser
+				(Pyodide/WebAssembly); geladen wird nur die Python-Umgebung selbst,
+				von einem CDN.
+			</p>
+		</footer>
+
+		<script src="assets/examples.js"></script>
+		<script src="../assets/js/site.js"></script>
+	</body>
+</html>

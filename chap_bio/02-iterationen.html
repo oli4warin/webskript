@@ -1,0 +1,847 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>2 Iterationen – Dynamische Systeme</title>
+		<script>
+			/* Farbschema vor dem ersten Zeichnen setzen, damit beim Laden nichts
+			   aufblitzt. Dunkel ist der Standard, siehe ../assets/css/style.css. */
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.bio.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="../assets/css/style.css" />
+		<link
+			rel="icon"
+			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235fc9ae'/%3E%3Ctext x='16' y='23' font-family='system-ui,sans-serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230f1f1b'%3EW%3C/text%3E%3C/svg%3E"
+		/>
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html"
+				>Dynamische<span>Systeme</span></a
+			>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-python-matplotlib.html">1 Python und Matplotlib</a>
+				<a href="02-iterationen.html">2 Iterationen</a>
+				<a href="03-wachstumsmodelle.html">3 Wachstumsmodelle</a>
+				<a href="04-mehrere-zustandsgroessen.html">4 Mehrere Zustandsgrössen</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main class="layout" data-ex-chapter="2" data-ex-offset="1">
+			<div class="content">
+				<p class="eyebrow">Abschnitt 2</p>
+				<h1>Iterationen</h1>
+
+				<div class="progress" data-progress>
+					<span class="meter"><i style="width: 0"></i></span>
+					<span data-progress-text>0 von 8 Übungen erledigt</span>
+					<button type="button" data-reset>zurücksetzen</button>
+				</div>
+
+				<div class="box">
+					<p class="box__label">Definition: Iteration</p>
+					<p>
+						Eine <em>Iteration</em> beschreibt einen Prozess mehrfachen
+						Wiederholens gleicher Operationen. Für unsere Zwecke
+						bedeutet dies konkret: Wir beginnen mit einer Zahl
+						(<em>Startwert</em>) x₀ und führen damit eine Rechnung aus.
+						Dann wenden wir dieselbe Rechnung auf das Resultat x₁ an.
+						Danach wenden wir dieselbe Rechnung auf das neue Resultat x₂
+						an, usw.
+					</p>
+					<p>
+						In Formeln bedeutet dies x₁ = f(x₀), x₂ = f(x₁), x₃ = f(x₂),
+						…, wobei f eine festgelegte Funktion ist. Man nennt f auch
+						<em>Trägerfunktion</em>.
+					</p>
+				</div>
+
+				<div class="box">
+					<p class="box__label">Definition: (Vor-)Fixpunkt</p>
+					<p>
+						Ein <em>Fixpunkt</em> ist eine Zahl, die durch eine gegebene
+						Abbildung auf sich selbst abgebildet wird. Im Fall einer
+						Iteration bedeutet dies, dass die Zahlenfolge konstant
+						wird, wenn wir mit einem Fixpunkt als Startwert beginnen.
+						In Formeln x₀ = x₁ = x₂ = x₃ = …
+					</p>
+					<p>
+						Ein <em>Vorfixpunkt</em> ist eine Zahl, die selbst kein
+						Fixpunkt ist, die aber nach einer Iteration zu einem
+						Fixpunkt führt.
+					</p>
+				</div>
+
+				<div class="box">
+					<p class="box__label">Definition: Attraktor</p>
+					<p>
+						Ein <em>Attraktor</em> (oder ein <em>Häufungspunkt</em>) ist
+						ein Grenzwert einer Teilfolge von iterierten Zahlen. Es ist
+						eine Zahl, welche die Folgenglieder gleichsam zu sich
+						zieht.
+					</p>
+				</div>
+
+				<p class="hint"><b>Beispiel.</b> Iteration x<sub>n</sub> = 0.7·x<sub>n−1</sub> + 2</p>
+				<div class="workbench" data-id="wbex1" data-files="python" data-height="260">
+					<template data-seed="python">
+import matplotlib.pyplot as plt
+
+def f(x):
+    return 0.7 * x + 2
+
+def simulate(x0, n):
+    x = [x0]
+    for _ in range(n):
+        x.append(f(x[-1]))
+    return x
+
+for x0 in [1, 8, 20 / 3, -5]:
+    plt.plot(simulate(x0, 20), "-o", label=f"x0={x0:.2f}")
+plt.xlabel("n")
+plt.ylabel("x_n")
+plt.legend()
+plt.show()
+					</template>
+				</div>
+				<p>
+					Werden die Folgeglieder immer grösser bzw. kleiner, oder gibt
+					es eine Grenze? Was ergibt sich für verschiedene Startwerte?
+					Hat diese Iteration weitere Fixpunkte, oder gibt es nur einen?
+					Probieren Sie in der Werkbank oben weitere Startwerte aus.
+				</p>
+
+				<h2 id="spinnwebdiagramm">Das Spinnwebdiagramm</h2>
+				<p>
+					Ein sogenanntes <em>Spinnwebdiagramm</em> bietet die
+					Möglichkeit, das Verhalten einer Iteration grafisch zu
+					überblicken. Dazu gehen wir wie folgt vor:
+				</p>
+				<ol>
+					<li>Wir zeichnen den Graph der Trägerfunktion f ein.</li>
+					<li>Wir zeichnen die erste Winkelhalbierende y = x ein.</li>
+					<li>Wir markieren auf der x-Achse den Startwert x₀.</li>
+					<li>
+						Von dort bewegen wir uns in y-Richtung auf den Graphen der
+						Trägerfunktion.
+					</li>
+					<li>
+						Anschliessend geht es in x-Richtung auf die erste
+						Winkelhalbierende.
+					</li>
+					<li>Wir springen zurück zu Schritt 4.</li>
+				</ol>
+
+				<p class="hint">
+					<b>Beispiel.</b> Spinnwebdiagramm von f(x) = 0.7x + 2, Startwert
+					x₀ = 1
+				</p>
+				<div class="workbench" data-id="wbex2" data-files="python" data-height="320">
+					<template data-seed="python">
+import numpy as np
+import matplotlib.pyplot as plt
+
+def f(x):
+    return 0.7 * x + 2
+
+x0 = 1
+n = 15
+
+xs = np.linspace(-1, 9, 200)
+plt.plot(xs, f(xs), color="green", label="Trägerfunktion f")
+plt.plot(xs, xs, color="blue", label="Winkelhalbierende y=x")
+
+x, prev_y = x0, 0
+for _ in range(n):
+    y = f(x)
+    plt.plot([x, x], [prev_y, y], color="red")  # in y-Richtung auf f
+    plt.plot([x, y], [y, y], color="red")       # in x-Richtung auf y=x
+    x, prev_y = y, y
+
+plt.scatter([x0], [0], color="red", zorder=5, label="Startwert x0")
+plt.legend()
+plt.title("Spinnwebdiagramm")
+plt.axis("equal")
+plt.show()
+					</template>
+				</div>
+				<div class="hint">
+					<p>
+						Die Fixpunkte einer Iteration sind im Spinnwebdiagramm als
+						Schnittpunkte von der Winkelhalbierenden mit der
+						Trägerfunktion sichtbar.
+					</p>
+				</div>
+
+				<h2 id="beispiele">Weitere Beispiele</h2>
+				<p>
+					Wir betrachten die Iteration x<sub>n</sub> = x<sub>n−1</sub>² −
+					1: Im Spinnwebdiagramm werden zwei abstossende Fixpunkte
+					sichtbar, sowie die beiden Attraktoren 0 und −1. Bei x<sub>n</sub>
+					= x<sub>n−1</sub>² − 0.5 zeigt sich dagegen ein abstossender
+					und ein anziehender Fixpunkt. Verändern Sie in der Werkbank
+					oben die Funktion <code>f</code> zu
+					<code>x**2 - 1</code> bzw. <code>x**2 - 0.5</code> und
+					probieren Sie es selbst aus (mit <code>x0 = 1.17</code>).
+				</p>
+
+				<h3 id="exponentiell">Exponentielles Wachstum und Zerfall</h3>
+				<p>
+					Die Iteration x<sub>n</sub> = x<sub>n−1</sub> + r · x<sub>n−1</sub>
+					nennt man <em>exponentielles Wachstum</em>: Die Grösse wird in
+					jedem Zeitschritt um denselben Anteil r vergrössert (r &gt; 0)
+					bzw. verkleinert (r &lt; 0, <em>exponentieller Zerfall</em>).
+					Die Trägerfunktion lautet f(x) = x + r·x.
+				</p>
+
+				<h3 id="logistisch">Logistisches Wachstum</h3>
+				<p>
+					Im 19. Jahrhundert versuchte man mathematische Modelle für
+					biologische Prozesse zu entwickeln. Ungehemmte biologische
+					Vermehrung wird durch exponentielles Wachstum sinnvoll
+					beschrieben, doch das kommt in Wirklichkeit so gut wie nie vor:
+					Die meisten Populationen entwickeln sich stattdessen hin zu
+					einem biologischen Gleichgewicht. Daher erscheint es
+					sinnvoll, den Zuwachs sowohl proportional zum momentanen
+					Bestand als auch zum Abstand von einer Grenze bzw. Schranke S
+					anzunehmen. Dieses Modell führt zur Iteration
+				</p>
+				<p>x<sub>n</sub> = x<sub>n−1</sub> + r · x<sub>n−1</sub> · (S − x<sub>n−1</sub>).</p>
+				<p>
+					Diese Iteration wird <em>logistische Iteration</em> genannt,
+					ihre Trägerfunktion f(x) = x + r·x·(S − x) die
+					<em>logistische Parabel</em>. In den beiden Konstanten r und S
+					kann man sich die biologischen Parameter untergebracht denken,
+					zum Beispiel Geburts- und Sterberaten, Nahrungsangebot,
+					verfügbarer Platz usw.
+				</p>
+
+				<p class="hint"><b>Beispiel.</b> Logistisches Wachstum, r = 0.1, S = 8</p>
+				<div class="workbench" data-id="wbex3" data-files="python" data-height="260">
+					<template data-seed="python">
+import matplotlib.pyplot as plt
+
+def f(x, r=0.1, s=8):
+    return x + r * x * (s - x)
+
+def simulate(x0, n, r=0.1, s=8):
+    x = [x0]
+    for _ in range(n):
+        x.append(f(x[-1], r, s))
+    return x
+
+for x0 in [1, 2, 3, 0.5]:
+    plt.plot(simulate(x0, 20), "-o", label=f"x0={x0}")
+plt.axhline(8, color="grey", linestyle="dashed", label="S=8")
+plt.xlabel("n")
+plt.ylabel("x_n")
+plt.legend()
+plt.show()
+					</template>
+				</div>
+
+				<h2 id="schaefer">Das Schaefer'sche Modell</h2>
+				<p>
+					Bereits bekannte Modelle lassen sich natürlich beliebig
+					erweitern. Ein Beispiel dafür ist das
+					<em>Schaefer'sche Modell</em>. Es beschreibt die Entwicklung
+					einer logistisch wachsenden Population, die unter Bejagung
+					steht. Dabei wird davon ausgegangen, dass in jedem Zeitschritt
+					ein fester relativer Anteil a der Population durch die Jagd
+					getötet wird.
+				</p>
+				<p>
+					x<sub>n</sub> = x<sub>n−1</sub> + r·x<sub>n−1</sub>·(S −
+					x<sub>n−1</sub>) − a·x<sub>n−1</sub>
+				</p>
+				<p>
+					Die Übungen dazu finden Sie in
+					<a href="03-wachstumsmodelle.html">Abschnitt 3</a>.
+				</p>
+
+				<h2 id="uebungen">Übungen</h2>
+
+				<!-- ============================================== Übung 2.02 -->
+				<section class="exercise" id="ex-quadrieren">
+					<div class="exercise__body">
+						<p>
+							Wir betrachten Zahlenfolgen, die durch das laufende
+							Quadrieren einer Zahl entstehen. Formal lässt sich diese
+							Iteration beschreiben als x<sub>n</sub> =
+							x<sub>n−1</sub>². Dabei muss noch ein Startwert
+							vorgegeben werden.
+						</p>
+						<ol class="tasks">
+							<li>Berechnen Sie die Fix- und Vorfixpunkte dieser Iteration.</li>
+							<li>
+								Wie viele Iterationsschritte sind nötig, um von 1.01
+								ausgehend 100 zu überschreiten?
+							</li>
+							<li>Wie ist es, wenn man von 1.001 ausgeht?</li>
+							<li>
+								Wie viele Iterationsschritte sind nötig, um von 0.99
+								ausgehend 0.01 zu unterschreiten?
+							</li>
+							<li>Wie ist es, wenn man von 0.999 ausgeht?</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb02"
+							data-files="python"
+							data-sol-python="dynamic-systems/quadr.py"
+							data-height="220"
+						>
+							<template data-seed="python">
+def carrier(x):
+    return x**2
+
+def count_steps(startx, condition):
+    x = startx
+    c = 0
+    while condition(x):
+        x = carrier(x)
+        c += 1
+    return c
+
+# TODO: (b)-(e) mit count_steps und einer passenden Bedingung (lambda) berechnen.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<ol class="tasks tasks--cols">
+									<li>Fixpunkte: 0 und 1; Vorfixpunkt: −1</li>
+									<li>9</li>
+									<li>13</li>
+									<li>9</li>
+									<li>13</li>
+								</ol>
+								<div
+									class="workbench"
+									data-id="sol02"
+									data-files="python"
+									data-seed-python="dynamic-systems/quadr.py"
+									data-height="220"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/dynamic-systems/quadr.py"
+										>quadr.py</a
+									>)
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 2.03 -->
+				<section class="exercise" id="ex-spinnweb-programm">
+					<div class="exercise__body">
+						<p>
+							Schreiben Sie ein Python-Programm, das zu einer
+							Trägerfunktion f, einem Startwert x₀ und einer Zahl n
+							das entsprechende Spinnwebdiagramm für die ersten n
+							Schritte zeichnet.
+						</p>
+						<p class="hint">
+							<em>Hinweis:</em> Orientieren Sie sich am Beispiel weiter
+							oben — dort ist <code>f</code> aber fest einprogrammiert.
+							Verpacken Sie den Zeichenteil in eine Funktion
+							<code>spinnweb(f, x0, n)</code>, die für jede beliebige
+							Trägerfunktion funktioniert.
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb03"
+							data-files="python"
+							data-height="220"
+						>
+							<template data-seed="python">
+import numpy as np
+import matplotlib.pyplot as plt
+
+def spinnweb(f, x0, n, xmin=-2, xmax=2):
+    # TODO: Trägerfunktion, Winkelhalbierende und die "Spinnwebfäden" zeichnen.
+    pass
+
+spinnweb(lambda x: 0.7 * x + 2, 1, 15, xmin=-1, xmax=9)
+							</template>
+						</div>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 2.04 -->
+				<section class="exercise" id="ex-r-minus-eins">
+					<div class="exercise__body">
+						<p>
+							Wir betrachten die Iteration x<sub>n</sub> =
+							x<sub>n−1</sub>² + r und wählen zuerst r = −1. Versuchen
+							Sie einerseits die folgenden Fragen zu beantworten.
+							Verwenden Sie aber auch ein Spinnwebdiagramm, um eine
+							Übersicht über diese Iteration zu bekommen.
+						</p>
+						<ol class="tasks">
+							<li>
+								Welches Grenzverhalten ergibt sich für die entstehenden
+								Folgenglieder für x₀ = 0.5?
+							</li>
+							<li>Existiert für diese Iteration ein Fixpunkt?</li>
+							<li>
+								Vergleichen Sie die ersten zehn Iterationsschritte für
+								x₀ = 1.61 und x₀ = 1.62.
+							</li>
+							<li>
+								Welche Zahl entsteht nach 10 Iterationsschritten aus
+								x₀ = 1.6 und welche nach 11 Iterationsschritten?
+							</li>
+							<li>Entsprechend mit x₀ = 1.61802, x₀ = 1.61803 bzw. x₀ = 1.61804?</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb04"
+							data-files="python"
+							data-sol-python="dynamic-systems/recursion1.py"
+							data-height="220"
+						>
+							<template data-seed="python">
+def carrier(r, x):
+    return x**2 + r
+
+def simulate(n, r, startx):
+    result = [startx]
+    for _ in range(n):
+        result.append(carrier(r, result[-1]))
+    return result
+
+# TODO: (c)-(e) mit simulate(n, -1, x0) berechnen und print(...).
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<ol class="tasks tasks--cols">
+									<li>
+										Die Werte nähern sich der alternierenden Folge
+										−1, 0, −1, 0, …
+									</li>
+									<li>
+										Es gibt zwei Fixpunkte: x = (1+√5)/2 ≈ 1.618 und
+										x = (1−√5)/2 ≈ −0.618.
+									</li>
+									<li>
+										Für x₀=1.61 bleiben die Werte über 10 Schritte
+										beschränkt, für x₀=1.62 wachsen sie explosionsartig
+										bis über 3.7·10¹⁰ — kleinster Unterschied im
+										Startwert, radikal anderes Verhalten (siehe
+										Werkbank).
+									</li>
+									<li>
+										Mit x₀=1.6: x₁₀ ≈ −3.4·10⁻⁶, x₁₁ ≈ −0.99999999999.
+									</li>
+									<li>
+										Mit x₀=1.61802: x₁₀ ≈ 0.239, x₁₁ ≈ −0.943. Mit
+										x₀=1.61804: x₁₀ ≈ 2.458, x₁₁ ≈ 5.043 — auch hier
+										trennen sich die Bahnen nach wenigen Schritten
+										völlig.
+									</li>
+								</ol>
+								<div
+									class="workbench"
+									data-id="sol04"
+									data-files="python"
+									data-seed-python="dynamic-systems/recursion1.py"
+									data-height="220"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/dynamic-systems/recursion1.py"
+										>recursion1.py</a
+									>)
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 2.05 -->
+				<section class="exercise" id="ex-fixpunkte-allgemein">
+					<div class="exercise__body">
+						<p>
+							Wir betrachten nochmals die Iteration x<sub>n</sub> =
+							x<sub>n−1</sub>² + r.
+						</p>
+						<ol class="tasks">
+							<li>Für welche Werte von r hat diese Iteration keine Fixpunkte?</li>
+							<li>
+								Für welche Werte von r hat diese Iteration genau einen
+								Fixpunkt? Berechnen Sie diesen Fixpunkt. Ist dieser
+								Fixpunkt anziehend oder abstossend?
+							</li>
+							<li>
+								Vergleichen Sie die beiden Iterationen für r = −0.4 und
+								r = −0.8. Sind die Fixpunkte anziehend oder abstossend?
+							</li>
+							<li>
+								Bei welchem Wert von r wechselt der kleinere Fixpunkt
+								von anziehend zu abstossend?
+							</li>
+							<li>
+								Wann ist ein Fixpunkt anziehend bzw. abstossend? Können
+								Sie eine Regel formulieren?
+							</li>
+						</ol>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<ol class="tasks">
+									<li>Für r &gt; 1/4.</li>
+									<li>
+										Für r = 1/4 hat die Iteration genau einen
+										Fixpunkt bei x = 1/2. Dieser Fixpunkt ist
+										abstossend.
+									</li>
+									<li>
+										Für r = −0.4 ist ein Fixpunkt anziehend und einer
+										abstossend. Für r = −0.8 sind beide Fixpunkte
+										abstossend.
+									</li>
+									<li>Bei r = −3/4.</li>
+									<li>
+										Der Betrag der Steigung der Trägerfunktion beim
+										Fixpunkt ist entscheidend. Ist dieser &gt; 1, ist
+										der Fixpunkt abstossend. Ist dieser &lt; 1, ist der
+										Fixpunkt anziehend. Ist der Betrag genau gleich 1,
+										ist beides möglich.
+									</li>
+								</ol>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 2.06 -->
+				<section class="exercise" id="ex-spiegel-iteration">
+					<div class="exercise__body">
+						<p>
+							Was lässt sich über die Iteration x<sub>n</sub> =
+							−x<sub>n−1</sub> + r sagen? Fixpunkte? Attraktoren?
+						</p>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>
+									Diese Iteration hat einen Fixpunkt bei x = r/2.
+									Dieser ist abstossend. Genauer alterniert die
+									entsprechende Folge, sobald ein anderer Wert als der
+									Fixpunkt eingesetzt wird.
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 2.07 -->
+				<section class="exercise" id="ex-feigenbaum">
+					<div class="exercise__body">
+						<p>
+							Wir betrachten die Iteration x<sub>n</sub> = r ·
+							x<sub>n−1</sub> · (1 − x<sub>n−1</sub>) und gehen für
+							alle Teilaufgaben vom gleichen Startwert x₀ = 0.5 aus.
+						</p>
+						<ol class="tasks">
+							<li>
+								Untersuchen Sie diese Iteration für die verschiedenen
+								r-Werte: r=2.8, r=3.2, r=3.8 und r=3.85.
+							</li>
+							<li>
+								Schreiben Sie ein Programm, welches ein sogenanntes
+								<em>Attraktordiagramm</em> (oder
+								<em>Feigenbaumdiagramm</em> oder
+								<em>Bifurkationsdiagramm</em>) erzeugt. Die Idee dabei
+								ist, dass man r auf der x-Achse aufträgt und in einem
+								gewissen Bereich für jedes r zuerst 100 Iterationen im
+								Dunkeln berechnet und dann die nächsten 100
+								Iterationswerte in y-Richtung aufträgt. Bei einem
+								bestimmten r-Wert werden dann eventuell 100
+								verschiedene (chaotisch verteilte) y-Werte sichtbar.
+								Für einen anderen r-Wert könnten dagegen alle 100 Werte
+								gleich gross sein, so dass dort nur ein einziger Punkt
+								(Attraktor) sichtbar wird usw.
+							</li>
+						</ol>
+
+						<figure class="shot">
+							<img
+								src="assets/img/feigenbaum.jpg"
+								alt="Porträt von Mitchell Feigenbaum"
+								width="160"
+							/>
+							<figcaption>
+								Mitchell Feigenbaum (1944–2019)
+								<span class="credit">
+									Foto: Wikimedia Commons,
+									<a
+										href="https://en.wikipedia.org/wiki/File:Mitchell_J_Feigenbaum_-_Niels_Bohr_Institute_2006.jpg"
+										>Niels Bohr Institute, 2006</a
+									>,
+									<a
+										rel="license"
+										href="https://creativecommons.org/licenses/by-sa/2.0/deed.de"
+										>CC BY-SA 2.0</a
+									>
+								</span>
+							</figcaption>
+						</figure>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<figure class="shot">
+									<img
+										src="assets/img/feigenbaum-diagram.png"
+										alt="Feigenbaumdiagramm der Iteration r·x·(1-x)"
+									/>
+									<figcaption>Feigenbaumdiagramm</figcaption>
+								</figure>
+								<figure class="listing">
+									<pre data-src="dynamic-systems/feigenbaum.py"></pre>
+									<figcaption>
+										<b>Code.</b> feigenbaum.py (<a
+											href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/dynamic-systems/feigenbaum.py"
+											>Quelle</a
+										>)
+									</figcaption>
+								</figure>
+								<p class="hint">
+									Dieser Code rechnet 10'000 × 2000 Iterationen und
+									dauert selbst nativ mehrere Sekunden — im Browser via
+									Pyodide ist das unpraktisch langsam. Diese Werkbank
+									führt den Code darum <em>nicht</em> live aus; probieren
+									Sie ihn stattdessen lokal aus (siehe
+									<a href="01-python-matplotlib.html#code-ausfuehren"
+										>Abschnitt 1</a
+									>), notfalls mit kleineren Werten für <code>nr</code>
+									und <code>steps</code>.
+								</p>
+								<p>
+									Unter
+									<a href="https://www.youtube.com/watch?v=ovJcsL7vyrk"
+										>diesem Video</a
+									>
+									finden Sie weitere spannende Informationen zu diesem
+									Diagramm.
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 2.08 -->
+				<section class="exercise" id="ex-fischzucht">
+					<div class="exercise__body">
+						<p>
+							In einem Fischzuchtbecken befinden sich zunächst 800
+							Fische. Im ersten Jahr ist mit einer Wachstumsrate von
+							54% zu rechnen. Die Obergrenze wird von der Züchterin
+							auf 8000 Fische veranschlagt.
+						</p>
+						<ol class="tasks">
+							<li>
+								Nehmen Sie logistisches Wachstum an. Berechnen Sie den
+								Faktor r und stellen Sie den Fischbestand für die
+								nächsten 15 Jahre dar.
+							</li>
+							<li>In welchem Jahr ist die Zunahme am grössten?</li>
+							<li>
+								Wie viele Fische kann die Züchterin nach einem Jahr
+								entnehmen, wenn sie den Ausgangsbestand konstant halten
+								will?
+							</li>
+							<li>
+								Wie viele Fische kann die Züchterin ab Ende des dritten
+								Jahres jährlich entnehmen, wenn sie die ersten zwei
+								Jahre keinen Fisch verkauft und von da an den Bestand
+								konstant halten will?
+							</li>
+							<li>
+								Sie möchte die nächsten 10 Jahre insgesamt möglichst
+								viele Fische verkaufen. Wie soll sie sich verhalten?
+								Experimentieren Sie mit verschiedenen Möglichkeiten.
+							</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb08"
+							data-files="python"
+							data-sol-python="dynamic-systems/fishing.py"
+							data-height="260"
+						>
+							<template data-seed="python">
+import matplotlib.pyplot as plt
+
+def logistic_map(r, s, x):
+    return x + r * x * (s - x)
+
+def simulate(r, s, x0, steps):
+    x = [x0]
+    for _ in range(steps):
+        x.append(logistic_map(r, s, x[-1]))
+    return x
+
+# TODO: (a) r bestimmen, simulate(r, 8000, 800, 15) aufrufen und plotten.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<ol class="tasks">
+									<li>Es gilt r = 0.000075 (siehe Diagramm in der Werkbank unten).</li>
+									<li>Die Zunahme ist im fünften Jahr am grössten.</li>
+									<li>432 Fische</li>
+									<li>≈ 855.68 Fische</li>
+									<li>
+										Wenn sie die ersten fünf Jahre abwartet und dann
+										den Fischbestand konstant hält, kann sie einen
+										Ertrag von ≈ 9772.10 pro Jahr erzielen. Ist dies
+										optimal?
+									</li>
+								</ol>
+								<div
+									class="workbench"
+									data-id="sol08"
+									data-files="python"
+									data-seed-python="dynamic-systems/fishing.py"
+									data-height="260"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/dynamic-systems/fishing.py"
+										>fishing.py</a
+									>)
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 2.09 -->
+				<section class="exercise" id="ex-bottich">
+					<div class="exercise__body">
+						<p>
+							Wir betrachten noch ein Beispiel für einen
+							nicht-logistischen Wachstumsprozess: Ein löchriger
+							Bottich enthält 20 Liter Wasser. Fritzli rennt mit
+							einem Eimer vom nahegelegenen Weiher hin und her und
+							schüttet im Abstand von einer Minute jeweils 5 Liter
+							Wasser in den Bottich. In dieser Minute versickert
+							jeweils 10% des eben noch vorhandenen Inhalts.
+						</p>
+						<ol>
+							<li>
+								Geben Sie eine Rekursionsvorschrift für diesen Prozess
+								an und stellen Sie den Verlauf für die ersten 50
+								Minuten dar.
+							</li>
+							<li>
+								Bei welcher Füllmenge stabilisiert sich dieser
+								Prozess? Bestimmen Sie dies graphisch und rechnerisch
+								(Fixpunkte bestimmen).
+							</li>
+							<li>
+								Was ändert sich, wenn man mit 0 Liter oder mit 100
+								Liter im Bottich starten würde?
+							</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb09"
+							data-files="python"
+							data-sol-python="dynamic-systems/bottich.py"
+							data-height="220"
+						>
+							<template data-seed="python">
+import matplotlib.pyplot as plt
+
+def f(x):
+    # TODO: Rekursionsvorschrift fuer den Bottich.
+    return x
+
+def iterate(x0, n):
+    xlist = [x0]
+    for _ in range(n):
+        xlist.append(f(xlist[-1]))
+    return xlist
+
+plt.plot(iterate(20, 50), "-o")
+plt.grid()
+plt.show()
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>x<sub>n</sub> = 0.9 · x<sub>n−1</sub> + 5</p>
+								<div
+									class="workbench"
+									data-id="sol09"
+									data-files="python"
+									data-seed-python="dynamic-systems/bottich.py"
+									data-height="220"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/dynamic-systems/bottich.py"
+										>bottich.py</a
+									>)
+								</p>
+								<p>Die Füllmenge stabilisiert sich bei 50 Liter — egal ob man mit 0 oder mit 100 Liter startet.</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<nav class="pager">
+					<a href="01-python-matplotlib.html">← <b>Abschnitt 1 Python und Matplotlib</b></a>
+					<a href="03-wachstumsmodelle.html" style="text-align: right"
+						>Abschnitt 3 <b>Das Schaefer'sche Modell →</b></a
+					>
+				</nav>
+			</div>
+
+			<aside class="minitoc">
+				<h2>Auf dieser Seite</h2>
+				<ol></ol>
+			</aside>
+		</main>
+
+		<script src="assets/examples.js"></script>
+		<script src="../assets/js/editor.js"></script>
+		<script src="../assets/js/pyrunner.js"></script>
+		<script src="../assets/js/site.js"></script>
+	</body>
+</html>

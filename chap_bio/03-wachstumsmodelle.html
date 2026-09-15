@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>3 Das Schaefer'sche Modell – Dynamische Systeme</title>
+		<script>
+			/* Farbschema vor dem ersten Zeichnen setzen, damit beim Laden nichts
+			   aufblitzt. Dunkel ist der Standard, siehe ../assets/css/style.css. */
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.bio.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="../assets/css/style.css" />
+		<link
+			rel="icon"
+			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235fc9ae'/%3E%3Ctext x='16' y='23' font-family='system-ui,sans-serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230f1f1b'%3EW%3C/text%3E%3C/svg%3E"
+		/>
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html"
+				>Dynamische<span>Systeme</span></a
+			>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-python-matplotlib.html">1 Python und Matplotlib</a>
+				<a href="02-iterationen.html">2 Iterationen</a>
+				<a href="03-wachstumsmodelle.html">3 Wachstumsmodelle</a>
+				<a href="04-mehrere-zustandsgroessen.html">4 Mehrere Zustandsgrössen</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main class="layout" data-ex-chapter="2" data-ex-offset="9">
+			<div class="content">
+				<p class="eyebrow">Abschnitt 3</p>
+				<h1>Das Schaefer'sche Modell</h1>
+
+				<div class="progress" data-progress>
+					<span class="meter"><i style="width: 0"></i></span>
+					<span data-progress-text>0 von 4 Übungen erledigt</span>
+					<button type="button" data-reset>zurücksetzen</button>
+				</div>
+
+				<p>
+					Bereits bekannte Modelle lassen sich natürlich beliebig
+					erweitern. Ein Beispiel dafür ist das
+					<em>Schaefer'sche Modell</em>. Es beschreibt die Entwicklung
+					einer logistisch wachsenden Population (siehe
+					<a href="02-iterationen.html#logistisch">Abschnitt 2</a>), die
+					unter Bejagung steht. Dabei wird davon ausgegangen, dass in
+					jedem Zeitschritt ein fester relativer Anteil a der Population
+					durch die Jagd getötet wird.
+				</p>
+				<p>
+					x<sub>n</sub> = x<sub>n−1</sub> + r · x<sub>n−1</sub> · (S −
+					x<sub>n−1</sub>) − a · x<sub>n−1</sub>
+				</p>
+
+				<h2 id="uebungen">Übungen</h2>
+
+				<!-- ============================================== Übung 2.10 -->
+				<section class="exercise" id="ex-schaefer-simulieren">
+					<div class="exercise__body">
+						<p>
+							Realisieren Sie das Schaefer'sche Modell auf dem
+							Computer, indem Sie die Werte
+						</p>
+						<p>x₀=10, r=0.007, a=0.2 und S=100</p>
+						<p>verwenden und eine graphische Darstellung der Wachstumskurve für 30 Zeitschritte erzeugen.</p>
+
+						<div
+							class="workbench"
+							data-id="wb10"
+							data-files="python"
+							data-height="240"
+						>
+							<template data-seed="python">
+import matplotlib.pyplot as plt
+
+def schaefer(x, r, s, a):
+    return x + r * x * (s - x) - a * x
+
+def simulate(x0, r, s, a, steps):
+    x = [x0]
+    for _ in range(steps):
+        x.append(schaefer(x[-1], r, s, a))
+    return x
+
+# TODO: simulate(10, 0.007, 100, 0.2, 30) aufrufen und plotten.
+							</template>
+						</div>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 2.11 -->
+				<section class="exercise" id="ex-schaefer-fixpunkte">
+					<div class="exercise__body">
+						<p>Welche Fixpunkte hat das Schaefer'sche Modell</p>
+						<p>
+							x<sub>n</sub> = x<sub>n−1</sub> + r · x<sub>n−1</sub> ·
+							(S − x<sub>n−1</sub>) − a · x<sub>n−1</sub>
+						</p>
+						<ol>
+							<li>wenn wir die Zahlenwerte x₀=10, r=0.007, a=0.2 und S=100 verwenden?</li>
+							<li>im Allgemeinen, d.h. ohne konkrete Zahlenwerte für x₀, r, a und S?</li>
+							<li>
+								Welche Bedingungen müssen die Werte von S, r und a im
+								Schaefer'schen Modell erfüllen, damit der nicht
+								triviale Fixpunkt einen biologisch relevanten Wert
+								annimmt?
+							</li>
+						</ol>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 2.12 -->
+				<section class="exercise" id="ex-rehe">
+					<div class="exercise__body">
+						<p>
+							Es wird geschätzt, dass in einem gewissen Gebiet die
+							Kapazität für Rehe mit S=200 beschränkt ist und dass
+							r=0.001 für das entsprechende Schaefer'sche Modell gilt.
+						</p>
+						<ol class="tasks">
+							<li>
+								Was passiert mit der Rehpopulation auf lange Sicht,
+								wenn in jedem Zeitschritt 15% der Rehe erlegt werden?
+							</li>
+							<li>
+								Wie hoch dürfte a maximal gewählt werden, um der
+								Population ein dauerhaftes Überleben zu ermöglichen?
+							</li>
+							<li>
+								Betrachten Sie für a=0.16, a=0.13 und a=0.08 den
+								Jagdertrag. Für welchen Wert von a ist der Jagdertrag
+								maximal?
+							</li>
+							<li>
+								Wir starten mit x₀=30 Rehen und einer Bejagung mit
+								a=0.1. Nach wie vielen Zeitschritten ist die
+								Wachstumsgeschwindigkeit der Population am grössten?
+							</li>
+						</ol>
+						<p class="hint">
+							<em>Hinweis:</em> Diese Aufgabe verlangt keinen fertigen
+							Code im Skript, lässt sich aber gut mit der Werkbank aus
+							Übung 2.10 erkunden — einfach S, r und a anpassen.
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb12"
+							data-files="python"
+							data-height="240"
+						>
+							<template data-seed="python">
+import matplotlib.pyplot as plt
+
+def schaefer(x, r, s, a):
+    return x + r * x * (s - x) - a * x
+
+def simulate(x0, r, s, a, steps):
+    x = [x0]
+    for _ in range(steps):
+        x.append(schaefer(x[-1], r, s, a))
+    return x
+
+# TODO: S=200, r=0.001 -- verschiedene a-Werte ausprobieren.
+							</template>
+						</div>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 2.13 -->
+				<section class="exercise" id="ex-jagdquote-optimal">
+					<div class="exercise__body">
+						<p>
+							Wir gehen nochmals vom allgemeinen Schaefer'schen Modell
+						</p>
+						<p>
+							x<sub>n</sub> = x<sub>n−1</sub> + r · x<sub>n−1</sub> ·
+							(S − x<sub>n−1</sub>) − a · x<sub>n−1</sub>
+						</p>
+						<p>und nicht von konkreten Zahlenwerten aus.</p>
+						<p>
+							Eine Jagdbehörde muss die Jagdquote a festlegen. Dabei
+							soll der stabile Jagdertrag im Fixpunkt möglichst gross
+							sein. Was ist unter diesen Bedingungen die optimale Wahl
+							für a?
+						</p>
+					</div>
+				</section>
+
+				<nav class="pager">
+					<a href="02-iterationen.html">← <b>Abschnitt 2 Iterationen</b></a>
+					<a href="04-mehrere-zustandsgroessen.html" style="text-align: right"
+						>Abschnitt 4 <b>Mehrere Zustandsgrössen →</b></a
+					>
+				</nav>
+			</div>
+
+			<aside class="minitoc">
+				<h2>Auf dieser Seite</h2>
+				<ol></ol>
+			</aside>
+		</main>
+
+		<script src="assets/examples.js"></script>
+		<script src="../assets/js/editor.js"></script>
+		<script src="../assets/js/pyrunner.js"></script>
+		<script src="../assets/js/site.js"></script>
+	</body>
+</html>
