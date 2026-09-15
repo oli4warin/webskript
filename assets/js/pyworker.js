@@ -25,7 +25,11 @@ var pyodideReady = null;
 /* matplotlib nur fuer die Beispiel-Listings im Theorieteil (die Uebungen
    selbst brauchen es nicht). Ohne echtes Fenster/Canvas im Worker muss der
    Agg-Backend erzwungen werden -- einmalig beim Laden, denn matplotlib legt
-   sein Backend beim ersten Import von pyplot fest. */
+   sein Backend beim ersten Import von pyplot fest.
+
+   dpi=200 statt der matplotlib-Voreinstellung (100), weil die Vorschau nur
+   gut die halbe Seitenbreite bekommt -- bei 100 dpi wirken die PNGs auf
+   hochaufloesenden (Retina-)Bildschirmen unscharf. */
 var FIGURE_CAPTURE = [
 	"import sys as _sys",
 	"_images = []",
@@ -35,7 +39,7 @@ var FIGURE_CAPTURE = [
 	"    for _num in _plt.get_fignums():",
 	"        _fig = _plt.figure(_num)",
 	'        _buf = _io.BytesIO()',
-	'        _fig.savefig(_buf, format="png", bbox_inches="tight")',
+	'        _fig.savefig(_buf, format="png", dpi=200, bbox_inches="tight")',
 	"        _images.append(_base64.b64encode(_buf.getvalue()).decode('ascii'))",
 	'    _plt.close("all")',
 	"import json as _json",
@@ -51,8 +55,21 @@ function getPyodide() {
 			return pyodide
 				.loadPackage(["numpy", "scipy", "matplotlib"])
 				.then(function () {
+					/* Im Worker gibt es kein Fenster, in das plt.show() etwas
+					   malen koennte -- die Figuren werden stattdessen ueber
+					   FIGURE_CAPTURE als PNG eingesammelt. plt.show() ist damit
+					   ein bewusstes No-Op, die deswegen von matplotlib
+					   ausgeloeste UserWarning also erwartet und wird hier
+					   unterdrueckt, statt den Schuelerinnen und Schuelern in
+					   der Ausgabe zu erscheinen. */
 					return pyodide.runPythonAsync(
-						'import matplotlib\nmatplotlib.use("Agg")\n'
+						'import matplotlib\n' +
+							'matplotlib.use("Agg")\n' +
+							'import warnings\n' +
+							'warnings.filterwarnings(\n' +
+							'    "ignore",\n' +
+							'    message="Matplotlib is currently using agg",\n' +
+							')\n'
 					);
 				})
 				.then(function () {
