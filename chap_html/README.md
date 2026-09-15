@@ -37,31 +37,41 @@ sie direkt per Doppelklick (`file://`) geöffnet wird.
 ## Anschauen
 
 ```sh
-python3 -m http.server 8000 --directory web
+python3 -m http.server 8000     # aus dem Repo-Wurzelverzeichnis
 ```
 
-Dann <http://localhost:8000/>. Über `file://` funktioniert alles ausser
-`localStorage` in manchen Browsern — für den Unterricht darum besser über einen
-Server ausliefern.
+Dann <http://localhost:8000/chap_html/>. Über `file://` funktioniert alles
+ausser `localStorage` in manchen Browsern — für den Unterricht darum besser
+über einen Server ausliefern.
 
-Die Seite ist statisch: `web/` auf einen beliebigen Webserver kopieren genügt.
-Es gibt kein Backend, und es werden keine Daten hochgeladen.
+Die Seite ist statisch: das ganze Repo auf einen beliebigen Webserver kopieren
+genügt. Es gibt kein Backend, und es werden keine Daten hochgeladen.
 
 ## Aufbau
 
 ```
-web/
-├── index.html, 01-…, 02-…, 03-…   Inhalt (der Prosatext steht hier)
-├── build.py                       Bündelt das Submodul
-└── assets/
-    ├── style.css                  Gestaltung, dunkel und hell
-    ├── site.js                    Syntaxfarben, Listings, Vorschauen,
-    │                              Übungsnummern, Fortschritt, minitoc,
-    │                              Lösungsschalter
-    ├── editor.js                  Die «Werkbank» (Editor + Vorschau)
-    ├── examples.js                erzeugt
-    └── img/                       erzeugt
+webskript/
+├── index.html                     Startseite mit Links zu allen Kapiteln
+├── assets/
+│   ├── css/style.css              Gestaltung, dunkel und hell — geteilt mit chap_svg/
+│   └── js/
+│       ├── site.js                Syntaxfarben, Listings, Vorschauen,
+│       │                          Übungsnummern, Fortschritt, minitoc,
+│       │                          Lösungsschalter — geteilt mit chap_svg/
+│       └── editor.js              Die «Werkbank» (Editor + Vorschau) — geteilt
+└── chap_html/
+    ├── index.html, 01-…, 02-…, 03-…   Inhalt (der Prosatext steht hier)
+    ├── build.py                       Bündelt das Submodul
+    └── assets/
+        ├── examples.js                erzeugt
+        └── img/                       erzeugt
 ```
+
+`style.css`, `site.js` und `editor.js` sind kapitelunabhängig: `site.js`
+bestimmt den localStorage-Namensraum (`skript.html.*`, `skript.svg.*`, …)
+automatisch aus dem Ordnernamen (`chap_html` → `html`), und `editor.js` baut
+die Werkbank-Reiter aus `data-files` auf der jeweiligen Seite. Ein drittes
+Kapitel braucht darum keine Änderung an diesen Dateien.
 
 ### Farbschema
 

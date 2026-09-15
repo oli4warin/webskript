@@ -1,11 +1,11 @@
 /* ==========================================================================
-   Werkbank: Editor mit Reitern (bild.svg / index.html / style.css) und
+   Werkbank: Editor mit Reitern (html/css/svg, je nach data-files) und
    Live-Vorschau. Der Code der Schueler wird im Browser (localStorage)
    gespeichert.
 
-   Fuer dieses Kapitel ist "svg" der Normalfall: Eine SVG-Datei ist kein
-   ganzes HTML-Dokument, sie wird darum in den <body> der Vorschau gestellt
-   (siehe composeDocument in site.js) und dort zentriert.
+   Eine SVG-Datei ist kein ganzes HTML-Dokument; sie wird darum in den <body>
+   der Vorschau gestellt (siehe composeDocument in site.js) und dort
+   zentriert.
    ========================================================================== */
 
 (function () {

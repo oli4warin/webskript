@@ -6,8 +6,24 @@
 (function () {
 	"use strict";
 
-	var PREFIX = "skript.html.";
+	/* Eigener localStorage-Bereich pro Kapitel (Ordner "chap_xxx"), damit
+	   Fortschritt und Code zweier Kapitel sich nicht vermischen. */
+	var CHAP = (function () {
+		var parts = location.pathname.split("/").filter(Boolean);
+		var dir = parts.length > 1 ? parts[parts.length - 2] : "";
+		return dir.replace(/^chap_/, "") || "skript";
+	})();
+	var PREFIX = "skript." + CHAP + ".";
 	var PAGE = location.pathname.split("/").pop() || "index.html";
+
+	/* Eine SVG-Datei ist kein ganzes Dokument. Damit sie in einer Vorschau
+	   sitzt wie in einem frischen Browserfenster, wird sie in den <body>
+	   gestellt und mit diesem Stil zentriert. */
+	var SVG_DEMO_CSS =
+		"html, body { margin: 0; height: 100%; }\n" +
+		"body { display: flex; align-items: center; justify-content: center;\n" +
+		"       padding: 8px; box-sizing: border-box; background: #fff; }\n" +
+		"svg { max-width: 100%; max-height: 100%; }\n";
 
 	/* ---------------------------------------------------------------- Speicher */
 
@@ -524,6 +540,7 @@
 		var css = frame.dataset.css ? fileContent(frame.dataset.css) : "";
 		if (html === null) html = "";
 		if (css === null) css = "";
+		if (/\.svg$/.test(frame.dataset.src || "")) css = SVG_DEMO_CSS + css;
 		/* Nur einen Ausschnitt darstellen, passend zum Listing daneben. */
 		if (frame.dataset.lines) html = excerpt(html, frame.dataset.lines);
 		frame.setAttribute(
@@ -542,9 +559,9 @@
 		if (!main) return [];
 
 		var offset = +(main.dataset.exOffset || 0);
-		/* Kapitelnummer im Skript; die Nummern lauten darum 3.01, 3.02, … wie
-		   dort (\thechapter.NN). */
-		var chapter = main.dataset.exChapter || "3";
+		/* Kapitelnummer im Skript (data-ex-chapter auf <main>); die Nummern
+		   lauten darum z.B. 3.01, 3.02, … wie dort (\thechapter.NN). */
+		var chapter = main.dataset.exChapter || "1";
 		var list = Array.prototype.slice.call(
 			document.querySelectorAll(".exercise")
 		);
@@ -776,6 +793,7 @@
 		composeDocument: composeDocument,
 		fileContent: fileContent,
 		highlight: highlight,
+		svgDemoCSS: SVG_DEMO_CSS,
 		showSolutions: SHOW_SOL,
 	};
 

@@ -47,31 +47,33 @@ sie direkt per Doppelklick (`file://`) geöffnet wird.
 ## Anschauen
 
 ```sh
-python3 -m http.server 8000 --directory chap_svg-web
+python3 -m http.server 8000     # aus dem Repo-Wurzelverzeichnis
 ```
 
-Dann <http://localhost:8000/>. Über `file://` funktioniert alles ausser
-`localStorage` in manchen Browsern — für den Unterricht darum besser über einen
-Server ausliefern.
+Dann <http://localhost:8000/chap_svg/>. Über `file://` funktioniert alles
+ausser `localStorage` in manchen Browsern — für den Unterricht darum besser
+über einen Server ausliefern.
 
-Die Seite ist statisch: `chap_svg-web/` auf einen beliebigen Webserver kopieren
+Die Seite ist statisch: das ganze Repo auf einen beliebigen Webserver kopieren
 genügt. Es gibt kein Backend, und es werden keine Daten hochgeladen.
 
 ## Aufbau
 
 ```
-chap_svg-web/
-├── index.html, 01-…, 02-…, 03-…   Inhalt (der Prosatext steht hier)
-├── build.py                       Bündelt das Submodul
-└── assets/
-    ├── style.css                  Gestaltung, dunkel und hell
-    ├── site.js                    Syntaxfarben, Listings, Vorschauen,
-    │                              Übungsnummern, Fortschritt, minitoc,
-    │                              Lösungsschalter
-    ├── editor.js                  Die «Werkbank» (Editor + Vorschau)
-    ├── examples.js                erzeugt
-    └── img/                       erzeugt
+webskript/
+├── index.html                     Startseite mit Links zu allen Kapiteln
+├── assets/                        gemeinsam mit chap_html/, siehe dort
+└── chap_svg/
+    ├── index.html, 01-…, 02-…, 03-…   Inhalt (der Prosatext steht hier)
+    ├── build.py                       Bündelt das Submodul
+    └── assets/
+        ├── examples.js                erzeugt
+        └── img/                       erzeugt
 ```
+
+`style.css`, `site.js` und `editor.js` liegen zusammen mit `chap_html/` unter
+`../assets/` im Repo-Wurzelverzeichnis — beide Kapitel benutzen dieselben
+Dateien, siehe [`chap_html/README.md`](../chap_html/README.md#aufbau).
 
 ### Farbschema
 
