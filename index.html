@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Webskript – Gymnasium Muttenz</title>
+		<meta
+			name="description"
+			content="Übersicht über die Webversionen einzelner Kapitel aus den Mathematik- und Informatik-Skripten des Gymnasiums Muttenz."
+		/>
+		<script>
+			/* Farbschema vor dem ersten Zeichnen setzen, damit beim Laden nichts
+			   aufblitzt. Dunkel ist der Standard, siehe assets/css/style.css. */
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.webskript.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="assets/css/style.css" />
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html">Web<span>skript</span></a>
+			<nav>
+				<a href="chap_html/index.html">HTML und CSS</a>
+				<a href="chap_svg/index.html">SVG</a>
+				<a href="chap_hypothesen/index.html">Hypothesentests</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main>
+			<div class="hero">
+				<p class="eyebrow">Gymnasium Muttenz</p>
+				<h1>Webskript</h1>
+				<p class="lead">
+					Einzelne Kapitel aus den Mathematik- und Informatik-Skripten gibt
+					es zusätzlich zum gedruckten Skript als Webseite: mit Werkbänken,
+					in denen Sie Code direkt im Browser schreiben, ausführen und
+					verändern können. Die folgenden Kapitel sind bereits verfügbar.
+				</p>
+			</div>
+
+			<ul class="cards">
+				<li>
+					<a class="card" href="chap_html/index.html">
+						<span class="card__no">Informatik</span>
+						<h2>HTML und CSS</h2>
+						<p>
+							Wie eine Webseite aufgebaut und gestaltet wird: Tags und der
+							DOM, Selektoren und das Box-Modell, Layouts mit Grid und
+							Flexbox.
+						</p>
+					</a>
+				</li>
+				<li>
+					<a class="card" href="chap_svg/index.html">
+						<span class="card__no">Informatik</span>
+						<h2>SVG — Scalable Vector Graphics</h2>
+						<p>
+							Bilder als Bauanleitung statt Pixelraster: Grundformen, Pfade
+							und Animationen, die im Browser wirklich laufen.
+						</p>
+					</a>
+				</li>
+				<li>
+					<a class="card" href="chap_hypothesen/index.html">
+						<span class="card__no">Angewandte Mathematik Profil B</span>
+						<h2>Hypothesentests</h2>
+						<p>
+							Der Python-Teil des Kapitels: Tests mit
+							<code>scipy.stats</code>, p-Werte und
+							Bootstrap-Konfidenzintervalle statt Tabellen von Hand.
+						</p>
+					</a>
+				</li>
+			</ul>
+		</main>
+
+		<footer class="pagefoot">
+			<p>
+				Diese Seiten ergänzen die gedruckten Skripte des Gymnasiums
+				Muttenz um interaktive Werkbänke. Ihre Eingaben und Häkchen
+				werden nur im jeweiligen Browser gespeichert und nirgends
+				hochgeladen.
+			</p>
+		</footer>
+
+		<script src="assets/js/site.js"></script>
+	</body>
+</html>
