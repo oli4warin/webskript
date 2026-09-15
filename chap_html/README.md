@@ -25,7 +25,7 @@ Alle Listings und Lösungsvorschläge kommen aus dem Submodul
 die Figuren, welche die Seite nicht selber rendern kann, nach `assets/img/`:
 
 ```sh
-python3 web/build.py     # aus dem Repo-Wurzelverzeichnis
+python3 webskript/chap_html/build.py     # aus dem Wurzelverzeichnis des Hauptrepos
 ```
 
 Nach jeder Änderung in `code/gyminf/html/` neu ausführen. `assets/examples.js`
@@ -37,7 +37,7 @@ sie direkt per Doppelklick (`file://`) geöffnet wird.
 ## Anschauen
 
 ```sh
-python3 -m http.server 8000     # aus dem Repo-Wurzelverzeichnis
+python3 -m http.server 8000     # aus dem Wurzelverzeichnis des Submoduls webskript
 ```
 
 Dann <http://localhost:8000/chap_html/>. Über `file://` funktioniert alles

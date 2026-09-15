@@ -5,9 +5,10 @@ Alle Listings und Lösungen der Webseite kommen aus code/gyminf/html/. Damit die
 Seite auch direkt über file:// funktioniert (fetch() ist dort gesperrt), werden
 die Dateien in ein JavaScript-Objekt geschrieben, anstatt zur Laufzeit geladen.
 
-Aufruf aus dem Repo-Wurzelverzeichnis:
+Aufruf aus dem Wurzelverzeichnis des Hauptrepos (nicht des Submoduls
+webskript):
 
-    python3 web/build.py
+    python3 webskript/chap_html/build.py
 """
 
 import json
@@ -16,7 +17,7 @@ import sys
 from pathlib import Path
 
 WEB = Path(__file__).resolve().parent
-REPO = WEB.parent
+REPO = WEB.parent.parent
 SRC = REPO / "code" / "gyminf" / "html"
 OUT = WEB / "assets" / "examples.js"
 IMG = WEB / "assets" / "img"
@@ -64,7 +65,7 @@ def main():
     OUT.parent.mkdir(parents=True, exist_ok=True)
     body = json.dumps(files, ensure_ascii=False, indent=1, sort_keys=True)
     OUT.write_text(
-        "/* Automatisch erzeugt von web/build.py -- nicht von Hand aendern.\n"
+        "/* Automatisch erzeugt von chap_html/build.py -- nicht von Hand aendern.\n"
         "   Quelle: code/gyminf/html/ (Submodul gyminf) */\n"
         f"window.EXAMPLES = {body};\n",
         encoding="utf-8",

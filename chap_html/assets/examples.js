@@ -1,4 +1,4 @@
-/* Automatisch erzeugt von web/build.py -- nicht von Hand aendern.
+/* Automatisch erzeugt von chap_html/build.py -- nicht von Hand aendern.
    Quelle: code/gyminf/html/ (Submodul gyminf) */
 window.EXAMPLES = {
  "article-example.html": "<article>\n  <h2>Titel</h2>\n\n  <section>Dies ist der erste Abschnitt.</section>\n  <section>\n    <p>Der zweite Abschnitt hat mehrere Unterabschnitte.</p>\n    <p>Dies ist der zweite Unterabschnitt.</p>\n  </section>\n</article>\n",
