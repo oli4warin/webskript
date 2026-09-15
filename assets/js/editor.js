@@ -48,25 +48,22 @@
 		"</svg>\n";
 
 	/* ------------------------------------------------------------------
-	   Emmet-Kürzel (nur HTML). Kein fertiges Emmet eingebunden -- die Seite
-	   muss auch offline über file:// laufen (siehe README). Stattdessen ein
-	   kleiner, in sich geschlossener Ausdrucksparser für den gängigen
-	   Teilumfang: Tag, .klasse, #id, [attr=wert], {text}, *anzahl (mit $ als
-	   Zähler), Kind (>), Geschwister (+), Klammerung (()) und ein Schritt
-	   Hochklettern (^). Wird auf Tab im HTML-Reiter angewendet.
+	   Emmet-Kürzel (HTML- und SVG-Reiter). Kein fertiges Emmet eingebunden --
+	   die Seite muss auch offline über file:// laufen (siehe README).
+	   Stattdessen ein kleiner, in sich geschlossener Ausdrucksparser für den
+	   gängigen Teilumfang: Tag, .klasse, #id, [attr=wert], {text}, *anzahl
+	   (mit $ als Zähler), Kind (>), Geschwister (+), Klammerung (()) und ein
+	   Schritt Hochklettern (^). Wird auf Tab angewendet; HTML- und
+	   SVG-Reiter haben je ein eigenes "Profil" (Tag-Liste, leere Elemente,
+	   Standardattribute), der Parser selbst ist für beide derselbe.
 	   ------------------------------------------------------------------ */
 
-	var EMMET_VOID = {
-		area: 1, base: 1, br: 1, col: 1, embed: 1, hr: 1, img: 1, input: 1,
-		link: 1, meta: 1, param: 1, source: 1, track: 1, wbr: 1,
-	};
-
-	var EMMET_DEFAULT_ATTRS = {
-		a: [["href", ""]],
-		img: [["src", ""], ["alt", ""]],
-		input: [["type", "text"]],
-		link: [["rel", "stylesheet"], ["href", ""]],
-	};
+	function tagSet(list) {
+		return list.split(" ").reduce(function (set, t) {
+			set[t] = true;
+			return set;
+		}, {});
+	}
 
 	var EMMET_IMPLICIT_TAG = {
 		ul: "li", ol: "li",
@@ -74,22 +71,62 @@
 		tr: "td",
 		select: "option", optgroup: "option",
 		dl: "dt",
+		text: "tspan",
 	};
 
-	var EMMET_KNOWN_TAGS = (
-		"a abbr address area article aside audio b bdi bdo blockquote body br " +
-		"button canvas caption cite code col colgroup data datalist dd del " +
-		"details dfn dialog div dl dt em embed fieldset figcaption figure " +
-		"footer form h1 h2 h3 h4 h5 h6 head header hr html i iframe img input " +
-		"ins kbd label legend li link main map mark meta meter nav noscript " +
-		"object ol optgroup option output p param picture pre progress q rp rt " +
-		"ruby s samp script section select small source span strong style sub " +
-		"summary sup table tbody td template textarea tfoot th thead time " +
-		"title tr track u ul var video wbr"
-	).split(" ").reduce(function (set, t) {
-		set[t] = true;
-		return set;
-	}, {});
+	var EMMET_PROFILE_HTML = {
+		fallbackTag: "div",
+		voidTags: tagSet(
+			"area base br col embed hr img input link meta param source track wbr"
+		),
+		defaultAttrs: {
+			a: [["href", ""]],
+			img: [["src", ""], ["alt", ""]],
+			input: [["type", "text"]],
+			link: [["rel", "stylesheet"], ["href", ""]],
+		},
+		knownTags: tagSet(
+			"a abbr address area article aside audio b bdi bdo blockquote body br " +
+			"button canvas caption cite code col colgroup data datalist dd del " +
+			"details dfn dialog div dl dt em embed fieldset figcaption figure " +
+			"footer form h1 h2 h3 h4 h5 h6 head header hr html i iframe img input " +
+			"ins kbd label legend li link main map mark meta meter nav noscript " +
+			"object ol optgroup option output p param picture pre progress q rp rt " +
+			"ruby s samp script section select small source span strong style sub " +
+			"summary sup table tbody td template textarea tfoot th thead time " +
+			"title tr track u ul var video wbr"
+		),
+	};
+
+	var EMMET_PROFILE_SVG = {
+		fallbackTag: "g",
+		voidTags: tagSet(
+			"circle ellipse line rect path polygon polyline stop use image view " +
+			"animate animateMotion animateTransform set mpath feGaussianBlur " +
+			"feOffset feBlend feColorMatrix feComposite feDropShadow feFlood " +
+			"feImage feTile feTurbulence feDisplacementMap"
+		),
+		defaultAttrs: {
+			circle: [["cx", "0"], ["cy", "0"], ["r", "0"]],
+			ellipse: [["cx", "0"], ["cy", "0"], ["rx", "0"], ["ry", "0"]],
+			rect: [["width", "0"], ["height", "0"]],
+			line: [["x1", "0"], ["y1", "0"], ["x2", "0"], ["y2", "0"]],
+			path: [["d", ""]],
+			polygon: [["points", ""]],
+			polyline: [["points", ""]],
+			use: [["href", ""]],
+			stop: [["offset", "0"], ["stop-color", "#000"]],
+		},
+		knownTags: tagSet(
+			"a animate animateMotion animateTransform circle clipPath defs desc " +
+			"ellipse feBlend feColorMatrix feComposite feDropShadow feFlood " +
+			"feGaussianBlur feImage feMerge feMergeNode feOffset feTile " +
+			"feTurbulence feDisplacementMap filter foreignObject g image line " +
+			"linearGradient marker mask metadata mpath path pattern polygon " +
+			"polyline radialGradient rect set stop style svg switch symbol text " +
+			"textPath title tspan use view"
+		),
+	};
 
 	var EMMET_CHAR = /[A-Za-z0-9.#\-_:*+^>()[\]="'$\{\}]/;
 	var EMMET_SPECIAL = /[.#[{>+*^($]/;
@@ -288,17 +325,18 @@
 		};
 	}
 
-	function emmetExpandList(nodes, parentTag) {
+	function emmetExpandList(nodes, parentTag, profile) {
 		var out = [];
 		nodes.forEach(function (node) {
 			var count = node.mult || 1;
 			for (var idx = 1; idx <= count; idx++) {
 				var inst = emmetCloneNumbered(node, idx);
 				if (inst.isGroup) {
-					out = out.concat(emmetExpandList(inst.children, parentTag));
+					out = out.concat(emmetExpandList(inst.children, parentTag, profile));
 				} else {
-					if (!inst.tag) inst.tag = EMMET_IMPLICIT_TAG[parentTag] || "div";
-					inst.children = emmetExpandList(inst.children, inst.tag);
+					if (!inst.tag)
+						inst.tag = EMMET_IMPLICIT_TAG[parentTag] || profile.fallbackTag;
+					inst.children = emmetExpandList(inst.children, inst.tag, profile);
 					out.push(inst);
 				}
 			}
@@ -310,9 +348,9 @@
 		return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 	}
 
-	function emmetRenderNode(node, indent, state) {
+	function emmetRenderNode(node, indent, state, profile) {
 		var attrs = node.attrs.slice();
-		var defaults = EMMET_DEFAULT_ATTRS[node.tag];
+		var defaults = profile.defaultAttrs[node.tag];
 		if (defaults) {
 			defaults.forEach(function (d) {
 				if (!attrs.some(function (a) { return a[0] === d[0]; })) attrs.push(d.slice());
@@ -326,7 +364,7 @@
 			attrStr += a[1] == null ? " " + a[0] : " " + a[0] + '="' + emmetEsc(a[1]) + '"';
 		});
 
-		if (EMMET_VOID[node.tag]) {
+		if (profile.voidTags[node.tag]) {
 			state.out += indent + "<" + node.tag + attrStr + " />\n";
 			return;
 		}
@@ -347,16 +385,16 @@
 
 		state.out += indent + "<" + node.tag + attrStr + ">\n";
 		node.children.forEach(function (ch) {
-			emmetRenderNode(ch, indent + "  ", state);
+			emmetRenderNode(ch, indent + "  ", state, profile);
 		});
 		if (node.text != null) state.out += indent + "  " + emmetEsc(node.text) + "\n";
 		state.out += indent + "</" + node.tag + ">\n";
 	}
 
-	function emmetRenderTree(nodes) {
+	function emmetRenderTree(nodes, profile) {
 		var state = { out: "", cursorPos: -1 };
 		nodes.forEach(function (n) {
-			emmetRenderNode(n, "", state);
+			emmetRenderNode(n, "", state, profile);
 		});
 		var text = state.out;
 		if (text.slice(-1) === "\n") text = text.slice(0, -1);
@@ -364,13 +402,13 @@
 		return { text: text, cursorPos: cursorPos };
 	}
 
-	function emmetExpand(abbr) {
+	function emmetExpand(abbr, profile) {
 		try {
 			var parsed = emmetParse(abbr);
 			if (parsed.pos < abbr.length || !parsed.nodes.length) return null;
-			var expanded = emmetExpandList(parsed.nodes, null);
+			var expanded = emmetExpandList(parsed.nodes, null, profile);
 			if (!expanded.length) return null;
-			return emmetRenderTree(expanded);
+			return emmetRenderTree(expanded, profile);
 		} catch (e) {
 			return null;
 		}
@@ -391,7 +429,7 @@
 	/* Versucht, das Kürzel vor dem Cursor zu expandieren. Gibt true zurück,
 	   wenn der Textinhalt des Feldes verändert wurde (dann muss der Aufrufer
 	   touched() aufrufen), sonst false -- dann greift der normale Tab. */
-	function tryExpandEmmet(code) {
+	function tryExpandEmmet(code, profile) {
 		if (code.selectionStart !== code.selectionEnd) return false;
 		var value = code.value;
 		var pos = code.selectionStart;
@@ -407,12 +445,16 @@
 
 		var plainWord = /^[A-Za-z][A-Za-z0-9]*$/.test(abbr);
 		if (plainWord) {
-			if (!EMMET_KNOWN_TAGS[abbr.toLowerCase()]) return false;
+			/* Groß-/Kleinschreibung bleibt erhalten (wichtig für SVG-Tags wie
+			   linearGradient), die Bekanntheitsprüfung nimmt notfalls auch
+			   Kleinschreibung -- so tippt sich z. B. "div" weiterhin bequem. */
+			if (!profile.knownTags[abbr] && !profile.knownTags[abbr.toLowerCase()])
+				return false;
 		} else if (!EMMET_SPECIAL.test(abbr)) {
 			return false;
 		}
 
-		var result = emmetExpand(abbr);
+		var result = emmetExpand(abbr, profile);
 		if (!result) return false;
 
 		var baseIndent = (/^[ \t]*/.exec(value.slice(lineStart)) || [""])[0];
@@ -595,6 +637,8 @@
 			statusRight.textContent =
 				active === "html"
 					? "Ctrl/⌘ + Enter führt aus · Tab expandiert Kürzel (z. B. ul>li*3)"
+					: active === "svg"
+					? "Ctrl/⌘ + Enter führt aus · Tab expandiert Kürzel (z. B. g>circle+rect)"
 					: "Ctrl/⌘ + Enter führt aus";
 		}
 		status.appendChild(statusLeft);
@@ -692,7 +736,13 @@
 			if (e.key === "Tab") {
 				e.preventDefault();
 
-				if (!e.shiftKey && active === "html" && tryExpandEmmet(code)) {
+				var emmetProfile =
+					active === "html"
+						? EMMET_PROFILE_HTML
+						: active === "svg"
+						? EMMET_PROFILE_SVG
+						: null;
+				if (!e.shiftKey && emmetProfile && tryExpandEmmet(code, emmetProfile)) {
 					touched();
 					return;
 				}

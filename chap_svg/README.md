@@ -203,6 +203,16 @@ Ist `svg` unter `data-files`, wird der Inhalt des Reiters als Inline-SVG in die
 Vorschau gestellt, mit demselben Zentrierstil wie eine `.demo`. Der Editor
 färbt SVG mit dem HTML-Tokenizer ein.
 
+Auch im `svg`-Reiter expandiert Tab Emmet-artige Kürzel (`g>circle+rect`,
+`svg>circle*3`, `use[href=#stern]`) -- derselbe Parser wie im `html`-Reiter
+von `chap_html/`, aber mit einem eigenen Profil (`EMMET_PROFILE_SVG` in
+`editor.js`): eigene Tag-Liste mit den SVG-Elementnamen (`circle`, `rect`,
+`linearGradient`, …, Gross-/Kleinschreibung bleibt erhalten), eigene leere
+Elemente (`circle`, `path`, `use`, `stop`, …) und ein paar sinnvolle
+Standardattribute (`circle` bekommt `cx`/`cy`/`r`, `path` bekommt `d`). Ein
+Tag ohne bekannten Namen expandiert nicht -- Tab fügt dann wie gewohnt zwei
+Leerzeichen ein.
+
 Die Vorschau läuft in einem `sandbox`-`<iframe>` mit `srcdoc`, ohne
 `allow-same-origin`. Sie kann also nicht auf diese Seite oder den gespeicherten
 Code zugreifen.
