@@ -193,6 +193,15 @@ Schriftgrösse, Zeilenhöhe und dasselbe `padding` — wer eines davon in
 `style.css` ändert, muss es an beiden Stellen ändern, sonst laufen Text und
 Farben auseinander.
 
+Im `html`-Reiter expandiert Tab Emmet-artige Kürzel (`nav>ul>li*3>a`,
+`div.card>h2+p`, `.box$*3` mit `$` als Zähler). Kein fertiges Emmet
+eingebunden, sondern ein kleiner eigener Parser in `editor.js`
+(`emmetExpand` und Umfeld) für den gängigen Teilumfang — Grund ist wieder
+`file://`: kein Build-Schritt, keine CDN-Abhängigkeit. Erkennt das Kürzel vor
+dem Cursor nichts Sinnvolles (z. B. ein normales Wort ohne `.`/`#`/`>`/…, das
+nicht in der Tag-Liste `EMMET_KNOWN_TAGS` steht), fügt Tab wie gewohnt zwei
+Leerzeichen ein.
+
 ## Was der Browser nicht kann
 
 - `:visited` (Übung 3.21) wird aus Datenschutzgründen eingeschränkt und zählt in

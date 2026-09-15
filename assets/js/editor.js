@@ -47,6 +47,382 @@
 		'  <circle cx="50" cy="50" r="40" fill="red" />\n' +
 		"</svg>\n";
 
+	/* ------------------------------------------------------------------
+	   Emmet-Kürzel (nur HTML). Kein fertiges Emmet eingebunden -- die Seite
+	   muss auch offline über file:// laufen (siehe README). Stattdessen ein
+	   kleiner, in sich geschlossener Ausdrucksparser für den gängigen
+	   Teilumfang: Tag, .klasse, #id, [attr=wert], {text}, *anzahl (mit $ als
+	   Zähler), Kind (>), Geschwister (+), Klammerung (()) und ein Schritt
+	   Hochklettern (^). Wird auf Tab im HTML-Reiter angewendet.
+	   ------------------------------------------------------------------ */
+
+	var EMMET_VOID = {
+		area: 1, base: 1, br: 1, col: 1, embed: 1, hr: 1, img: 1, input: 1,
+		link: 1, meta: 1, param: 1, source: 1, track: 1, wbr: 1,
+	};
+
+	var EMMET_DEFAULT_ATTRS = {
+		a: [["href", ""]],
+		img: [["src", ""], ["alt", ""]],
+		input: [["type", "text"]],
+		link: [["rel", "stylesheet"], ["href", ""]],
+	};
+
+	var EMMET_IMPLICIT_TAG = {
+		ul: "li", ol: "li",
+		table: "tr", tbody: "tr", thead: "tr", tfoot: "tr",
+		tr: "td",
+		select: "option", optgroup: "option",
+		dl: "dt",
+	};
+
+	var EMMET_KNOWN_TAGS = (
+		"a abbr address area article aside audio b bdi bdo blockquote body br " +
+		"button canvas caption cite code col colgroup data datalist dd del " +
+		"details dfn dialog div dl dt em embed fieldset figcaption figure " +
+		"footer form h1 h2 h3 h4 h5 h6 head header hr html i iframe img input " +
+		"ins kbd label legend li link main map mark meta meter nav noscript " +
+		"object ol optgroup option output p param picture pre progress q rp rt " +
+		"ruby s samp script section select small source span strong style sub " +
+		"summary sup table tbody td template textarea tfoot th thead time " +
+		"title tr track u ul var video wbr"
+	).split(" ").reduce(function (set, t) {
+		set[t] = true;
+		return set;
+	}, {});
+
+	var EMMET_CHAR = /[A-Za-z0-9.#\-_:*+^>()[\]="'$\{\}]/;
+	var EMMET_SPECIAL = /[.#[{>+*^($]/;
+
+	function emmetParse(input) {
+		var i = 0;
+		var n = input.length;
+
+		function peek() {
+			return input[i];
+		}
+		function eof() {
+			return i >= n;
+		}
+
+		function parseAttrs(node) {
+			for (;;) {
+				if (peek() === ".") {
+					i++;
+					var cm = /^[A-Za-z0-9_$-]+/.exec(input.slice(i));
+					if (!cm) break;
+					node.classes.push(cm[0]);
+					i += cm[0].length;
+				} else if (peek() === "#") {
+					i++;
+					var idm = /^[A-Za-z0-9_$-]+/.exec(input.slice(i));
+					if (!idm) break;
+					node.id = idm[0];
+					i += idm[0].length;
+				} else if (peek() === "[") {
+					i++;
+					while (!eof() && peek() !== "]") {
+						while (peek() === " ") i++;
+						if (eof() || peek() === "]") break;
+						var am = /^[A-Za-z_:][A-Za-z0-9_:.-]*/.exec(input.slice(i));
+						if (!am) {
+							i++;
+							continue;
+						}
+						var aname = am[0];
+						i += am[0].length;
+						var aval = null;
+						if (peek() === "=") {
+							i++;
+							if (peek() === '"' || peek() === "'") {
+								var q = peek();
+								i++;
+								var vs = i;
+								while (!eof() && peek() !== q) i++;
+								aval = input.slice(vs, i);
+								if (peek() === q) i++;
+							} else {
+								var vm = /^[^\s\]]*/.exec(input.slice(i));
+								aval = vm[0];
+								i += vm[0].length;
+							}
+						}
+						node.attrs.push([aname, aval]);
+						while (peek() === " ") i++;
+					}
+					if (peek() === "]") i++;
+				} else if (peek() === "{") {
+					i++;
+					var ts = i;
+					while (!eof() && peek() !== "}") i++;
+					node.text = input.slice(ts, i);
+					if (peek() === "}") i++;
+				} else {
+					break;
+				}
+			}
+		}
+
+		function parseNode() {
+			var tm = /^[A-Za-z][A-Za-z0-9:-]*/.exec(input.slice(i));
+			var node = {
+				tag: null, isGroup: false, classes: [], id: null,
+				attrs: [], text: null, children: [], mult: 1,
+			};
+			if (tm) {
+				node.tag = tm[0];
+				i += tm[0].length;
+			}
+			parseAttrs(node);
+			if (
+				!node.tag && !node.classes.length && !node.id &&
+				!node.attrs.length && node.text == null
+			) {
+				return null;
+			}
+			return node;
+		}
+
+		function parseMult(node) {
+			if (peek() === "*") {
+				i++;
+				var mm = /^[0-9]+/.exec(input.slice(i));
+				if (mm) {
+					node.mult = parseInt(mm[0], 10);
+					i += mm[0].length;
+				}
+			}
+		}
+
+		function parseElement() {
+			var node;
+			if (peek() === "(") {
+				i++;
+				node = {
+					tag: null, isGroup: true, classes: [], id: null,
+					attrs: [], text: null, children: [], mult: 1,
+				};
+				node.children = parseSequence();
+				if (peek() === ")") i++;
+			} else {
+				node = parseNode();
+			}
+			if (!node) return null;
+			parseMult(node);
+			return node;
+		}
+
+		function parseSequence() {
+			var siblings = [];
+			for (;;) {
+				if (eof() || peek() === ")") break;
+				if (peek() === "+") {
+					i++;
+					continue;
+				}
+				if (peek() === "^") {
+					while (peek() === "^") i++;
+					break;
+				}
+				if (peek() === ">") {
+					i++;
+					if (siblings.length) {
+						var parent = siblings[siblings.length - 1];
+						parent.children = parent.children.concat(parseSequence());
+					}
+					continue;
+				}
+				var node = parseElement();
+				if (!node) break;
+				siblings.push(node);
+			}
+			return siblings;
+		}
+
+		var nodes = parseSequence();
+		return { nodes: nodes, pos: i };
+	}
+
+	function emmetNumber(str, idx) {
+		return str.replace(/\$+/g, function (m) {
+			var s = String(idx);
+			while (s.length < m.length) s = "0" + s;
+			return s;
+		});
+	}
+
+	/* Reine Strukturkopie, ohne $ aufzulösen -- für Kinder, die selbst eine
+	   *anzahl tragen: deren $ gehört zu ihrem EIGENEN Durchlauf, nicht zum
+	   Index des Vorfahren. */
+	function emmetCopyRaw(node) {
+		return {
+			tag: node.tag,
+			isGroup: node.isGroup,
+			classes: node.classes.slice(),
+			id: node.id,
+			attrs: node.attrs.map(function (a) {
+				return a.slice();
+			}),
+			text: node.text,
+			mult: node.mult,
+			children: node.children.map(emmetCopyRaw),
+		};
+	}
+
+	function emmetCloneNumbered(node, idx) {
+		return {
+			tag: node.tag,
+			isGroup: node.isGroup,
+			classes: node.classes.map(function (c) {
+				return emmetNumber(c, idx);
+			}),
+			id: node.id != null ? emmetNumber(node.id, idx) : null,
+			attrs: node.attrs.map(function (a) {
+				return [a[0], a[1] != null ? emmetNumber(a[1], idx) : a[1]];
+			}),
+			text: node.text != null ? emmetNumber(node.text, idx) : null,
+			mult: node.mult,
+			children: node.children.map(function (c) {
+				return c.mult > 1 ? emmetCopyRaw(c) : emmetCloneNumbered(c, idx);
+			}),
+		};
+	}
+
+	function emmetExpandList(nodes, parentTag) {
+		var out = [];
+		nodes.forEach(function (node) {
+			var count = node.mult || 1;
+			for (var idx = 1; idx <= count; idx++) {
+				var inst = emmetCloneNumbered(node, idx);
+				if (inst.isGroup) {
+					out = out.concat(emmetExpandList(inst.children, parentTag));
+				} else {
+					if (!inst.tag) inst.tag = EMMET_IMPLICIT_TAG[parentTag] || "div";
+					inst.children = emmetExpandList(inst.children, inst.tag);
+					out.push(inst);
+				}
+			}
+		});
+		return out;
+	}
+
+	function emmetEsc(s) {
+		return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+	}
+
+	function emmetRenderNode(node, indent, state) {
+		var attrs = node.attrs.slice();
+		var defaults = EMMET_DEFAULT_ATTRS[node.tag];
+		if (defaults) {
+			defaults.forEach(function (d) {
+				if (!attrs.some(function (a) { return a[0] === d[0]; })) attrs.push(d.slice());
+			});
+		}
+
+		var attrStr = "";
+		if (node.id) attrStr += ' id="' + emmetEsc(node.id) + '"';
+		if (node.classes.length) attrStr += ' class="' + emmetEsc(node.classes.join(" ")) + '"';
+		attrs.forEach(function (a) {
+			attrStr += a[1] == null ? " " + a[0] : " " + a[0] + '="' + emmetEsc(a[1]) + '"';
+		});
+
+		if (EMMET_VOID[node.tag]) {
+			state.out += indent + "<" + node.tag + attrStr + " />\n";
+			return;
+		}
+
+		var hasChildren = node.children.length > 0;
+		if (!hasChildren && node.text == null) {
+			state.out += indent + "<" + node.tag + attrStr + ">";
+			if (state.cursorPos === -1) state.cursorPos = state.out.length;
+			state.out += "</" + node.tag + ">\n";
+			return;
+		}
+		if (!hasChildren) {
+			state.out +=
+				indent + "<" + node.tag + attrStr + ">" +
+				emmetEsc(node.text) + "</" + node.tag + ">\n";
+			return;
+		}
+
+		state.out += indent + "<" + node.tag + attrStr + ">\n";
+		node.children.forEach(function (ch) {
+			emmetRenderNode(ch, indent + "  ", state);
+		});
+		if (node.text != null) state.out += indent + "  " + emmetEsc(node.text) + "\n";
+		state.out += indent + "</" + node.tag + ">\n";
+	}
+
+	function emmetRenderTree(nodes) {
+		var state = { out: "", cursorPos: -1 };
+		nodes.forEach(function (n) {
+			emmetRenderNode(n, "", state);
+		});
+		var text = state.out;
+		if (text.slice(-1) === "\n") text = text.slice(0, -1);
+		var cursorPos = state.cursorPos === -1 ? text.length : Math.min(state.cursorPos, text.length);
+		return { text: text, cursorPos: cursorPos };
+	}
+
+	function emmetExpand(abbr) {
+		try {
+			var parsed = emmetParse(abbr);
+			if (parsed.pos < abbr.length || !parsed.nodes.length) return null;
+			var expanded = emmetExpandList(parsed.nodes, null);
+			if (!expanded.length) return null;
+			return emmetRenderTree(expanded);
+		} catch (e) {
+			return null;
+		}
+	}
+
+	function emmetApplyBaseIndent(text, cursorPos, baseIndent) {
+		if (!baseIndent) return { text: text, cursorPos: cursorPos };
+		var breaksBefore = (text.slice(0, cursorPos).match(/\n/g) || []).length;
+		var indented = text
+			.split("\n")
+			.map(function (line, idx) {
+				return idx === 0 ? line : baseIndent + line;
+			})
+			.join("\n");
+		return { text: indented, cursorPos: cursorPos + baseIndent.length * breaksBefore };
+	}
+
+	/* Versucht, das Kürzel vor dem Cursor zu expandieren. Gibt true zurück,
+	   wenn der Textinhalt des Feldes verändert wurde (dann muss der Aufrufer
+	   touched() aufrufen), sonst false -- dann greift der normale Tab. */
+	function tryExpandEmmet(code) {
+		if (code.selectionStart !== code.selectionEnd) return false;
+		var value = code.value;
+		var pos = code.selectionStart;
+		var lineStart = value.lastIndexOf("\n", pos - 1) + 1;
+
+		var k = pos;
+		while (k > lineStart && EMMET_CHAR.test(value[k - 1])) k--;
+		var abbr = value.slice(k, pos);
+		if (!abbr) return false;
+		/* Wird bereits mitten in einem Tag getippt (nach "<"), nicht
+		   eingreifen -- sonst verdoppelt sich die spitze Klammer. */
+		if (k > 0 && value[k - 1] === "<") return false;
+
+		var plainWord = /^[A-Za-z][A-Za-z0-9]*$/.test(abbr);
+		if (plainWord) {
+			if (!EMMET_KNOWN_TAGS[abbr.toLowerCase()]) return false;
+		} else if (!EMMET_SPECIAL.test(abbr)) {
+			return false;
+		}
+
+		var result = emmetExpand(abbr);
+		if (!result) return false;
+
+		var baseIndent = (/^[ \t]*/.exec(value.slice(lineStart)) || [""])[0];
+		var adjusted = emmetApplyBaseIndent(result.text, result.cursorPos, baseIndent);
+
+		code.value = value.slice(0, k) + adjusted.text + value.slice(pos);
+		code.selectionStart = code.selectionEnd = k + adjusted.cursorPos;
+		return true;
+	}
+
 	function el(tag, cls, text) {
 		var node = document.createElement(tag);
 		if (cls) node.className = cls;
@@ -214,11 +590,13 @@
 
 		var status = el("div", "wb__status");
 		var statusLeft = el("span", null, "");
-		var statusRight = el(
-			"span",
-			null,
-			"Ctrl/⌘ + Enter führt aus"
-		);
+		var statusRight = el("span", null, "");
+		function updateHint() {
+			statusRight.textContent =
+				active === "html"
+					? "Ctrl/⌘ + Enter führt aus · Tab expandiert Kürzel (z. B. ul>li*3)"
+					: "Ctrl/⌘ + Enter führt aus";
+		}
 		status.appendChild(statusLeft);
 		status.appendChild(statusRight);
 
@@ -296,6 +674,7 @@
 					tabBtns[n].setAttribute("aria-selected", n === which ? "true" : "false");
 			});
 			redraw();
+			updateHint();
 			code.focus();
 		}
 
@@ -312,6 +691,12 @@
 
 			if (e.key === "Tab") {
 				e.preventDefault();
+
+				if (!e.shiftKey && active === "html" && tryExpandEmmet(code)) {
+					touched();
+					return;
+				}
+
 				var start = code.selectionStart;
 				var end = code.selectionEnd;
 				var value = code.value;
@@ -426,6 +811,7 @@
 				tabBtns[n].setAttribute("aria-selected", n === active ? "true" : "false");
 		});
 		redraw();
+		updateHint();
 		run();
 	}
 
