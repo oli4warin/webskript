@@ -99,15 +99,19 @@ self.onmessage = function (e) {
 		.then(function (pyodide) {
 			self.postMessage({ type: "status", text: "wird ausgeführt …" });
 
+			/* setStdout/setStderr rufen "batched" pro Zeile auf, aber OHNE das
+			   abschliessende Newline (das wird von Pyodide beim Zeilenumbruch
+			   im Stream abgeschnitten) -- darum hier wieder anhaengen, sonst
+			   verschmelzen mehrere print()-Aufrufe zu einer Zeile. */
 			var out = [];
 			pyodide.setStdout({
 				batched: function (s) {
-					out.push(s);
+					out.push(s + "\n");
 				},
 			});
 			pyodide.setStderr({
 				batched: function (s) {
-					out.push(s);
+					out.push(s + "\n");
 				},
 			});
 

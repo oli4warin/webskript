@@ -1077,6 +1077,55 @@ details.sol > summary:hover {
 	background: #fff;
 	border-radius: 4px;
 	animation: fade-rise 0.3s ease-out both;
+	cursor: zoom-in;
+}
+
+/* Tab-Vervollstaendigung im Python-Reiter: kleine Liste, die ueber dem Code
+   an der Cursorposition erscheint (siehe acShow in editor.js). Liegt in
+   derselben .wb__stack wie .wb__hl/.wb__code, darum absolut positioniert. */
+.wb__ac {
+	position: absolute;
+	z-index: 5;
+	margin: 0;
+	padding: 0.25rem;
+	list-style: none;
+	min-width: 9rem;
+	max-height: 11rem;
+	overflow-y: auto;
+	background: var(--paper-soft);
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+	font-family: var(--mono);
+	font-size: 0.78rem;
+}
+
+.wb__ac__item {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 0.75rem;
+	padding: 0.2rem 0.45rem;
+	border-radius: 4px;
+	color: var(--ink);
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.wb__ac__item.is-active {
+	background: var(--accent-soft);
+	color: var(--accent);
+}
+
+.wb__ac__kind {
+	font-family: var(--sans);
+	font-size: 0.68rem;
+	color: var(--ink-faint);
+}
+
+.wb__ac__item.is-active .wb__ac__kind {
+	color: var(--accent);
+	opacity: 0.8;
 }
 
 .wb__status {

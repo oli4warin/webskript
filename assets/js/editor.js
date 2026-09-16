@@ -50,6 +50,354 @@
 	var SKELETON_PYTHON = "# Schreiben Sie hier Ihren Code hin\n";
 
 	/* ------------------------------------------------------------------
+	   Tab-Vervollstaendigung (Python-Reiter). Kein echtes Sprachverstaendnis
+	   (dafuer muesste Pyodide bei jedem Tastendruck gefragt werden) --
+	   stattdessen eine kleine, feste Liste aus Schluesselwoertern/Builtins
+	   plus ein paar Modulen, die in diesem Kurs vorkommen (siehe
+	   PY_MODULE_MEMBERS), ergaenzt um das, was im Code selbst schon steht
+	   (eigene Funktionen, Klassen, Variablen). Genau wie im PyTamaro-
+	   Playground zeigt Tab bei mehreren Treffern eine kleine Auswahlliste.
+	   ------------------------------------------------------------------ */
+
+	var PY_KEYWORDS = (
+		"False None True and as assert async await break class continue def " +
+		"del elif else except finally for from global if import in is lambda " +
+		"nonlocal not or pass raise return try while with yield"
+	).split(" ");
+
+	var PY_BUILTINS = (
+		"abs all any bin bool chr dict dir enumerate filter float format " +
+		"frozenset getattr hasattr hex input int isinstance issubclass iter " +
+		"len list map max min next oct open ord pow print range repr " +
+		"reversed round set slice sorted str sum tuple type zip"
+	).split(" ");
+
+	/* Mitglieder der Module, die in den Uebungen tatsaechlich benutzt werden
+	   (matplotlib fuers Plotten, math/random/numpy als gaengige Helfer). */
+	var PY_MODULE_MEMBERS = {
+		"matplotlib.pyplot": [
+			["plot", "Funktion"],
+			["scatter", "Funktion"],
+			["bar", "Funktion"],
+			["hist", "Funktion"],
+			["show", "Funktion"],
+			["figure", "Funktion"],
+			["subplots", "Funktion"],
+			["subplot", "Funktion"],
+			["xlabel", "Funktion"],
+			["ylabel", "Funktion"],
+			["title", "Funktion"],
+			["legend", "Funktion"],
+			["grid", "Funktion"],
+			["xlim", "Funktion"],
+			["ylim", "Funktion"],
+			["xticks", "Funktion"],
+			["yticks", "Funktion"],
+			["axhline", "Funktion"],
+			["axvline", "Funktion"],
+			["fill_between", "Funktion"],
+			["annotate", "Funktion"],
+			["text", "Funktion"],
+			["savefig", "Funktion"],
+			["close", "Funktion"],
+		],
+		math: [
+			["pi", "Konstante"],
+			["e", "Konstante"],
+			["inf", "Konstante"],
+			["nan", "Konstante"],
+			["sqrt", "Funktion"],
+			["floor", "Funktion"],
+			["ceil", "Funktion"],
+			["exp", "Funktion"],
+			["log", "Funktion"],
+			["log2", "Funktion"],
+			["log10", "Funktion"],
+			["sin", "Funktion"],
+			["cos", "Funktion"],
+			["tan", "Funktion"],
+			["radians", "Funktion"],
+			["degrees", "Funktion"],
+			["factorial", "Funktion"],
+			["gcd", "Funktion"],
+			["isnan", "Funktion"],
+			["pow", "Funktion"],
+		],
+		numpy: [
+			["array", "Funktion"],
+			["linspace", "Funktion"],
+			["arange", "Funktion"],
+			["zeros", "Funktion"],
+			["ones", "Funktion"],
+			["mean", "Funktion"],
+			["std", "Funktion"],
+			["sum", "Funktion"],
+			["sqrt", "Funktion"],
+			["exp", "Funktion"],
+			["log", "Funktion"],
+			["sin", "Funktion"],
+			["cos", "Funktion"],
+			["pi", "Konstante"],
+			["max", "Funktion"],
+			["min", "Funktion"],
+			["abs", "Funktion"],
+			["round", "Funktion"],
+		],
+		random: [
+			["random", "Funktion"],
+			["randint", "Funktion"],
+			["choice", "Funktion"],
+			["shuffle", "Funktion"],
+			["seed", "Funktion"],
+			["uniform", "Funktion"],
+			["sample", "Funktion"],
+		],
+	};
+
+	/* Methoden pro Python-Grundtyp -- fuer Variablen, deren Typ sich aus
+	   ihrer letzten Zuweisung erraten laesst (siehe pyInferType). Damit
+	   vervollstaendigt z. B. "x.app" zu "x.append(", wenn irgendwo
+	   "x = [...]" steht. */
+	var PY_TYPE_MEMBERS = {
+		list: [
+			["append", "Methode"],
+			["extend", "Methode"],
+			["insert", "Methode"],
+			["remove", "Methode"],
+			["pop", "Methode"],
+			["clear", "Methode"],
+			["index", "Methode"],
+			["count", "Methode"],
+			["sort", "Methode"],
+			["reverse", "Methode"],
+			["copy", "Methode"],
+		],
+		dict: [
+			["get", "Methode"],
+			["keys", "Methode"],
+			["values", "Methode"],
+			["items", "Methode"],
+			["update", "Methode"],
+			["pop", "Methode"],
+			["popitem", "Methode"],
+			["clear", "Methode"],
+			["setdefault", "Methode"],
+			["copy", "Methode"],
+		],
+		str: [
+			["upper", "Methode"],
+			["lower", "Methode"],
+			["strip", "Methode"],
+			["lstrip", "Methode"],
+			["rstrip", "Methode"],
+			["split", "Methode"],
+			["join", "Methode"],
+			["replace", "Methode"],
+			["find", "Methode"],
+			["startswith", "Methode"],
+			["endswith", "Methode"],
+			["format", "Methode"],
+			["capitalize", "Methode"],
+			["title", "Methode"],
+			["isdigit", "Methode"],
+			["isalpha", "Methode"],
+		],
+		set: [
+			["add", "Methode"],
+			["remove", "Methode"],
+			["discard", "Methode"],
+			["pop", "Methode"],
+			["clear", "Methode"],
+			["union", "Methode"],
+			["intersection", "Methode"],
+			["difference", "Methode"],
+			["update", "Methode"],
+			["issubset", "Methode"],
+			["issuperset", "Methode"],
+		],
+		tuple: [
+			["count", "Methode"],
+			["index", "Methode"],
+		],
+		int: [
+			["bit_length", "Methode"],
+			["to_bytes", "Methode"],
+		],
+		float: [
+			["is_integer", "Methode"],
+			["hex", "Methode"],
+		],
+	};
+
+	/* Kandidaten dieser Art werden mit einer oeffnenden Klammer eingesetzt
+	   ("append" -> "append("), weil sie ohne Aufruf so gut wie nie gemeint
+	   sind. */
+	function pyIsCallable(kind) {
+		return (
+			kind === "Funktion" ||
+			kind === "Methode" ||
+			kind === "eingebaut" ||
+			kind === "Klasse"
+		);
+	}
+
+	/* Guesst den Typ einer Variable aus ihrer letzten Zuweisung vor der
+	   Cursorposition -- reicht fuer die literalen Zuweisungen ("x = [...]"),
+	   wie sie in den Uebungen vorkommen; keine echte Typanalyse. */
+	function pyInferType(source, name, beforePos) {
+		var re = new RegExp(
+			"(?:^|\\n)[ \\t]*" + name + "[ \\t]*=(?!=)[ \\t]*([^\\n]*)",
+			"g"
+		);
+		var m,
+			rhs = null,
+			bestIndex = -1;
+		while ((m = re.exec(source))) {
+			if (m.index <= beforePos && m.index > bestIndex) {
+				bestIndex = m.index;
+				rhs = m[1];
+			}
+		}
+		if (rhs == null) return null;
+		/* Ein "#" schneidet auch innerhalb eines String-Literals ab (z. B.
+		   x = "a#b") -- stoert hier nicht, weil danach nur noch auf das
+		   Anfangszeichen geprueft wird. */
+		rhs = rhs.replace(/#.*/, "").trim();
+		if (/^\[/.test(rhs) || /^list\s*\(/.test(rhs)) return "list";
+		if (/^\{/.test(rhs)) {
+			var body = rhs.replace(/^\{/, "").split("}")[0];
+			return body.trim() === "" || /:/.test(body) ? "dict" : "set";
+		}
+		if (/^dict\s*\(/.test(rhs)) return "dict";
+		if (/^set\s*\(/.test(rhs)) return "set";
+		if (/^["']/.test(rhs) || /^str\s*\(/.test(rhs)) return "str";
+		if (/^\(/.test(rhs) || /^tuple\s*\(/.test(rhs)) return "tuple";
+		if (/^-?\d+[ \t]*$/.test(rhs)) return "int";
+		if (/^-?\d*\.\d+/.test(rhs)) return "float";
+		return null;
+	}
+
+	function pyTypeMemberCandidates(source, name, beforePos) {
+		var type = pyInferType(source, name, beforePos);
+		var members = type && PY_TYPE_MEMBERS[type];
+		if (!members) return [];
+		return members.map(function (pair) {
+			return { name: pair[0], kind: pair[1], call: pyIsCallable(pair[1]) };
+		});
+	}
+
+	/* {Alias: Modulname} aus allen "import x"/"import x as y" im Code. */
+	function pyImportAliases(source) {
+		var map = {};
+		var re = /^[ \t]*import\s+([\w.]+)(?:\s+as\s+(\w+))?/gm;
+		var m;
+		while ((m = re.exec(source))) {
+			map[m[2] || m[1].split(".").pop()] = m[1];
+		}
+		return map;
+	}
+
+	function pyMemberCandidates(source, alias) {
+		var mod = pyImportAliases(source)[alias];
+		var members = mod && PY_MODULE_MEMBERS[mod];
+		if (!members) return [];
+		return members.map(function (pair) {
+			return { name: pair[0], kind: pair[1], call: pyIsCallable(pair[1]) };
+		});
+	}
+
+	/* Namen, die im Code selbst schon vorkommen: eigene Funktionen, Klassen,
+	   Variablen (Zuweisung, for-Schleife, with/import ... as, Parameter) und
+	   gezielt importierte Namen (from x import a, b). Es wird der ganze
+	   Puffer durchsucht, nicht nur der aktuelle Sichtbarkeitsbereich -- fuer
+	   eine kleine Vorschlagsliste reicht das. */
+	function pyLocalCandidates(source) {
+		var out = [];
+		function add(name, kind) {
+			if (name) out.push({ name: name, kind: kind, call: pyIsCallable(kind) });
+		}
+
+		var re = /\bdef\s+([A-Za-z_]\w*)\s*\(([^)]*)\)/g;
+		var m;
+		while ((m = re.exec(source))) {
+			add(m[1], "Funktion");
+			m[2].split(",").forEach(function (param) {
+				var name = param.split("=")[0].split(":")[0].trim();
+				if (/^[A-Za-z_]\w*$/.test(name) && name !== "self")
+					add(name, "Variable");
+			});
+		}
+
+		re = /\bclass\s+([A-Za-z_]\w*)/g;
+		while ((m = re.exec(source))) add(m[1], "Klasse");
+
+		re = /^[ \t]*([A-Za-z_]\w*)\s*=(?!=)/gm;
+		while ((m = re.exec(source))) add(m[1], "Variable");
+
+		re = /\bfor\s+([A-Za-z_]\w*)\s+in\b/g;
+		while ((m = re.exec(source))) add(m[1], "Variable");
+
+		re = /\bas\s+([A-Za-z_]\w*)/g;
+		while ((m = re.exec(source))) add(m[1], "Variable");
+
+		re = /\bfrom\s+[\w.]+\s+import\s+([^\n#]+)/g;
+		while ((m = re.exec(source))) {
+			m[1].split(",").forEach(function (part) {
+				var name = part.trim().split(/\s+as\s+/).pop().trim();
+				if (/^[A-Za-z_]\w*$/.test(name)) add(name, "Funktion");
+			});
+		}
+
+		return out;
+	}
+
+	/* Liefert null (normales Tab soll einruecken) oder {from, to, candidates}
+	   fuer die Stelle vor dem Cursor. Bei "x." zaehlt sowohl ein bekannter
+	   Modul-Alias (plt, math, ...) als auch der aus einer Zuweisung
+	   erratene Grundtyp von x (siehe pyInferType) -- so wird "x.app" zu
+	   "x.append(" vervollstaendigt, wenn irgendwo "x = [...]" steht. */
+	function pyCompletionContext(source, pos) {
+		var lineStart = source.lastIndexOf("\n", pos - 1) + 1;
+		var line = source.slice(lineStart, pos);
+
+		var pool, prefix;
+		var attr = line.match(/([A-Za-z_]\w*)\.([A-Za-z0-9_]*)$/);
+		if (attr) {
+			prefix = attr[2];
+			pool = pyMemberCandidates(source, attr[1]).concat(
+				pyTypeMemberCandidates(source, attr[1], pos)
+			);
+		} else {
+			var word = line.match(/[A-Za-z_]\w*$/);
+			if (!word) return null;
+			prefix = word[0];
+			pool = PY_KEYWORDS.map(function (k) {
+				return { name: k, kind: "Schlüsselwort", call: false };
+			})
+				.concat(
+					PY_BUILTINS.map(function (b) {
+						return { name: b, kind: "eingebaut", call: true };
+					})
+				)
+				.concat(pyLocalCandidates(source));
+		}
+
+		var seen = {};
+		var matches = pool.filter(function (c) {
+			if (c.name === prefix || c.name.indexOf(prefix) !== 0) return false;
+			if (seen[c.name]) return false;
+			seen[c.name] = true;
+			return true;
+		});
+		if (!matches.length) return null;
+		matches.sort(function (a, b) {
+			return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+		});
+
+		return { from: pos - prefix.length, to: pos, candidates: matches.slice(0, 8) };
+	}
+
+	/* ------------------------------------------------------------------
 	   Emmet-Kürzel (HTML- und SVG-Reiter). Kein fertiges Emmet eingebunden --
 	   die Seite muss auch offline über file:// laufen (siehe README).
 	   Stattdessen ein kleiner, in sich geschlossener Ausdrucksparser für den
@@ -665,6 +1013,8 @@
 					? "Ctrl/⌘ + Enter führt aus · Tab expandiert Kürzel (z. B. ul>li*3)"
 					: active === "svg"
 					? "Ctrl/⌘ + Enter führt aus · Tab expandiert Kürzel (z. B. g>circle+rect)"
+					: active === "python"
+					? "Ctrl/⌘ + Enter führt aus · Tab vervollständigt"
 					: "Ctrl/⌘ + Enter führt aus";
 		}
 		status.appendChild(statusLeft);
@@ -708,9 +1058,116 @@
 			syncScroll();
 		}
 
+		/* ------------------------------------------------ Tab-Vervollstaendigung
+		   (nur fuer den Python-Reiter genutzt, siehe pyCompletionContext oben).
+		   Die Liste ist ein <ul> ueber dem Textfeld, in derselben
+		   Koordinatenebene wie .wb__hl (siehe .wb__stack in style.css) --
+		   Position wird ueber Zeile/Spalte des Cursors plus Zeichenmass
+		   (monospace) berechnet. */
+		var acList = null;
+		var acItems = [];
+		var acIndex = 0;
+		var acFrom = 0;
+		var acTo = 0;
+		var acMetrics = null;
+
+		function acCharMetrics() {
+			if (acMetrics) return acMetrics;
+			var cs = window.getComputedStyle(code);
+			if (!acCharMetrics._canvas)
+				acCharMetrics._canvas = document.createElement("canvas");
+			var ctx = acCharMetrics._canvas.getContext("2d");
+			ctx.font = cs.fontStyle + " " + cs.fontWeight + " " + cs.fontSize + " " + cs.fontFamily;
+			acMetrics = {
+				charWidth: ctx.measureText("0").width,
+				lineHeight: parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.3,
+				paddingLeft: parseFloat(cs.paddingLeft) || 0,
+				paddingTop: parseFloat(cs.paddingTop) || 0,
+			};
+			return acMetrics;
+		}
+
+		function acCaretCoords(pos) {
+			var before = code.value.slice(0, pos).split("\n");
+			var row = before.length - 1;
+			var col = before[before.length - 1].length;
+			var m = acCharMetrics();
+			return {
+				left: m.paddingLeft + col * m.charWidth - code.scrollLeft,
+				top: m.paddingTop + (row + 1) * m.lineHeight - code.scrollTop,
+			};
+		}
+
+		function acHide() {
+			if (acList) acList.remove();
+			acList = null;
+			acItems = [];
+		}
+
+		function acHighlight() {
+			if (!acList) return;
+			for (var i = 0; i < acList.children.length; i++) {
+				acList.children[i].classList.toggle("is-active", i === acIndex);
+			}
+			var current = acList.children[acIndex];
+			if (current) current.scrollIntoView({ block: "nearest" });
+		}
+
+		function acMove(delta) {
+			acIndex = (acIndex + delta + acItems.length) % acItems.length;
+			acHighlight();
+		}
+
+		function acAccept() {
+			var item = acItems[acIndex];
+			acHide();
+			if (!item) return;
+			var value = code.value;
+			var insert = item.name + (item.call ? "(" : "");
+			code.value = value.slice(0, acFrom) + insert + value.slice(acTo);
+			code.selectionStart = code.selectionEnd = acFrom + insert.length;
+			touched();
+			code.focus();
+		}
+
+		function acShow(candidates, from, to) {
+			acHide();
+			acItems = candidates;
+			acIndex = 0;
+			acFrom = from;
+			acTo = to;
+
+			acList = el("ul", "wb__ac");
+			acList.setAttribute("role", "listbox");
+			candidates.forEach(function (item, i) {
+				var li = el("li", "wb__ac__item");
+				li.setAttribute("role", "option");
+				li.appendChild(el("span", "wb__ac__name", item.name));
+				li.appendChild(el("span", "wb__ac__kind", item.kind));
+				/* mousedown statt click: das Textfeld darf den Fokus (und die
+				   Cursorposition acFrom/acTo) nicht schon vorher verlieren. */
+				li.addEventListener("mousedown", function (e) {
+					e.preventDefault();
+					acIndex = i;
+					acAccept();
+				});
+				acList.appendChild(li);
+			});
+
+			var coords = acCaretCoords(from);
+			acList.style.left = coords.left + "px";
+			acList.style.top = coords.top + "px";
+			stack.appendChild(acList);
+			acHighlight();
+		}
+
+		code.addEventListener("blur", acHide);
+		code.addEventListener("click", acHide);
+
 		var runBtn = null;
 
 		function showPythonPlaceholder() {
+			consoleOut.hidden = false;
 			consoleOut.textContent =
 				'Noch nicht ausgeführt. Klicken Sie auf "Ausführen" oder ' +
 				"drücken Sie Ctrl/⌘ + Enter.";
@@ -718,13 +1175,32 @@
 			imagesWrap.innerHTML = "";
 		}
 
+		/* Oeffnet eine Grafik-Ausgabe allein (ohne den Rest der Seite) in einem
+		   neuen Tab/Fenster. */
+		function openImageStandalone(dataUrl) {
+			var win = window.open("", "_blank");
+			if (!win) return;
+			win.document.write(
+				"<!doctype html><title>Grafik-Ausgabe</title>" +
+					"<style>body{margin:0;min-height:100vh;display:flex;" +
+					"align-items:center;justify-content:center;background:#000}" +
+					"img{max-width:100%;max-height:100vh}</style>" +
+					'<img src="' +
+					dataUrl +
+					'" alt="Grafik-Ausgabe (matplotlib)">'
+			);
+			win.document.close();
+		}
+
 		function runPython() {
+			consoleOut.hidden = false;
 			consoleOut.textContent = "läuft …";
 			consoleOut.classList.remove("wb__console--error");
 			imagesWrap.innerHTML = "";
 			if (runBtn) runBtn.disabled = true;
 			window.PyRunner.run(buffers.python, function (msg) {
 				if (msg.type === "status") {
+					consoleOut.hidden = false;
 					consoleOut.textContent = msg.text;
 					return;
 				}
@@ -732,13 +1208,33 @@
 				if (!msg.ok) {
 					text += (text ? "\n\n" : "") + "Fehler:\n" + msg.error;
 				}
-				consoleOut.textContent = text || "(keine Ausgabe)";
+				var images = msg.images || [];
+				/* Bei einer reinen Grafik-Ausgabe (z. B. matplotlib) ohne Text
+				   bleibt die Konsole aus -- es soll nur das Bild erscheinen. */
+				if (!text && images.length) {
+					consoleOut.hidden = true;
+					consoleOut.textContent = "";
+				} else {
+					consoleOut.hidden = false;
+					consoleOut.textContent = text || "(keine Ausgabe)";
+				}
 				consoleOut.classList.toggle("wb__console--error", !msg.ok);
 				imagesWrap.innerHTML = "";
-				(msg.images || []).forEach(function (b64) {
+				images.forEach(function (b64) {
+					var dataUrl = "data:image/png;base64," + b64;
 					var img = document.createElement("img");
-					img.src = "data:image/png;base64," + b64;
+					img.src = dataUrl;
 					img.alt = "Grafik-Ausgabe (matplotlib)";
+					img.tabIndex = 0;
+					img.addEventListener("click", function () {
+						openImageStandalone(dataUrl);
+					});
+					img.addEventListener("keydown", function (e) {
+						if (e.key === "Enter" || e.key === " ") {
+							e.preventDefault();
+							openImageStandalone(dataUrl);
+						}
+					});
 					imagesWrap.appendChild(img);
 				});
 				if (runBtn) runBtn.disabled = false;
@@ -782,6 +1278,7 @@
 		}
 
 		function select(which) {
+			acHide();
 			buffers[active] = code.value;
 			active = which;
 			code.value = buffers[which];
@@ -795,9 +1292,36 @@
 		}
 
 		code.addEventListener("input", touched);
-		code.addEventListener("scroll", syncScroll);
+		code.addEventListener("scroll", function () {
+			syncScroll();
+			acHide();
+		});
 
 		code.addEventListener("keydown", function (e) {
+			if (acList) {
+				if (e.key === "ArrowDown") {
+					e.preventDefault();
+					acMove(1);
+					return;
+				}
+				if (e.key === "ArrowUp") {
+					e.preventDefault();
+					acMove(-1);
+					return;
+				}
+				if (e.key === "Tab" || (e.key === "Enter" && !e.metaKey && !e.ctrlKey)) {
+					e.preventDefault();
+					acAccept();
+					return;
+				}
+				if (e.key === "Escape") {
+					e.preventDefault();
+					acHide();
+					return;
+				}
+				acHide();
+			}
+
 			if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
 				e.preventDefault();
 				clearTimeout(runTimer);
@@ -822,6 +1346,22 @@
 				var start = code.selectionStart;
 				var end = code.selectionEnd;
 				var value = code.value;
+
+				if (wantsPython && start === end && !e.shiftKey) {
+					var ctx = pyCompletionContext(value, start);
+					if (ctx) {
+						if (ctx.candidates.length === 1) {
+							var only = ctx.candidates[0];
+							var onlyInsert = only.name + (only.call ? "(" : "");
+							code.value = value.slice(0, ctx.from) + onlyInsert + value.slice(ctx.to);
+							code.selectionStart = code.selectionEnd = ctx.from + onlyInsert.length;
+							touched();
+						} else {
+							acShow(ctx.candidates, ctx.from, ctx.to);
+						}
+						return;
+					}
+				}
 
 				if (start === end && !e.shiftKey) {
 					code.value = value.slice(0, start) + "  " + value.slice(end);
