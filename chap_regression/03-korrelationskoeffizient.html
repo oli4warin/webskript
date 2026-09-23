@@ -18,6 +18,22 @@
 			rel="icon"
 			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235fc9ae'/%3E%3Ctext x='16' y='23' font-family='system-ui,sans-serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230f1f1b'%3EW%3C/text%3E%3C/svg%3E"
 		/>
+		<script>
+			window.MathJax = {
+				tex: {
+					inlineMath: [["\\(", "\\)"]],
+					displayMath: [["\\[", "\\]"]],
+				},
+				options: {
+					skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code", "template"],
+				},
+			};
+		</script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+			id="MathJax-script"
+			async
+		></script>
 	</head>
 
 	<body>
@@ -41,7 +57,7 @@
 				<h2 id="definition">Definition und Beispiel</h2>
 				<p>
 					Bei der Regression haben wir bereits den sogenannten empirischen
-					Korrelationskoeffizienten <var>r</var> angesprochen (zum Beispiel
+					Korrelationskoeffizienten \(r\) angesprochen (zum Beispiel
 					über <code>np.corrcoef</code>). Wir legen unseren Fokus nun
 					darauf, die Bedeutung dieser Zahl genauer zu verstehen.
 				</p>
@@ -49,18 +65,18 @@
 				<div class="box">
 					<p class="box__label" id="def-kor">Definition: Empirischer Korrelationskoeffizient</p>
 					<p>
-						Gegeben seien die Datenpunkte (x<sub>1</sub>,y<sub>1</sub>), …,
-						(x<sub>n</sub>,y<sub>n</sub>). Wir definieren dann den
+						Gegeben seien die Datenpunkte \((x_1,y_1)\), …,
+						\((x_n,y_n)\). Wir definieren dann den
 						<em>empirischen Korrelationskoeffizienten</em> wie folgt:
 					</p>
 					<p style="text-align: center">
-						r = s<sub>xy</sub> / √(s<sub>xx</sub> · s<sub>yy</sub>),
+						\[r = \frac{s_{xy}}{\sqrt{s_{xx} \cdot s_{yy}}},\]
 					</p>
 					<p>wobei</p>
 					<p style="text-align: center">
-						s<sub>xy</sub> = Σ (x<sub>i</sub>−x̄)·(y<sub>i</sub>−ȳ),
-						&nbsp; s<sub>xx</sub> = Σ (x<sub>i</sub>−x̄)²
-						&nbsp;und&nbsp; s<sub>yy</sub> = Σ (y<sub>i</sub>−ȳ)².
+						\[s_{xy} = \sum (x_i-\bar{x})\cdot(y_i-\bar{y}),
+						\quad s_{xx} = \sum (x_i-\bar{x})^2
+						\quad\text{und}\quad s_{yy} = \sum (y_i-\bar{y})^2.\]
 					</p>
 				</div>
 
@@ -71,7 +87,7 @@
 
 				<p class="hint">
 					<b>Beispiel.</b> Punkte A(3,3), B(1,2), C(2,1) — Berechnung von
-					<var>r</var> mit Hilfe der Definition
+					\(r\) mit Hilfe der Definition
 				</p>
 				<div class="workbench" data-id="wbex1" data-files="python" data-height="240">
 					<template data-seed="python">
@@ -94,8 +110,8 @@ print("Kontrolle mit np.corrcoef:", np.corrcoef(x, y)[0, 1])
 				</div>
 
 				<h2 id="eigenschaften">Eigenschaften von r</h2>
-				<p>Für den empirischen Korrelationskoeffizienten <var>r</var> gilt immer</p>
-				<p style="text-align: center">−1 ≤ r ≤ 1.</p>
+				<p>Für den empirischen Korrelationskoeffizienten \(r\) gilt immer</p>
+				<p style="text-align: center">\[-1 \le r \le 1.\]</p>
 
 				<p class="hint">
 					<b>Zum Ausprobieren.</b> Fünf Punktwolken mit unterschiedlichem
@@ -162,15 +178,15 @@ plt.show()
 					</template>
 				</div>
 				<ul>
-					<li>Falls r = ±1 ist, liegen alle Datenpunkte exakt auf einer Geraden.</li>
-					<li>Falls r &gt; 0 ist, liegt ein steigender Trend vor.</li>
-					<li>Falls r &lt; 0 ist, liegt ein fallender Trend vor.</li>
+					<li>Falls \(r = \pm 1\) ist, liegen alle Datenpunkte exakt auf einer Geraden.</li>
+					<li>Falls \(r &gt; 0\) ist, liegt ein steigender Trend vor.</li>
+					<li>Falls \(r &lt; 0\) ist, liegt ein fallender Trend vor.</li>
 					<li>
-						Falls |r| gross ist (d.h. nahe bei 1), liegen die
+						Falls \(|r|\) gross ist (d.h. nahe bei 1), liegen die
 						Datenpunkte in der Nähe der Regressionsgeraden.
 					</li>
 					<li>
-						Falls |r| klein ist (d.h. nahe bei 0), liegen die
+						Falls \(|r|\) klein ist (d.h. nahe bei 0), liegen die
 						Datenpunkte weiter von der Regressionsgeraden entfernt.
 					</li>
 				</ul>
@@ -178,7 +194,7 @@ plt.show()
 				<div class="box box--warn">
 					<p class="box__label">Korrelation ist nicht Kausalität</p>
 					<p>
-						Ein grosser Betrag von <var>r</var> bedeutet nur, dass ein
+						Ein grosser Betrag von \(r\) bedeutet nur, dass ein
 						<em>statistischer</em> Zusammenhang zwischen den beiden
 						Grössen besteht — er sagt nichts darüber aus, ob die eine
 						Grösse die andere auch <em>verursacht</em>. Ein klassisches

@@ -18,6 +18,22 @@
 			rel="icon"
 			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235fc9ae'/%3E%3Ctext x='16' y='23' font-family='system-ui,sans-serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230f1f1b'%3EW%3C/text%3E%3C/svg%3E"
 		/>
+		<script>
+			window.MathJax = {
+				tex: {
+					inlineMath: [["\\(", "\\)"]],
+					displayMath: [["\\[", "\\]"]],
+				},
+				options: {
+					skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code", "template"],
+				},
+			};
+		</script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+			id="MathJax-script"
+			async
+		></script>
 	</head>
 
 	<body>
@@ -77,17 +93,17 @@
 						<dd>
 							berechnet die Regressionsgerade zu den Datenpunkten und
 							liefert die Liste <code>[m, b]</code> mit der Steigung
-							<var>m</var> und dem y-Achsenabschnitt <var>b</var> zurück.
+							\(m\) und dem y-Achsenabschnitt \(b\) zurück.
 							Die <code>1</code> steht für den Grad des Polynoms: Mit
 							einer <code>2</code> erhalten wir eine <em>quadratische</em>
 							Regression (also die Liste <code>[a, b, c]</code> zu
-							y = a·x² + b·x + c).
+							\(y = a \cdot x^2 + b \cdot x + c\)).
 						</dd>
 					</div>
 					<div>
 						<dt><code>np.corrcoef(x, y)[0, 1]</code></dt>
 						<dd>
-							liefert den empirischen Korrelationskoeffizienten <var>r</var>
+							liefert den empirischen Korrelationskoeffizienten \(r\)
 							(siehe <a href="03-korrelationskoeffizient.html">Abschnitt 3</a>).
 						</dd>
 					</div>
@@ -151,8 +167,8 @@ plt.show()
 				</div>
 				<p>
 					Wir erhalten also genau dieselbe Regressionsgerade
-					y ≈ 0.9095·x − 89.5941 und denselben empirischen
-					Korrelationskoeffizienten r ≈ 0.9035 wie zuvor mit dem
+					\(y \approx 0.9095 \cdot x - 89.5941\) und denselben empirischen
+					Korrelationskoeffizienten \(r \approx 0.9035\) wie zuvor mit dem
 					Taschenrechner. Das ist wenig überraschend: Der Rechner und
 					Python lösen dasselbe Minimierungsproblem, nur eben mit
 					unterschiedlichen Knöpfen.
@@ -161,16 +177,16 @@ plt.show()
 				<h2 id="linearisierung">Nicht-lineare Regression durch Linearisierung</h2>
 				<p>
 					Für eine <em>exponentielle</em> Regression suchen wir eine
-					Funktion der Form h(t) = a · e<sup>k·t</sup>. Logarithmieren wir
+					Funktion der Form \(h(t) = a \cdot e^{k \cdot t}\). Logarithmieren wir
 					diese Gleichung, so erhalten wir
 				</p>
-				<p style="text-align: center">ln(h(t)) = k·t + ln(a),</p>
+				<p style="text-align: center">\[\ln(h(t)) = k \cdot t + \ln(a),\]</p>
 				<p>
 					also einen <em>linearen</em> Zusammenhang zwischen t und ln(h).
 					Damit lässt sich das Problem auf eine lineare Regression
 					zurückführen: Wir führen die lineare Regression nicht mit den
-					Daten (t<sub>i</sub>, h<sub>i</sub>), sondern mit den Daten
-					(t<sub>i</sub>, ln(h<sub>i</sub>)) durch. Genauso rechnet auch der
+					Daten \((t_i, h_i)\), sondern mit den Daten
+					\((t_i, \ln(h_i))\) durch. Genauso rechnet auch der
 					Taschenrechner.
 				</p>
 
@@ -213,9 +229,9 @@ plt.show()
 				<div class="box box--note">
 					<p class="box__label">Derselbe Trick für eine Potenzregression</p>
 					<p>
-						Für y = a · x<sup>n</sup> (<em>Potenzregression</em>) gilt
-						ln(y) = n · ln(x) + ln(a). Wir führen die lineare Regression
-						also mit den Daten (ln(x<sub>i</sub>), ln(y<sub>i</sub>)) durch,
+						Für \(y = a \cdot x^n\) (<em>Potenzregression</em>) gilt
+						\(\ln(y) = n \cdot \ln(x) + \ln(a)\). Wir führen die lineare Regression
+						also mit den Daten \((\ln(x_i), \ln(y_i))\) durch,
 						in Python mit
 						<code>np.polyfit(np.log(x), np.log(y), 1)</code>.
 					</p>
@@ -259,7 +275,7 @@ print(f"G = {G:.2f}, A = {A:.2f}, c = {c:.4f}")
 					</template>
 				</div>
 				<p>
-					Die Grösse G ≈ 10&nbsp;880.01 ist hier die sogenannte
+					Die Grösse \(G \approx 10\,880.01\) ist hier die sogenannte
 					<em>Kapazitätsgrenze</em>: Mehr als etwa 10&nbsp;880 Kranke sind
 					in diesem Modell nie möglich — vergleichen Sie mit
 					<a href="#ex-virus">Übung 1.06</a> weiter unten.
@@ -323,7 +339,7 @@ print(f"G = {G:.2f}, A = {A:.2f}, c = {c:.4f}")
 							<li>
 								Stellen Sie die Daten in einem Streudiagramm dar und
 								passen Sie mit <code>curve_fit</code> eine Funktion der
-								Form f(x) = a · sin(b·x + c) + d an die Daten an.
+								Form \(f(x) = a \cdot \sin(b \cdot x + c) + d\) an die Daten an.
 								Zeichnen Sie die gefundene Kurve zusammen mit den Daten.
 								<span class="hint">
 									(Hinweis: Wählen Sie als Startwerte
@@ -373,7 +389,7 @@ def modell(x, a, b, c, d):
 							<summary>Lösungsvorschlag</summary>
 							<div class="sol__body">
 								<p>
-									<b>(a)</b> f(x) ≈ 8.92 · sin(0.53·x − 2.16) + 10.54
+									<b>(a)</b> \(f(x) \approx 8.92 \cdot \sin(0.53 \cdot x - 2.16) + 10.54\)
 								</p>
 								<p>
 									<b>(b)</b> Die Daten lassen auf etwa 188 Tage im Jahr
@@ -486,12 +502,12 @@ def logistisch(x, G, A, c):
 							<summary>Lösungsvorschlag</summary>
 							<div class="sol__body">
 								<p>
-									<b>(a)</b> y ≈ 10&nbsp;880.01 / (1 + 70&nbsp;563.49 ·
-									e<sup>−0.87·x</sup>)
+									<b>(a)</b> \(y \approx 10\,880.01 / (1 + 70\,563.49 \cdot
+									e^{-0.87 \cdot x})\)
 								</p>
 								<p>
 									<b>(b)</b> Nein: Die Anzahl Kranker kann in diesem
-									Modell niemals G ≈ 10&nbsp;880.01 übersteigen, bleibt
+									Modell niemals \(G \approx 10\,880.01\) übersteigen, bleibt
 									also immer unter 11'000.
 								</p>
 								<div
@@ -539,17 +555,17 @@ def logistisch(x, G, A, c):
 						</table>
 						<ol class="tasks">
 							<li>
-								Berechnen Sie mit numpy die Werte n, x̄, ȳ, Σx<sub>i</sub>,
-								Σy<sub>i</sub>, Σx<sub>i</sub>·y<sub>i</sub> und
-								Σx<sub>i</sub>².
+								Berechnen Sie mit numpy die Werte \(n\), \(\bar{x}\), \(\bar{y}\), \(\sum x_i\),
+								\(\sum y_i\), \(\sum x_i \cdot y_i\) und
+								\(\sum x_i^2\).
 							</li>
 							<li>
-								Berechnen Sie damit von Hand die Steigung <var>m</var> und
-								den y-Achsenabschnitt <var>b</var> der Regressionsgeraden.
+								Berechnen Sie damit von Hand die Steigung \(m\) und
+								den y-Achsenabschnitt \(b\) der Regressionsgeraden.
 								<span class="hint">
-									(Hinweis: Es gilt s<sub>xy</sub> = Σx<sub>i</sub>y<sub>i</sub>
-									− n·x̄·ȳ und s<sub>xx</sub> = Σx<sub>i</sub>²
-									− n·x̄². Benutzen Sie dann
+									(Hinweis: Es gilt \(s_{xy} = \sum x_i y_i
+									- n \cdot \bar{x} \cdot \bar{y}\) und \(s_{xx} = \sum x_i^2
+									- n \cdot \bar{x}^2\). Benutzen Sie dann
 									<a href="04-herleitung.html#thm-regall">den Satz aus
 										Abschnitt 4</a
 									>.)
@@ -584,14 +600,14 @@ y = np.array([2, 3, 5, 4, 6])
 							<summary>Lösungsvorschlag</summary>
 							<div class="sol__body">
 								<p>
-									<b>(a)</b> n=5, x̄=3, ȳ=4, Σx=15, Σy=20, Σxy=69,
-									Σx²=55.
+									<b>(a)</b> \(n=5\), \(\bar{x}=3\), \(\bar{y}=4\), \(\sum x=15\), \(\sum y=20\), \(\sum xy=69\),
+									\(\sum x^2=55\).
 								</p>
 								<p>
-									<b>(b)</b> s<sub>xy</sub> = 69 − 5·3·4 = 9 und
-									s<sub>xx</sub> = 55 − 5·3² = 10, also m = 9/10 = 0.9
-									und b = 4 − 0.9·3 = 1.3. Die Regressionsgerade lautet
-									y = 0.9·x + 1.3.
+									<b>(b)</b> \(s_{xy} = 69 - 5 \cdot 3 \cdot 4 = 9\) und
+									\(s_{xx} = 55 - 5 \cdot 3^2 = 10\), also \(m = 9/10 = 0.9\)
+									und \(b = 4 - 0.9 \cdot 3 = 1.3\). Die Regressionsgerade lautet
+									\(y = 0.9 \cdot x + 1.3\).
 								</p>
 								<p><b>(c)</b> <code>np.polyfit</code> liefert dieselben Werte.</p>
 								<div
@@ -647,7 +663,7 @@ y = np.array([2, 3, 5, 4, 6])
 							<li>
 								Führen Sie eine lineare Regression durch und geben Sie
 								die Gleichung der Regressionsgeraden sowie den
-								empirischen Korrelationskoeffizienten <var>r</var> an.
+								empirischen Korrelationskoeffizienten \(r\) an.
 							</li>
 							<li>
 								Was bedeuten die Steigung und der y-Achsenabschnitt in
@@ -686,7 +702,7 @@ preis = np.array([24.5, 20.8, 18.9, 15.4, 12.1, 9.0])
 							<summary>Lösungsvorschlag</summary>
 							<div class="sol__body">
 								<ol class="tasks">
-									<li>y ≈ −0.1487·x + 26.4994 mit r ≈ −0.9985</li>
+									<li>\(y \approx -0.1487 \cdot x + 26.4994\) mit \(r \approx -0.9985\)</li>
 									<li>
 										Der Preis sinkt um etwa 149 CHF pro 1000 km. Der
 										y-Achsenabschnitt ist der Preis, den ein solches
@@ -752,7 +768,7 @@ preis = np.array([24.5, 20.8, 18.9, 15.4, 12.1, 9.0])
 						<ol class="tasks">
 							<li>
 								Führen Sie eine lineare Regression durch. Wie gross ist
-								<var>r</var>? Zeichnen Sie zusätzlich ein
+								\(r\)? Zeichnen Sie zusätzlich ein
 								Streudiagramm. Was fällt auf?
 							</li>
 							<li>
@@ -762,7 +778,7 @@ preis = np.array([24.5, 20.8, 18.9, 15.4, 12.1, 9.0])
 							</li>
 							<li>
 								Welchen Bremsweg sagen die beiden Modelle für
-								v = 160 km/h voraus?
+								\(v = 160\) km/h voraus?
 							</li>
 							<li>
 								Aus der Physik wissen wir, dass der Bremsweg
@@ -795,14 +811,14 @@ s = np.array([6, 15, 29, 48, 72, 100])
 							<div class="sol__body">
 								<ol class="tasks">
 									<li>
-										s ≈ 0.94286·v − 30.42857 mit r ≈ 0.98300. Obwohl
-										<var>r</var> nahe bei 1 liegt, sieht man im
+										\(s \approx 0.94286 \cdot v - 30.42857\) mit \(r \approx 0.98300\). Obwohl
+										\(r\) nahe bei 1 liegt, sieht man im
 										Streudiagramm deutlich, dass die Punkte auf einer
 										nach oben gekrümmten Kurve und nicht auf einer
 										Geraden liegen.
 									</li>
 									<li>
-										s ≈ 0.00603·v² − 0.02143·v + 1.11161
+										\(s \approx 0.00603 \cdot v^2 - 0.02143 \cdot v + 1.11161\)
 									</li>
 									<li>
 										Das lineare Modell liefert etwa 120.43 m, das
@@ -811,7 +827,7 @@ s = np.array([6, 15, 29, 48, 72, 100])
 									<li>
 										Das quadratische Modell. Es passt nicht nur besser
 										zu den Daten (Summe der Residuenquadrate
-										≈0.1786 statt ≈217.1429), sondern auch zur Physik.
+										\(\approx 0.1786\) statt \(\approx 217.1429\)), sondern auch zur Physik.
 										Das lineare Modell unterschätzt den Bremsweg bei
 										hohen Geschwindigkeiten deutlich.
 									</li>
@@ -900,7 +916,7 @@ c = np.array([120, 104, 89, 78, 67, 58, 50])
 							<summary>Lösungsvorschlag</summary>
 							<div class="sol__body">
 								<ol class="tasks">
-									<li>c(t) ≈ 120.01 · 0.86<sup>t</sup></li>
+									<li>\(c(t) \approx 120.01 \cdot 0.86^t\)</li>
 									<li>Um etwa 13.6 % pro Stunde.</li>
 									<li>Nach etwa 4.76 h.</li>
 									<li>Nach etwa 12.30 h, also nach gut einem halben Tag.</li>
@@ -968,8 +984,8 @@ c = np.array([120, 104, 89, 78, 67, 58, 50])
 							<li>
 								Führen Sie eine Potenzregression durch, also eine
 								Regression mit einer Funktion der Form
-								T = c · a<sup>n</sup> (siehe Hinweis zur
-								Linearisierung weiter oben). Wie gross ist <var>r</var>?
+								\(T = c \cdot a^n\) (siehe Hinweis zur
+								Linearisierung weiter oben). Wie gross ist \(r\)?
 							</li>
 							<li>
 								Der gefundene Exponent liegt sehr nahe bei einem Bruch
@@ -1009,12 +1025,12 @@ T = np.array([0.241, 0.615, 1.000, 1.881, 11.862, 29.457])
 							<div class="sol__body">
 								<ol class="tasks">
 									<li>
-										T ≈ 1.00 · a<sup>1.4997</sup> mit r ≈ 1 (genauer:
-										r ≈ 0.99999998).
+										\(T \approx 1.00 \cdot a^{1.4997}\) mit \(r \approx 1\) (genauer:
+										\(r \approx 0.99999998\)).
 									</li>
 									<li>
 										Der Exponent ist praktisch genau 3/2. Es gilt also
-										T ≈ a<sup>3/2</sup> und damit T² ≈ a³.
+										\(T \approx a^{3/2}\) und damit \(T^2 \approx a^3\).
 									</li>
 									<li>
 										Etwa 164.78 Jahre (der tatsächliche Wert ist
@@ -1076,8 +1092,8 @@ T = np.array([0.241, 0.615, 1.000, 1.881, 11.862, 29.457])
 						<ol class="tasks">
 							<li>
 								Probieren Sie die vier Regressionstypen linear,
-								logarithmisch (y = a + b·ln(x)), exponentiell und
-								Potenz aus und notieren Sie jeweils <var>r</var>
+								logarithmisch (\(y = a + b \cdot \ln(x)\)), exponentiell und
+								Potenz aus und notieren Sie jeweils \(r\)
 								(nutzen Sie dazu <code>np.corrcoef</code> auf den
 								passend linearisierten Daten). Welches Modell passt am
 								besten zu den Daten?
@@ -1117,12 +1133,12 @@ y = np.array([20, 42, 52, 62, 68, 73, 80, 88])
 							<div class="sol__body">
 								<ol class="tasks">
 									<li>
-										Man erhält r ≈ 0.9395 (linear), r ≈ 0.9993
-										(logarithmisch), r ≈ 0.8466 (exponentiell) und
-										r ≈ 0.9708 (Potenz). Am besten passt die
+										Man erhält \(r \approx 0.9395\) (linear), \(r \approx 0.9993\)
+										(logarithmisch), \(r \approx 0.8466\) (exponentiell) und
+										\(r \approx 0.9708\) (Potenz). Am besten passt die
 										logarithmische Regression.
 									</li>
-									<li>y ≈ 20.76 + 29.10 · ln(x)</li>
+									<li>\(y \approx 20.76 + 29.10 \cdot \ln(x)\)</li>
 									<li>
 										Etwa 108 Wörter nach 20 Tagen und 100 Wörter nach
 										etwa 15.23 Tagen.

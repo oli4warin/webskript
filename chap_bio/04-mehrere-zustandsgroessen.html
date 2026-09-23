@@ -20,6 +20,22 @@
 			rel="icon"
 			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235fc9ae'/%3E%3Ctext x='16' y='23' font-family='system-ui,sans-serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230f1f1b'%3EW%3C/text%3E%3C/svg%3E"
 		/>
+		<script>
+			window.MathJax = {
+				tex: {
+					inlineMath: [["\\(", "\\)"]],
+					displayMath: [["\\[", "\\]"]],
+				},
+				options: {
+					skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code", "template"],
+				},
+			};
+		</script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+			id="MathJax-script"
+			async
+		></script>
 	</head>
 
 	<body>
@@ -91,10 +107,12 @@
 
 				<p>Wir betrachten das Räuber-Beute-Modell rein iterativ:</p>
 				<p>
-					H<sub>t</sub> = H<sub>t−1</sub> + a · H<sub>t−1</sub> − b ·
-					H<sub>t−1</sub> · L<sub>t−1</sub><br />
-					L<sub>t</sub> = L<sub>t−1</sub> − c · L<sub>t−1</sub> + d ·
-					H<sub>t−1</sub> · L<sub>t−1</sub>
+					\[
+					\begin{aligned}
+					H_t &= H_{t-1} + a \cdot H_{t-1} - b \cdot H_{t-1} \cdot L_{t-1} \\
+					L_t &= L_{t-1} - c \cdot L_{t-1} + d \cdot H_{t-1} \cdot L_{t-1}
+					\end{aligned}
+					\]
 				</p>
 
 				<h2 id="uebungen-rb">Übungen</h2>
@@ -104,14 +122,17 @@
 					<div class="exercise__body">
 						<p>Simulieren Sie das Räuber-Beute-Modell</p>
 						<p>
-							H<sub>t</sub> = H<sub>t−1</sub> + a · H<sub>t−1</sub> − b ·
-							H<sub>t−1</sub> · L<sub>t−1</sub><br />
-							L<sub>t</sub> = L<sub>t−1</sub> − c · L<sub>t−1</sub> + d ·
-							H<sub>t−1</sub> · L<sub>t−1</sub>
+							\[
+							\begin{aligned}
+							H_t &= H_{t-1} + a \cdot H_{t-1} - b \cdot H_{t-1} \cdot L_{t-1} \\
+							L_t &= L_{t-1} - c \cdot L_{t-1} + d \cdot H_{t-1} \cdot L_{t-1}
+							\end{aligned}
+							\]
 						</p>
 						<p>
-							indem Sie von folgenden Werten ausgehen: H₀=100, L₀=30,
-							a=0.05, b=0.002, c=0.06, d=0.001. Stellen Sie die
+							indem Sie von folgenden Werten ausgehen: \(H_0=100\),
+							\(L_0=30\), \(a=0.05\), \(b=0.002\), \(c=0.06\),
+							\(d=0.001\). Stellen Sie die
 							Entwicklung der beiden Populationen über 300 Zeitschritte
 							dar. Vergleichen Sie Ihr Diagramm mit den Aufzeichnungen
 							der Hudson's Bay Company.
@@ -203,10 +224,12 @@ def simulate(h0, l0, a, b, c, d, steps):
 							Räuber-Beute-Modell
 						</p>
 						<p>
-							H<sub>t</sub> = H<sub>t−1</sub> + a · H<sub>t−1</sub> − b ·
-							H<sub>t−1</sub> · L<sub>t−1</sub><br />
-							L<sub>t</sub> = L<sub>t−1</sub> − c · L<sub>t−1</sub> + d ·
-							H<sub>t−1</sub> · L<sub>t−1</sub>
+							\[
+							\begin{aligned}
+							H_t &= H_{t-1} + a \cdot H_{t-1} - b \cdot H_{t-1} \cdot L_{t-1} \\
+							L_t &= L_{t-1} - c \cdot L_{t-1} + d \cdot H_{t-1} \cdot L_{t-1}
+							\end{aligned}
+							\]
 						</p>
 						<p>
 							Lassen sich Aussagen machen, wie «Je grösser der Parameter
@@ -228,20 +251,22 @@ def simulate(h0, l0, a, b, c, d, steps):
 					<div class="exercise__body">
 						<p>Berechnen Sie alle Fixpunkte des Räuber-Beute-Modells</p>
 						<p>
-							H<sub>t</sub> = H<sub>t−1</sub> + a · H<sub>t−1</sub> − b ·
-							H<sub>t−1</sub> · L<sub>t−1</sub><br />
-							L<sub>t</sub> = L<sub>t−1</sub> − c · L<sub>t−1</sub> + d ·
-							H<sub>t−1</sub> · L<sub>t−1</sub>
+							\[
+							\begin{aligned}
+							H_t &= H_{t-1} + a \cdot H_{t-1} - b \cdot H_{t-1} \cdot L_{t-1} \\
+							L_t &= L_{t-1} - c \cdot L_{t-1} + d \cdot H_{t-1} \cdot L_{t-1}
+							\end{aligned}
+							\]
 						</p>
-						<p>mit den Parametern a=0.05, b=0.002, c=0.06 und d=0.001.</p>
+						<p>mit den Parametern \(a=0.05\), \(b=0.002\), \(c=0.06\) und \(d=0.001\).</p>
 
 						<details class="sol">
 							<summary>Lösungsvorschlag</summary>
 							<div class="sol__body">
 								<p>Es gibt zwei Fixpunkte:</p>
 								<ul>
-									<li>H=60 und L=25</li>
-									<li>H=0 und L=0 (trivial)</li>
+									<li>\(H=60\) und \(L=25\)</li>
+									<li>\(H=0\) und \(L=0\) (trivial)</li>
 								</ul>
 							</div>
 						</details>
@@ -498,10 +523,12 @@ plot_lotka_volterra_phase_diagram(100, 30, 0.05, 0.002, 0.06, 0.001, 300)
 							allgemeinen Räuber-Beute-Modells
 						</p>
 						<p>
-							B<sub>t</sub> = B<sub>t−1</sub> + a · B<sub>t−1</sub> − b ·
-							B<sub>t−1</sub> · R<sub>t−1</sub><br />
-							R<sub>t</sub> = R<sub>t−1</sub> − c · R<sub>t−1</sub> + d ·
-							B<sub>t−1</sub> · R<sub>t−1</sub>
+							\[
+							\begin{aligned}
+							B_t &= B_{t-1} + a \cdot B_{t-1} - b \cdot B_{t-1} \cdot R_{t-1} \\
+							R_t &= R_{t-1} - c \cdot R_{t-1} + d \cdot B_{t-1} \cdot R_{t-1}
+							\end{aligned}
+							\]
 						</p>
 						<p>
 							Wir nehmen an, dass vor dem Einstellen der Fischerei
@@ -515,7 +542,7 @@ plot_lotka_volterra_phase_diagram(100, 30, 0.05, 0.002, 0.06, 0.001, 300)
 							<summary>Lösungsvorschlag</summary>
 							<div class="sol__body">
 								<p>Der nicht-triviale Fixpunkt liegt bei</p>
-								<p>B = c/d und R = a/b</p>
+								<p>\(B = c/d\) und \(R = a/b\)</p>
 								<p>
 									Wenn die Fischerei eingestellt wird, erhöht sich der
 									Wert von a und der Wert von c verringert sich. Dadurch
@@ -535,11 +562,11 @@ plot_lotka_volterra_phase_diagram(100, 30, 0.05, 0.002, 0.06, 0.001, 300)
 				</p>
 				<dl class="deflist">
 					<div>
-						<dt>S<sub>t</sub></dt>
+						<dt>\(S_t\)</dt>
 						<dd>Anzahl gesunde Individuen zum Zeitpunkt t (<em>S</em>usceptible individuals)</dd>
 					</div>
 					<div>
-						<dt>I<sub>t</sub></dt>
+						<dt>\(I_t\)</dt>
 						<dd>Anzahl kranke Individuen zum Zeitpunkt t (<em>I</em>nfectious individuals)</dd>
 					</div>
 				</dl>
@@ -555,10 +582,12 @@ plot_lotka_volterra_phase_diagram(100, 30, 0.05, 0.002, 0.06, 0.001, 300)
 					Kranken gesund und wieder ansteckbar wird:
 				</p>
 				<p>
-					S<sub>t</sub> = S<sub>t−1</sub> − a·S<sub>t−1</sub> +
-					b·I<sub>t−1</sub><br />
-					I<sub>t</sub> = I<sub>t−1</sub> + a·S<sub>t−1</sub> −
-					b·I<sub>t−1</sub>
+					\[
+					\begin{aligned}
+					S_t &= S_{t-1} - a \cdot S_{t-1} + b \cdot I_{t-1} \\
+					I_t &= I_{t-1} + a \cdot S_{t-1} - b \cdot I_{t-1}
+					\end{aligned}
+					\]
 				</p>
 				<p>
 					Dieses grob vereinfachende Modell blendet einen
@@ -575,15 +604,17 @@ plot_lotka_volterra_phase_diagram(100, 30, 0.05, 0.002, 0.06, 0.001, 300)
 					<div class="exercise__body">
 						<p>Gegeben ist das SI-Modell:</p>
 						<p>
-							S<sub>t</sub> = S<sub>t−1</sub> − a·S<sub>t−1</sub> +
-							b·I<sub>t−1</sub><br />
-							I<sub>t</sub> = I<sub>t−1</sub> + a·S<sub>t−1</sub> −
-							b·I<sub>t−1</sub>
+							\[
+							\begin{aligned}
+							S_t &= S_{t-1} - a \cdot S_{t-1} + b \cdot I_{t-1} \\
+							I_t &= I_{t-1} + a \cdot S_{t-1} - b \cdot I_{t-1}
+							\end{aligned}
+							\]
 						</p>
 						<p>
 							Stellen Sie dieses Modell für 50 Zeitschritte, die
-							Anfangswerte S₀=1500 und I₀=0 sowie die Parameterwerte
-							a=0.05 und b=0.1 auf dem Computer dar.
+							Anfangswerte \(S_0=1500\) und \(I_0=0\) sowie die
+							Parameterwerte \(a=0.05\) und \(b=0.1\) auf dem Computer dar.
 						</p>
 						<ol class="tasks">
 							<li>
@@ -665,7 +696,7 @@ def simulate(s0, i0, a, b, steps):
 					zwei Gruppen kommt. Solche Kontakte können nur schwer zu
 					Stande kommen, wenn es fast nur Ansteckbare (S) oder fast nur
 					Infizierte (I) gibt. Die Anzahl der Neuansteckungen wird also
-					insgesamt proportional zu S<sub>t−1</sub> und I<sub>t−1</sub>
+					insgesamt proportional zu \(S_{t-1}\) und \(I_{t-1}\)
 					sein.
 				</p>
 				<p>
@@ -686,32 +717,34 @@ def simulate(s0, i0, a, b, steps):
 				</p>
 				<p>Wir erhalten das sogenannte <em>SIR-Modell</em>:</p>
 				<p>
-					S<sub>t</sub> = S<sub>t−1</sub> − a·S<sub>t−1</sub>·I<sub>t−1</sub>
-					+ b·I<sub>t−1</sub><br />
-					I<sub>t</sub> = I<sub>t−1</sub> + a·S<sub>t−1</sub>·I<sub>t−1</sub>
-					− b·I<sub>t−1</sub> − c·I<sub>t−1</sub><br />
-					R<sub>t</sub> = R<sub>t−1</sub> + c·I<sub>t−1</sub>
+					\[
+					\begin{aligned}
+					S_t &= S_{t-1} - a \cdot S_{t-1} \cdot I_{t-1} + b \cdot I_{t-1} \\
+					I_t &= I_{t-1} + a \cdot S_{t-1} \cdot I_{t-1} - b \cdot I_{t-1} - c \cdot I_{t-1} \\
+					R_t &= R_{t-1} + c \cdot I_{t-1}
+					\end{aligned}
+					\]
 				</p>
 
 				<div class="box">
 					<p class="box__label">Definition: Basisreproduktionszahl</p>
 					<p>
 						Ob eine Epidemie überhaupt ausbricht, hängt vom
-						Startzustand ab. Aus der Gleichung für I<sub>t</sub> folgt
+						Startzustand ab. Aus der Gleichung für \(I_t\) folgt
 					</p>
 					<p>
-						I<sub>t</sub> = I<sub>t−1</sub> · (1 + a·S<sub>t−1</sub> − b − c),
+						\[I_t = I_{t-1} \cdot (1 + a \cdot S_{t-1} - b - c),\]
 					</p>
 					<p>
 						die Zahl der Infizierten wächst also nur, solange
-						a·S<sub>t−1</sub> &gt; b + c gilt. Man nennt die Grösse
+						\(a \cdot S_{t-1} > b + c\) gilt. Man nennt die Grösse
 					</p>
-					<p>R₀ = (a·S₀) / (b + c)</p>
+					<p>\[R_0 = \frac{a \cdot S_0}{b + c}\]</p>
 					<p>
 						die <em>Basisreproduktionszahl</em>: Sie gibt an, wie
 						viele weitere Personen eine einzelne infizierte Person zu
-						Beginn im Mittel ansteckt. Ist R₀ &gt; 1, breitet sich die
-						Krankheit zunächst aus, ist R₀ &lt; 1, stirbt sie gleich
+						Beginn im Mittel ansteckt. Ist \(R_0 > 1\), breitet sich die
+						Krankheit zunächst aus, ist \(R_0 \lt 1\), stirbt sie gleich
 						wieder aus.
 					</p>
 				</div>
@@ -722,7 +755,7 @@ def simulate(s0, i0, a, b, steps):
 				<section class="exercise" id="ex-sir">
 					<div class="exercise__body">
 						<p>Implementieren Sie das SIR-Modell auf dem Computer. Wählen Sie dazu</p>
-						<p>a=0.0002, b=0.1, c=0.03, S₀=990, I₀=10 und (als Anfangswert der Removed-Gruppe) R(0)=0.</p>
+						<p>\(a=0.0002\), \(b=0.1\), \(c=0.03\), \(S_0=990\), \(I_0=10\) und (als Anfangswert der Removed-Gruppe) \(R(0)=0\).</p>
 						<ol class="tasks">
 							<li>Warum spricht man landläufig oft von einer «Grippewelle»?</li>
 							<li>Gibt es in diesem Modell einen stationären Endzustand?</li>
@@ -744,9 +777,9 @@ def simulate(s0, i0, a, b, steps):
 							</li>
 						</ol>
 						<p class="hint">
-							<em>Hinweis:</em> Die Basisreproduktionszahl R₀ = a·S₀ /
-							(b+c) hilft bei (2) und (4) — setzen Sie die gegebenen
-							Werte ein.
+							<em>Hinweis:</em> Die Basisreproduktionszahl
+							\(R_0 = a \cdot S_0 / (b+c)\) hilft bei (2) und (4) —
+							setzen Sie die gegebenen Werte ein.
 						</p>
 
 						<div
@@ -818,12 +851,12 @@ def simulate(s0, i0, r0, a, b, c, steps):
 										ganzen Verlauf ab, nicht nur von a, b, c.
 									</li>
 									<li>
-										Eine höhere Genesungsrate b senkt R₀ = a·S₀/(b+c)
+										Eine höhere Genesungsrate b senkt \(R_0 = a \cdot S_0/(b+c)\)
 										und verkleinert damit den «Peak» der Welle bzw.
 										kann sie ganz verhindern.
 									</li>
 									<li>
-										Eine höhere Rate c senkt R₀ ebenfalls: Infizierte
+										Eine höhere Rate c senkt \(R_0\) ebenfalls: Infizierte
 										verlassen die ansteckende Gruppe schneller, was die
 										Welle abschwächt oder verhindert (Phänomen der
 										<em>Durchseuchungsschwelle</em>/«Herdenimmunität»

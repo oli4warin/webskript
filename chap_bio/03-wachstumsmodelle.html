@@ -20,6 +20,22 @@
 			rel="icon"
 			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235fc9ae'/%3E%3Ctext x='16' y='23' font-family='system-ui,sans-serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230f1f1b'%3EW%3C/text%3E%3C/svg%3E"
 		/>
+		<script>
+			window.MathJax = {
+				tex: {
+					inlineMath: [["\\(", "\\)"]],
+					displayMath: [["\\[", "\\]"]],
+				},
+				options: {
+					skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code", "template"],
+				},
+			};
+		</script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+			id="MathJax-script"
+			async
+		></script>
 	</head>
 
 	<body>
@@ -55,12 +71,13 @@
 					einer logistisch wachsenden Population (siehe
 					<a href="02-iterationen.html#logistisch">Abschnitt 2</a>), die
 					unter Bejagung steht. Dabei wird davon ausgegangen, dass in
-					jedem Zeitschritt ein fester relativer Anteil a der Population
+					jedem Zeitschritt ein fester relativer Anteil \(a\) der Population
 					durch die Jagd getötet wird.
 				</p>
 				<p>
-					x<sub>n</sub> = x<sub>n−1</sub> + r · x<sub>n−1</sub> · (S −
-					x<sub>n−1</sub>) − a · x<sub>n−1</sub>
+					\[
+					x_n = x_{n-1} + r \cdot x_{n-1} \cdot (S - x_{n-1}) - a \cdot x_{n-1}
+					\]
 				</p>
 
 				<h2 id="uebungen">Übungen</h2>
@@ -72,7 +89,7 @@
 							Realisieren Sie das Schaefer'sche Modell auf dem
 							Computer, indem Sie die Werte
 						</p>
-						<p>x₀=10, r=0.007, a=0.2 und S=100</p>
+						<p>\(x_0 = 10\), \(r = 0.007\), \(a = 0.2\) und \(S = 100\)</p>
 						<p>verwenden und eine graphische Darstellung der Wachstumskurve für 30 Zeitschritte erzeugen.</p>
 
 						<div
@@ -104,14 +121,15 @@ def simulate(x0, r, s, a, steps):
 					<div class="exercise__body">
 						<p>Welche Fixpunkte hat das Schaefer'sche Modell</p>
 						<p>
-							x<sub>n</sub> = x<sub>n−1</sub> + r · x<sub>n−1</sub> ·
-							(S − x<sub>n−1</sub>) − a · x<sub>n−1</sub>
+							\[
+							x_n = x_{n-1} + r \cdot x_{n-1} \cdot (S - x_{n-1}) - a \cdot x_{n-1}
+							\]
 						</p>
 						<ol>
-							<li>wenn wir die Zahlenwerte x₀=10, r=0.007, a=0.2 und S=100 verwenden?</li>
-							<li>im Allgemeinen, d.h. ohne konkrete Zahlenwerte für x₀, r, a und S?</li>
+							<li>wenn wir die Zahlenwerte \(x_0 = 10\), \(r = 0.007\), \(a = 0.2\) und \(S = 100\) verwenden?</li>
+							<li>im Allgemeinen, d.h. ohne konkrete Zahlenwerte für \(x_0\), \(r\), \(a\) und \(S\)?</li>
 							<li>
-								Welche Bedingungen müssen die Werte von S, r und a im
+								Welche Bedingungen müssen die Werte von \(S\), \(r\) und \(a\) im
 								Schaefer'schen Modell erfüllen, damit der nicht
 								triviale Fixpunkt einen biologisch relevanten Wert
 								annimmt?
@@ -125,8 +143,8 @@ def simulate(x0, r, s, a, steps):
 					<div class="exercise__body">
 						<p>
 							Es wird geschätzt, dass in einem gewissen Gebiet die
-							Kapazität für Rehe mit S=200 beschränkt ist und dass
-							r=0.001 für das entsprechende Schaefer'sche Modell gilt.
+							Kapazität für Rehe mit \(S = 200\) beschränkt ist und dass
+							\(r = 0.001\) für das entsprechende Schaefer'sche Modell gilt.
 						</p>
 						<ol class="tasks">
 							<li>
@@ -134,24 +152,24 @@ def simulate(x0, r, s, a, steps):
 								wenn in jedem Zeitschritt 15% der Rehe erlegt werden?
 							</li>
 							<li>
-								Wie hoch dürfte a maximal gewählt werden, um der
+								Wie hoch dürfte \(a\) maximal gewählt werden, um der
 								Population ein dauerhaftes Überleben zu ermöglichen?
 							</li>
 							<li>
-								Betrachten Sie für a=0.16, a=0.13 und a=0.08 den
-								Jagdertrag. Für welchen Wert von a ist der Jagdertrag
+								Betrachten Sie für \(a = 0.16\), \(a = 0.13\) und \(a = 0.08\) den
+								Jagdertrag. Für welchen Wert von \(a\) ist der Jagdertrag
 								maximal?
 							</li>
 							<li>
-								Wir starten mit x₀=30 Rehen und einer Bejagung mit
-								a=0.1. Nach wie vielen Zeitschritten ist die
+								Wir starten mit \(x_0 = 30\) Rehen und einer Bejagung mit
+								\(a = 0.1\). Nach wie vielen Zeitschritten ist die
 								Wachstumsgeschwindigkeit der Population am grössten?
 							</li>
 						</ol>
 						<p class="hint">
 							<em>Hinweis:</em> Diese Aufgabe verlangt keinen fertigen
 							Code im Skript, lässt sich aber gut mit der Werkbank aus
-							Übung 2.10 erkunden — einfach S, r und a anpassen.
+							Übung 2.10 erkunden — einfach \(S\), \(r\) und \(a\) anpassen.
 						</p>
 
 						<div
@@ -185,15 +203,16 @@ def simulate(x0, r, s, a, steps):
 							Wir gehen nochmals vom allgemeinen Schaefer'schen Modell
 						</p>
 						<p>
-							x<sub>n</sub> = x<sub>n−1</sub> + r · x<sub>n−1</sub> ·
-							(S − x<sub>n−1</sub>) − a · x<sub>n−1</sub>
+							\[
+							x_n = x_{n-1} + r \cdot x_{n-1} \cdot (S - x_{n-1}) - a \cdot x_{n-1}
+							\]
 						</p>
 						<p>und nicht von konkreten Zahlenwerten aus.</p>
 						<p>
-							Eine Jagdbehörde muss die Jagdquote a festlegen. Dabei
+							Eine Jagdbehörde muss die Jagdquote \(a\) festlegen. Dabei
 							soll der stabile Jagdertrag im Fixpunkt möglichst gross
 							sein. Was ist unter diesen Bedingungen die optimale Wahl
-							für a?
+							für \(a\)?
 						</p>
 					</div>
 				</section>

@@ -20,6 +20,22 @@
 			rel="icon"
 			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235fc9ae'/%3E%3Ctext x='16' y='23' font-family='system-ui,sans-serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230f1f1b'%3EW%3C/text%3E%3C/svg%3E"
 		/>
+		<script>
+			window.MathJax = {
+				tex: {
+					inlineMath: [["\\(", "\\)"]],
+					displayMath: [["\\[", "\\]"]],
+				},
+				options: {
+					skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code", "template"],
+				},
+			};
+		</script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+			id="MathJax-script"
+			async
+		></script>
 	</head>
 
 	<body>
@@ -54,14 +70,15 @@
 						Eine <em>Iteration</em> beschreibt einen Prozess mehrfachen
 						Wiederholens gleicher Operationen. Für unsere Zwecke
 						bedeutet dies konkret: Wir beginnen mit einer Zahl
-						(<em>Startwert</em>) x₀ und führen damit eine Rechnung aus.
-						Dann wenden wir dieselbe Rechnung auf das Resultat x₁ an.
-						Danach wenden wir dieselbe Rechnung auf das neue Resultat x₂
+						(<em>Startwert</em>) \(x_0\) und führen damit eine Rechnung aus.
+						Dann wenden wir dieselbe Rechnung auf das Resultat \(x_1\) an.
+						Danach wenden wir dieselbe Rechnung auf das neue Resultat \(x_2\)
 						an, usw.
 					</p>
 					<p>
-						In Formeln bedeutet dies x₁ = f(x₀), x₂ = f(x₁), x₃ = f(x₂),
-						…, wobei f eine festgelegte Funktion ist. Man nennt f auch
+						In Formeln bedeutet dies \(x_1 = f(x_0)\), \(x_2 = f(x_1)\),
+						\(x_3 = f(x_2)\), …, wobei \(f\) eine festgelegte Funktion ist.
+						Man nennt \(f\) auch
 						<em>Trägerfunktion</em>.
 					</p>
 				</div>
@@ -73,7 +90,7 @@
 						Abbildung auf sich selbst abgebildet wird. Im Fall einer
 						Iteration bedeutet dies, dass die Zahlenfolge konstant
 						wird, wenn wir mit einem Fixpunkt als Startwert beginnen.
-						In Formeln x₀ = x₁ = x₂ = x₃ = …
+						In Formeln \(x_0 = x_1 = x_2 = x_3 = \ldots\)
 					</p>
 					<p>
 						Ein <em>Vorfixpunkt</em> ist eine Zahl, die selbst kein
@@ -92,7 +109,7 @@
 					</p>
 				</div>
 
-				<p class="hint"><b>Beispiel.</b> Iteration x<sub>n</sub> = 0.7·x<sub>n−1</sub> + 2</p>
+				<p class="hint"><b>Beispiel.</b> Iteration \(x_n = 0.7 \cdot x_{n-1} + 2\)</p>
 				<div class="workbench" data-id="wbex1" data-files="python" data-height="260">
 					<template data-seed="python">
 import matplotlib.pyplot as plt
@@ -128,23 +145,23 @@ plt.show()
 					überblicken. Dazu gehen wir wie folgt vor:
 				</p>
 				<ol>
-					<li>Wir zeichnen den Graph der Trägerfunktion f ein.</li>
-					<li>Wir zeichnen die erste Winkelhalbierende y = x ein.</li>
-					<li>Wir markieren auf der x-Achse den Startwert x₀.</li>
+					<li>Wir zeichnen den Graph der Trägerfunktion \(f\) ein.</li>
+					<li>Wir zeichnen die erste Winkelhalbierende \(y = x\) ein.</li>
+					<li>Wir markieren auf der \(x\)-Achse den Startwert \(x_0\).</li>
 					<li>
-						Von dort bewegen wir uns in y-Richtung auf den Graphen der
+						Von dort bewegen wir uns in \(y\)-Richtung auf den Graphen der
 						Trägerfunktion.
 					</li>
 					<li>
-						Anschliessend geht es in x-Richtung auf die erste
+						Anschliessend geht es in \(x\)-Richtung auf die erste
 						Winkelhalbierende.
 					</li>
 					<li>Wir springen zurück zu Schritt 4.</li>
 				</ol>
 
 				<p class="hint">
-					<b>Beispiel.</b> Spinnwebdiagramm von f(x) = 0.7x + 2, Startwert
-					x₀ = 1
+					<b>Beispiel.</b> Spinnwebdiagramm von \(f(x) = 0.7x + 2\), Startwert
+					\(x_0 = 1\)
 				</p>
 				<div class="workbench" data-id="wbex2" data-files="python" data-height="320">
 					<template data-seed="python">
@@ -185,10 +202,10 @@ plt.show()
 
 				<h2 id="beispiele">Weitere Beispiele</h2>
 				<p>
-					Wir betrachten die Iteration x<sub>n</sub> = x<sub>n−1</sub>² −
-					1: Im Spinnwebdiagramm werden zwei abstossende Fixpunkte
-					sichtbar, sowie die beiden Attraktoren 0 und −1. Bei x<sub>n</sub>
-					= x<sub>n−1</sub>² − 0.5 zeigt sich dagegen ein abstossender
+					Wir betrachten die Iteration \(x_n = x_{n-1}^2 - 1\): Im
+					Spinnwebdiagramm werden zwei abstossende Fixpunkte
+					sichtbar, sowie die beiden Attraktoren 0 und −1. Bei
+					\(x_n = x_{n-1}^2 - 0.5\) zeigt sich dagegen ein abstossender
 					und ein anziehender Fixpunkt. Verändern Sie in der Werkbank
 					oben die Funktion <code>f</code> zu
 					<code>x**2 - 1</code> bzw. <code>x**2 - 0.5</code> und
@@ -197,11 +214,12 @@ plt.show()
 
 				<h3 id="exponentiell">Exponentielles Wachstum und Zerfall</h3>
 				<p>
-					Die Iteration x<sub>n</sub> = x<sub>n−1</sub> + r · x<sub>n−1</sub>
+					Die Iteration \(x_n = x_{n-1} + r \cdot x_{n-1}\)
 					nennt man <em>exponentielles Wachstum</em>: Die Grösse wird in
-					jedem Zeitschritt um denselben Anteil r vergrössert (r &gt; 0)
-					bzw. verkleinert (r &lt; 0, <em>exponentieller Zerfall</em>).
-					Die Trägerfunktion lautet f(x) = x + r·x.
+					jedem Zeitschritt um denselben Anteil \(r\) vergrössert
+					(\(r &gt; 0\)) bzw. verkleinert (\(r &lt; 0\),
+					<em>exponentieller Zerfall</em>).
+					Die Trägerfunktion lautet \(f(x) = x + r \cdot x\).
 				</p>
 
 				<h3 id="logistisch">Logistisches Wachstum</h3>
@@ -213,20 +231,20 @@ plt.show()
 					Die meisten Populationen entwickeln sich stattdessen hin zu
 					einem biologischen Gleichgewicht. Daher erscheint es
 					sinnvoll, den Zuwachs sowohl proportional zum momentanen
-					Bestand als auch zum Abstand von einer Grenze bzw. Schranke S
+					Bestand als auch zum Abstand von einer Grenze bzw. Schranke \(S\)
 					anzunehmen. Dieses Modell führt zur Iteration
 				</p>
-				<p>x<sub>n</sub> = x<sub>n−1</sub> + r · x<sub>n−1</sub> · (S − x<sub>n−1</sub>).</p>
+				<p>\[x_n = x_{n-1} + r \cdot x_{n-1} \cdot (S - x_{n-1}).\]</p>
 				<p>
 					Diese Iteration wird <em>logistische Iteration</em> genannt,
-					ihre Trägerfunktion f(x) = x + r·x·(S − x) die
-					<em>logistische Parabel</em>. In den beiden Konstanten r und S
+					ihre Trägerfunktion \(f(x) = x + r \cdot x \cdot (S - x)\) die
+					<em>logistische Parabel</em>. In den beiden Konstanten \(r\) und \(S\)
 					kann man sich die biologischen Parameter untergebracht denken,
 					zum Beispiel Geburts- und Sterberaten, Nahrungsangebot,
 					verfügbarer Platz usw.
 				</p>
 
-				<p class="hint"><b>Beispiel.</b> Logistisches Wachstum, r = 0.1, S = 8</p>
+				<p class="hint"><b>Beispiel.</b> Logistisches Wachstum, \(r = 0.1\), \(S = 8\)</p>
 				<div class="workbench" data-id="wbex3" data-files="python" data-height="260">
 					<template data-seed="python">
 import matplotlib.pyplot as plt
@@ -257,12 +275,11 @@ plt.show()
 					<em>Schaefer'sche Modell</em>. Es beschreibt die Entwicklung
 					einer logistisch wachsenden Population, die unter Bejagung
 					steht. Dabei wird davon ausgegangen, dass in jedem Zeitschritt
-					ein fester relativer Anteil a der Population durch die Jagd
+					ein fester relativer Anteil \(a\) der Population durch die Jagd
 					getötet wird.
 				</p>
 				<p>
-					x<sub>n</sub> = x<sub>n−1</sub> + r·x<sub>n−1</sub>·(S −
-					x<sub>n−1</sub>) − a·x<sub>n−1</sub>
+					\[x_n = x_{n-1} + r \cdot x_{n-1} \cdot (S - x_{n-1}) - a \cdot x_{n-1}\]
 				</p>
 				<p>
 					Die Übungen dazu finden Sie in
@@ -277,9 +294,8 @@ plt.show()
 						<p>
 							Wir betrachten Zahlenfolgen, die durch das laufende
 							Quadrieren einer Zahl entstehen. Formal lässt sich diese
-							Iteration beschreiben als x<sub>n</sub> =
-							x<sub>n−1</sub>². Dabei muss noch ein Startwert
-							vorgegeben werden.
+							Iteration beschreiben als \(x_n = x_{n-1}^2\). Dabei muss noch
+							ein Startwert vorgegeben werden.
 						</p>
 						<ol class="tasks">
 							<li>Berechnen Sie die Fix- und Vorfixpunkte dieser Iteration.</li>
@@ -352,9 +368,9 @@ def count_steps(startx, condition):
 					<div class="exercise__body">
 						<p>
 							Schreiben Sie ein Python-Programm, das zu einer
-							Trägerfunktion f, einem Startwert x₀ und einer Zahl n
-							das entsprechende Spinnwebdiagramm für die ersten n
-							Schritte zeichnet.
+							Trägerfunktion \(f\), einem Startwert \(x_0\) und einer Zahl
+							\(n\) das entsprechende Spinnwebdiagramm für die ersten
+							\(n\) Schritte zeichnet.
 						</p>
 						<p class="hint">
 							<em>Hinweis:</em> Orientieren Sie sich am Beispiel weiter
@@ -388,8 +404,8 @@ spinnweb(lambda x: 0.7 * x + 2, 1, 15, xmin=-1, xmax=9)
 				<section class="exercise" id="ex-r-minus-eins">
 					<div class="exercise__body">
 						<p>
-							Wir betrachten die Iteration x<sub>n</sub> =
-							x<sub>n−1</sub>² + r und wählen zuerst r = −1. Versuchen
+							Wir betrachten die Iteration \(x_n = x_{n-1}^2 + r\) und
+							wählen zuerst \(r = -1\). Versuchen
 							Sie einerseits die folgenden Fragen zu beantworten.
 							Verwenden Sie aber auch ein Spinnwebdiagramm, um eine
 							Übersicht über diese Iteration zu bekommen.
@@ -397,18 +413,18 @@ spinnweb(lambda x: 0.7 * x + 2, 1, 15, xmin=-1, xmax=9)
 						<ol class="tasks">
 							<li>
 								Welches Grenzverhalten ergibt sich für die entstehenden
-								Folgenglieder für x₀ = 0.5?
+								Folgenglieder für \(x_0 = 0.5\)?
 							</li>
 							<li>Existiert für diese Iteration ein Fixpunkt?</li>
 							<li>
 								Vergleichen Sie die ersten zehn Iterationsschritte für
-								x₀ = 1.61 und x₀ = 1.62.
+								\(x_0 = 1.61\) und \(x_0 = 1.62\).
 							</li>
 							<li>
 								Welche Zahl entsteht nach 10 Iterationsschritten aus
-								x₀ = 1.6 und welche nach 11 Iterationsschritten?
+								\(x_0 = 1.6\) und welche nach 11 Iterationsschritten?
 							</li>
-							<li>Entsprechend mit x₀ = 1.61802, x₀ = 1.61803 bzw. x₀ = 1.61804?</li>
+							<li>Entsprechend mit \(x_0 = 1.61802\), \(x_0 = 1.61803\) bzw. \(x_0 = 1.61804\)?</li>
 						</ol>
 
 						<div
@@ -441,22 +457,25 @@ def simulate(n, r, startx):
 										−1, 0, −1, 0, …
 									</li>
 									<li>
-										Es gibt zwei Fixpunkte: x = (1+√5)/2 ≈ 1.618 und
-										x = (1−√5)/2 ≈ −0.618.
+										Es gibt zwei Fixpunkte: \(x = \frac{1+\sqrt{5}}{2} \approx 1.618\)
+										und \(x = \frac{1-\sqrt{5}}{2} \approx -0.618\).
 									</li>
 									<li>
-										Für x₀=1.61 bleiben die Werte über 10 Schritte
-										beschränkt, für x₀=1.62 wachsen sie explosionsartig
-										bis über 3.7·10¹⁰ — kleinster Unterschied im
+										Für \(x_0=1.61\) bleiben die Werte über 10 Schritte
+										beschränkt, für \(x_0=1.62\) wachsen sie explosionsartig
+										bis über \(3.7 \cdot 10^{10}\) — kleinster Unterschied im
 										Startwert, radikal anderes Verhalten (siehe
 										Werkbank).
 									</li>
 									<li>
-										Mit x₀=1.6: x₁₀ ≈ −3.4·10⁻⁶, x₁₁ ≈ −0.99999999999.
+										Mit \(x_0=1.6\): \(x_{10} \approx -3.4 \cdot 10^{-6}\),
+										\(x_{11} \approx -0.99999999999\).
 									</li>
 									<li>
-										Mit x₀=1.61802: x₁₀ ≈ 0.239, x₁₁ ≈ −0.943. Mit
-										x₀=1.61804: x₁₀ ≈ 2.458, x₁₁ ≈ 5.043 — auch hier
+										Mit \(x_0=1.61802\): \(x_{10} \approx 0.239\),
+										\(x_{11} \approx -0.943\). Mit
+										\(x_0=1.61804\): \(x_{10} \approx 2.458\),
+										\(x_{11} \approx 5.043\) — auch hier
 										trennen sich die Bahnen nach wenigen Schritten
 										völlig.
 									</li>
@@ -484,22 +503,21 @@ def simulate(n, r, startx):
 				<section class="exercise" id="ex-fixpunkte-allgemein">
 					<div class="exercise__body">
 						<p>
-							Wir betrachten nochmals die Iteration x<sub>n</sub> =
-							x<sub>n−1</sub>² + r.
+							Wir betrachten nochmals die Iteration \(x_n = x_{n-1}^2 + r\).
 						</p>
 						<ol class="tasks">
-							<li>Für welche Werte von r hat diese Iteration keine Fixpunkte?</li>
+							<li>Für welche Werte von \(r\) hat diese Iteration keine Fixpunkte?</li>
 							<li>
-								Für welche Werte von r hat diese Iteration genau einen
+								Für welche Werte von \(r\) hat diese Iteration genau einen
 								Fixpunkt? Berechnen Sie diesen Fixpunkt. Ist dieser
 								Fixpunkt anziehend oder abstossend?
 							</li>
 							<li>
-								Vergleichen Sie die beiden Iterationen für r = −0.4 und
-								r = −0.8. Sind die Fixpunkte anziehend oder abstossend?
+								Vergleichen Sie die beiden Iterationen für \(r = -0.4\) und
+								\(r = -0.8\). Sind die Fixpunkte anziehend oder abstossend?
 							</li>
 							<li>
-								Bei welchem Wert von r wechselt der kleinere Fixpunkt
+								Bei welchem Wert von \(r\) wechselt der kleinere Fixpunkt
 								von anziehend zu abstossend?
 							</li>
 							<li>
@@ -512,22 +530,22 @@ def simulate(n, r, startx):
 							<summary>Lösungsvorschlag</summary>
 							<div class="sol__body">
 								<ol class="tasks">
-									<li>Für r &gt; 1/4.</li>
+									<li>Für \(r &gt; 1/4\).</li>
 									<li>
-										Für r = 1/4 hat die Iteration genau einen
-										Fixpunkt bei x = 1/2. Dieser Fixpunkt ist
+										Für \(r = 1/4\) hat die Iteration genau einen
+										Fixpunkt bei \(x = 1/2\). Dieser Fixpunkt ist
 										abstossend.
 									</li>
 									<li>
-										Für r = −0.4 ist ein Fixpunkt anziehend und einer
-										abstossend. Für r = −0.8 sind beide Fixpunkte
+										Für \(r = -0.4\) ist ein Fixpunkt anziehend und einer
+										abstossend. Für \(r = -0.8\) sind beide Fixpunkte
 										abstossend.
 									</li>
-									<li>Bei r = −3/4.</li>
+									<li>Bei \(r = -3/4\).</li>
 									<li>
 										Der Betrag der Steigung der Trägerfunktion beim
-										Fixpunkt ist entscheidend. Ist dieser &gt; 1, ist
-										der Fixpunkt abstossend. Ist dieser &lt; 1, ist der
+										Fixpunkt ist entscheidend. Ist dieser \(&gt; 1\), ist
+										der Fixpunkt abstossend. Ist dieser \(&lt; 1\), ist der
 										Fixpunkt anziehend. Ist der Betrag genau gleich 1,
 										ist beides möglich.
 									</li>
@@ -541,15 +559,15 @@ def simulate(n, r, startx):
 				<section class="exercise" id="ex-spiegel-iteration">
 					<div class="exercise__body">
 						<p>
-							Was lässt sich über die Iteration x<sub>n</sub> =
-							−x<sub>n−1</sub> + r sagen? Fixpunkte? Attraktoren?
+							Was lässt sich über die Iteration \(x_n = -x_{n-1} + r\)
+							sagen? Fixpunkte? Attraktoren?
 						</p>
 
 						<details class="sol">
 							<summary>Lösungsvorschlag</summary>
 							<div class="sol__body">
 								<p>
-									Diese Iteration hat einen Fixpunkt bei x = r/2.
+									Diese Iteration hat einen Fixpunkt bei \(x = r/2\).
 									Dieser ist abstossend. Genauer alterniert die
 									entsprechende Folge, sobald ein anderer Wert als der
 									Fixpunkt eingesetzt wird.
@@ -563,14 +581,14 @@ def simulate(n, r, startx):
 				<section class="exercise" id="ex-feigenbaum">
 					<div class="exercise__body">
 						<p>
-							Wir betrachten die Iteration x<sub>n</sub> = r ·
-							x<sub>n−1</sub> · (1 − x<sub>n−1</sub>) und gehen für
-							alle Teilaufgaben vom gleichen Startwert x₀ = 0.5 aus.
+							Wir betrachten die Iteration \(x_n = r \cdot x_{n-1} \cdot (1 - x_{n-1})\)
+							und gehen für alle Teilaufgaben vom gleichen Startwert
+							\(x_0 = 0.5\) aus.
 						</p>
 						<ol class="tasks">
 							<li>
 								Untersuchen Sie diese Iteration für die verschiedenen
-								r-Werte: r=2.8, r=3.2, r=3.8 und r=3.85.
+								\(r\)-Werte: \(r=2.8\), \(r=3.2\), \(r=3.8\) und \(r=3.85\).
 							</li>
 							<li>
 								Schreiben Sie ein Programm, welches ein sogenanntes
@@ -667,7 +685,7 @@ def simulate(n, r, startx):
 						<ol class="tasks">
 							<li>
 								Nehmen Sie logistisches Wachstum an. Berechnen Sie den
-								Faktor r und stellen Sie den Fischbestand für die
+								Faktor \(r\) und stellen Sie den Fischbestand für die
 								nächsten 15 Jahre dar.
 							</li>
 							<li>In welchem Jahr ist die Zunahme am grössten?</li>
@@ -716,14 +734,14 @@ def simulate(r, s, x0, steps):
 							<summary>Lösungsvorschlag</summary>
 							<div class="sol__body">
 								<ol class="tasks">
-									<li>Es gilt r = 0.000075 (siehe Diagramm in der Werkbank unten).</li>
+									<li>Es gilt \(r = 0.000075\) (siehe Diagramm in der Werkbank unten).</li>
 									<li>Die Zunahme ist im fünften Jahr am grössten.</li>
 									<li>432 Fische</li>
-									<li>≈ 855.68 Fische</li>
+									<li>\(\approx 855.68\) Fische</li>
 									<li>
 										Wenn sie die ersten fünf Jahre abwartet und dann
 										den Fischbestand konstant hält, kann sie einen
-										Ertrag von ≈ 9772.10 pro Jahr erzielen. Ist dies
+										Ertrag von \(\approx 9772.10\) pro Jahr erzielen. Ist dies
 										optimal?
 									</li>
 								</ol>
@@ -804,7 +822,7 @@ plt.show()
 						<details class="sol">
 							<summary>Lösungsvorschlag</summary>
 							<div class="sol__body">
-								<p>x<sub>n</sub> = 0.9 · x<sub>n−1</sub> + 5</p>
+								<p>\[x_n = 0.9 \cdot x_{n-1} + 5\]</p>
 								<div
 									class="workbench"
 									data-id="sol09"

@@ -412,6 +412,14 @@ hr {
 	margin-bottom: 0;
 }
 
+/* --- MathJax --------------------------------------------------------------- */
+
+mjx-container[jax="CHTML"][display="true"] {
+	overflow-x: auto;
+	overflow-y: hidden;
+	padding: 0.2em 0;
+}
+
 /* --- Inline-Code --------------------------------------------------------- */
 
 code {

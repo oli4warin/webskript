@@ -18,6 +18,22 @@
 			rel="icon"
 			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235fc9ae'/%3E%3Ctext x='16' y='23' font-family='system-ui,sans-serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230f1f1b'%3EW%3C/text%3E%3C/svg%3E"
 		/>
+		<script>
+			window.MathJax = {
+				tex: {
+					inlineMath: [["\\(", "\\)"]],
+					displayMath: [["\\[", "\\]"]],
+				},
+				options: {
+					skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code", "template"],
+				},
+			};
+		</script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+			id="MathJax-script"
+			async
+		></script>
 	</head>
 
 	<body>
@@ -56,18 +72,22 @@
 				<div class="box">
 					<p class="box__label" id="thm-regall">Satz: Regressionsgerade</p>
 					<p>
-						Gegeben seien n (n&gt;1) Datenpunkte (x<sub>1</sub>,y<sub>1</sub>),
-						(x<sub>2</sub>,y<sub>2</sub>), …, (x<sub>n</sub>,y<sub>n</sub>).
-						Dann ist die Regressionsgerade y = m·x + b gegeben durch
+						Gegeben seien \(n\) (\(n>1\)) Datenpunkte
+						\((x_1,y_1), (x_2,y_2), \dots, (x_n,y_n)\).
+						Dann ist die Regressionsgerade \(y = m \cdot x + b\) gegeben durch
 					</p>
 					<p style="text-align: center">
-						m = s<sub>xy</sub> / s<sub>xx</sub> &nbsp;und&nbsp;
-						b = ȳ − m·x̄,
+						\[
+						m = \frac{s_{xy}}{s_{xx}} \quad\text{und}\quad
+						b = \bar{y} - m \cdot \bar{x},
+						\]
 					</p>
 					<p>wobei</p>
 					<p style="text-align: center">
-						s<sub>xy</sub> = Σ (x<sub>i</sub>−x̄)·(y<sub>i</sub>−ȳ)
-						&nbsp;und&nbsp; s<sub>xx</sub> = Σ (x<sub>i</sub>−x̄)².
+						\[
+						s_{xy} = \sum (x_i - \bar{x}) \cdot (y_i - \bar{y})
+						\quad\text{und}\quad s_{xx} = \sum (x_i - \bar{x})^2.
+						\]
 					</p>
 				</div>
 
@@ -106,7 +126,7 @@ y = np.array([0, 3, 4, 5])
 									Natürlich dieselbe Gerade wie in
 									<a href="01-regressionsgerade.html#ex-regman"
 										>Übung 1.02</a
-									>: y = 17/26 · x + 27/26.
+									>: \(y = \frac{17}{26} \cdot x + \frac{27}{26}\).
 								</p>
 								<div
 									class="workbench"
@@ -132,24 +152,27 @@ y = np.array([0, 3, 4, 5])
 				<div class="box box--note">
 					<p class="box__label">Beweisskizze</p>
 					<p>
-						Wir müssen zeigen, dass m·x + b so gewählt werden muss, dass
-						die Summe der Residuenquadrate S(m,b) = Σ (m·x<sub>i</sub> + b
-						− y<sub>i</sub>)² minimal wird. Der Trick besteht darin, den
-						Term (m·x<sub>i</sub> + b − y<sub>i</sub>) geschickt um den
-						Schwerpunkt (x̄, ȳ) umzuschreiben:
+						Wir müssen zeigen, dass \(m \cdot x + b\) so gewählt werden muss,
+						dass die Summe der Residuenquadrate
+						\(S(m,b) = \sum (m \cdot x_i + b - y_i)^2\) minimal wird. Der
+						Trick besteht darin, den Term \((m \cdot x_i + b - y_i)\)
+						geschickt um den Schwerpunkt \((\bar{x}, \bar{y})\)
+						umzuschreiben:
 					</p>
 					<p style="text-align: center">
-						Σ (m·x<sub>i</sub>+b−y<sub>i</sub>)² = n·(m·x̄+b−ȳ)² +
-						Σ (m·(x<sub>i</sub>−x̄) − y<sub>i</sub>+ȳ)²
+						\[
+						\sum (m \cdot x_i + b - y_i)^2 = n \cdot (m \cdot \bar{x} + b - \bar{y})^2 +
+						\sum (m \cdot (x_i - \bar{x}) - y_i + \bar{y})^2
+						\]
 					</p>
 					<p>
-						Der zweite Summand hängt gar nicht mehr von <var>b</var> ab.
+						Der zweite Summand hängt gar nicht mehr von \(b\) ab.
 						Der erste Summand ist ein Quadrat und wird für festes
-						<var>m</var> genau dann minimal (nämlich 0), wenn
-						b = ȳ − m·x̄ gilt — das ist bereits die zweite Gleichung des
-						Satzes. Setzt man das ein, bleibt nur noch der zweite Summand
-						übrig, den man (quadratische Ergänzung nach <var>m</var>) für
-						m = s<sub>xy</sub>/s<sub>xx</sub> minimiert.
+						\(m\) genau dann minimal (nämlich 0), wenn
+						\(b = \bar{y} - m \cdot \bar{x}\) gilt — das ist bereits die
+						zweite Gleichung des Satzes. Setzt man das ein, bleibt nur noch
+						der zweite Summand übrig, den man (quadratische Ergänzung nach
+						\(m\)) für \(m = s_{xy}/s_{xx}\) minimiert.
 					</p>
 				</div>
 
@@ -160,9 +183,9 @@ y = np.array([0, 3, 4, 5])
 					<div class="exercise__body">
 						<p>Berechnen Sie die folgenden Summen.</p>
 						<ol class="tasks tasks--cols">
-							<li>Σ (i=1 bis 4) 2·i</li>
-							<li>Σ (k=2 bis 6) k²</li>
-							<li>Σ (i=3 bis 5) ( Σ (k=2 bis 3) i·k )</li>
+							<li>\(\displaystyle\sum_{i=1}^{4} 2 \cdot i\)</li>
+							<li>\(\displaystyle\sum_{k=2}^{6} k^2\)</li>
+							<li>\(\displaystyle\sum_{i=3}^{5} \left( \sum_{k=2}^{3} i \cdot k \right)\)</li>
 						</ol>
 
 						<div
@@ -215,7 +238,7 @@ y = np.array([0, 3, 4, 5])
 								>Definition aus Abschnitt 3</a
 							>
 							den entsprechenden empirischen Korrelationskoeffizienten
-							<var>r</var>.
+							\(r\).
 						</p>
 
 						<div
@@ -238,7 +261,7 @@ y = np.array([0, 0, 3])
 						<details class="sol">
 							<summary>Lösungsvorschlag</summary>
 							<div class="sol__body">
-								<p>r = −1/2</p>
+								<p>\(r = -\frac{1}{2}\)</p>
 								<div
 									class="workbench"
 									data-id="sol116"
@@ -263,22 +286,22 @@ y = np.array([0, 0, 3])
 					<div class="exercise__body">
 						<p>
 							Der Statistiker bevorzugt im Allgemeinen das
-							Kleinste-Quadrate-Kriterium Σ e<sub>i</sub>² vor
-							Σ |e<sub>i</sub>| (bei uns war
-							e<sub>i</sub> = y<sub>i</sub> − m·x<sub>i</sub> − b), wenn er
+							Kleinste-Quadrate-Kriterium \(\sum e_i^2\) vor
+							\(\sum |e_i|\) (bei uns war
+							\(e_i = y_i - m \cdot x_i - b\)), wenn er
 							seinen Daten eine Gerade anpasst. Tatsächlich sind Summen
 							von quadratischen Funktionen mathematisch einfacher zu
 							handhaben als Summen von Betragsfunktionen.
 						</p>
 						<ol class="tasks">
 							<li>
-								Stellen Sie die Funktionen y=(x−2)² und y=|x−2|
+								Stellen Sie die Funktionen \(y=(x-2)^2\) und \(y=|x-2|\)
 								graphisch dar. Vergleichen Sie Verlauf, Symmetrie,
 								Minimum.
 							</li>
 							<li>
-								Vergleichen Sie entsprechend y=(x−2)²+(x+3)² und
-								y=|x−2|+|x+3|.
+								Vergleichen Sie entsprechend \(y=(x-2)^2+(x+3)^2\) und
+								\(y=|x-2|+|x+3|\).
 							</li>
 							<li>
 								Betrachten Sie nun die Summen von mehr als zwei
@@ -287,8 +310,8 @@ y = np.array([0, 0, 3])
 							</li>
 							<li>
 								Passen Sie dem (fiktiven) Datensatz {(1,1), (5,1)}
-								eine Ursprungsgerade y=m·x an, indem Sie einmal
-								Σ e<sub>i</sub>² und einmal Σ |e<sub>i</sub>|
+								eine Ursprungsgerade \(y=m \cdot x\) an, indem Sie einmal
+								\(\sum e_i^2\) und einmal \(\sum |e_i|\)
 								minimieren.
 								<span class="hint">
 									(Hinweis: <code>scipy.optimize.minimize_scalar</code>
@@ -399,9 +422,9 @@ print("r =", np.corrcoef(x, y)[0, 1])
 						</p>
 						<p class="hint">
 							Hinweis: Stellen Sie die Summe der Residuenquadrate in
-							Abhängigkeit von <var>m</var> <em>und</em> <var>b</var>
+							Abhängigkeit von \(m\) <em>und</em> \(b\)
 							auf. Dann ergänzen Sie erst quadratisch bezüglich
-							<var>m</var>.
+							\(m\).
 						</p>
 
 						<div class="workbench" data-id="wb119" data-files="python" data-height="200">
@@ -420,7 +443,7 @@ y = np.array([0, 2, 1])
 							<summary>Lösungsvorschlag</summary>
 							<div class="sol__body">
 								<p>
-									y = 3/14 · x + 5/7 — genau dieselbe Gerade wie in
+									\(y = \frac{3}{14} \cdot x + \frac{5}{7}\) — genau dieselbe Gerade wie in
 									<a href="01-regressionsgerade.html#ex-residuenquadrate"
 										>Übung 1.01</a
 									>, diesmal ganz ohne den Schwerpunktsatz zu
@@ -451,8 +474,10 @@ y = np.array([0, 2, 1])
 							Hinweis: Zeigen Sie zuerst, dass gilt
 						</p>
 						<p style="text-align: center">
-							Σ (m·x<sub>i</sub>+b−y<sub>i</sub>)² = n·(m·x̄+b−ȳ)² +
-							Σ (m·(x<sub>i</sub>−x̄) − y<sub>i</sub>+ȳ)²
+							\[
+							\sum (m \cdot x_i + b - y_i)^2 = n \cdot (m \cdot \bar{x} + b - \bar{y})^2 +
+							\sum (m \cdot (x_i - \bar{x}) - y_i + \bar{y})^2
+							\]
 						</p>
 						<p>
 							(dieselbe Umformung wie in der

@@ -20,6 +20,22 @@
 			rel="icon"
 			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235fc9ae'/%3E%3Ctext x='16' y='23' font-family='system-ui,sans-serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230f1f1b'%3EW%3C/text%3E%3C/svg%3E"
 		/>
+		<script>
+			window.MathJax = {
+				tex: {
+					inlineMath: [["\\(", "\\)"]],
+					displayMath: [["\\[", "\\]"]],
+				},
+				options: {
+					skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code", "template"],
+				},
+			};
+		</script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+			id="MathJax-script"
+			async
+		></script>
 	</head>
 
 	<body>
@@ -64,8 +80,8 @@
 					<p>
 						Python rechnet direkt mit den <em>rohen Messdaten</em>
 						(einer Liste von Zahlen), nicht nur mit bereits
-						zusammengefassten Kennzahlen wie <i>n</i>, <i>x̄</i>
-						oder <i>s</i>. Ausserdem lassen sich beliebige
+						zusammengefassten Kennzahlen wie \(n\), \(\bar{x}\)
+						oder \(s\). Ausserdem lassen sich beliebige
 						Situationen simulieren, für die es gar keine fertige
 						Formel gibt (siehe
 						<a href="#simulation">Simulation statt Tabelle</a>).
@@ -92,7 +108,7 @@
 					<div>
 						<dt><code>stats.norm(loc, scale)</code></dt>
 						<dd>
-							Normalverteilung mit μ (<code>loc</code>) und σ
+							Normalverteilung mit \(\mu\) (<code>loc</code>) und \(\sigma\)
 							(<code>scale</code>) (stetig)
 						</dd>
 					</div>
@@ -106,7 +122,7 @@
 					<div>
 						<dt><code>stats.expon(scale)</code></dt>
 						<dd>
-							Exponentialverteilung mit λ = 1 / <code>scale</code>
+							Exponentialverteilung mit \(\lambda\) = 1 / <code>scale</code>
 							(stetig)
 						</dd>
 					</div>
@@ -116,21 +132,21 @@
 				<dl class="deflist">
 					<div>
 						<dt><code>pmf(k)</code></dt>
-						<dd>Wahrscheinlichkeitsfunktion P(X = k) (nur für diskrete Verteilungen).</dd>
+						<dd>Wahrscheinlichkeitsfunktion \(P(X = k)\) (nur für diskrete Verteilungen).</dd>
 					</div>
 					<div>
 						<dt><code>pdf(x)</code></dt>
-						<dd>Dichtefunktion f(x) (nur für stetige Verteilungen).</dd>
+						<dd>Dichtefunktion \(f(x)\) (nur für stetige Verteilungen).</dd>
 					</div>
 					<div>
 						<dt><code>cdf(x)</code></dt>
-						<dd>Verteilungsfunktion F(x) = P(X ≤ x).</dd>
+						<dd>Verteilungsfunktion \(F(x) = P(X \le x)\).</dd>
 					</div>
 					<div>
 						<dt><code>ppf(q)</code></dt>
 						<dd>
 							Prozentpunktfunktion (Inverse CDF). Liefert das
-							<i>x</i>, für das P(X ≤ x) = q gilt.
+							\(x\), für das \(P(X \le x) = q\) gilt.
 						</dd>
 					</div>
 					<div>
@@ -159,11 +175,11 @@ print(f"95%-Quantil: {wert_95:.2f} cm") # 185.87 cm
 
 				<h2 id="p-wert">Vom Datensatz zur Entscheidung: der p-Wert</h2>
 				<p>
-					Bisher kannten wir alle Parameter (zum Beispiel <i>p</i>
+					Bisher kannten wir alle Parameter (zum Beispiel \(p\)
 					bei der Binomialverteilung) bereits im Voraus. In der
 					Praxis liegen uns aber meistens nur <em>Messdaten</em> vor
 					(eine Stichprobe), aus denen wir schliessen wollen, ob
-					eine Vermutung (H₁) haltbar ist. Genau dafür sind
+					eine Vermutung (\(H_1\)) haltbar ist. Genau dafür sind
 					statistische Tests da.
 				</p>
 
@@ -171,14 +187,14 @@ print(f"95%-Quantil: {wert_95:.2f} cm") # 185.87 cm
 					<p class="box__label">Definition: der p-Wert</p>
 					<p>
 						Der <em>p-Wert</em> ist die Wahrscheinlichkeit, unter
-						der Annahme der Nullhypothese H₀ ein mindestens so
+						der Annahme der Nullhypothese \(H_0\) ein mindestens so
 						extremes Testergebnis wie das tatsächlich beobachtete
 						zu erhalten.
 					</p>
-					<p>Es gilt die fundamentale Entscheidungsregel für ein vorgegebenes Signifikanzniveau α:</p>
+					<p>Es gilt die fundamentale Entscheidungsregel für ein vorgegebenes Signifikanzniveau \(\alpha\):</p>
 					<p>
-						<b>Falls p-Wert ≤ α ⟹ H₀ ablehnen (Entscheidung für H₁)</b><br />
-						<b>Falls p-Wert &gt; α ⟹ H₀ beibehalten (nicht genügend Evidenz für H₁)</b>
+						<b>Falls p-Wert \(\le \alpha \Rightarrow H_0\) ablehnen (Entscheidung für \(H_1\))</b><br />
+						<b>Falls p-Wert \(> \alpha \Rightarrow H_0\) beibehalten (nicht genügend Evidenz für \(H_1\))</b>
 					</p>
 				</div>
 
@@ -188,7 +204,7 @@ print(f"95%-Quantil: {wert_95:.2f} cm") # 185.87 cm
 						Test durchführt, übernimmt für uns genau die Rolle,
 						die früher eine Tabelle oder eine von Hand
 						hergeleitete Formel hatte: Sie bestimmt die Verteilung
-						der Teststatistik unter H₀ und liest daraus den
+						der Teststatistik unter \(H_0\) und liest daraus den
 						p-Wert ab. Wir müssen diese Verteilung nicht mehr
 						selbst kennen.
 					</p>
@@ -203,19 +219,19 @@ print(f"95%-Quantil: {wert_95:.2f} cm") # 185.87 cm
 
 				<h3 id="t-test-1">1. Der Einstichproben-t-Test (1-sample t-test)</h3>
 				<p>
-					Der t-Test prüft, ob der Erwartungswert μ einer
+					Der t-Test prüft, ob der Erwartungswert \(\mu\) einer
 					(annähernd normalverteilten) Grundgesamtheit von einem
-					vorgegebenen Sollwert μ₀ abweicht.
+					vorgegebenen Sollwert \(\mu_0\) abweicht.
 				</p>
 				<div class="box box--note">
 					<p>
 						Ein Abfüller behauptet, dass seine Kaffeepackungen im
-						Mittel μ₀ = 500 g Kaffee enthalten. Wir wiegen 10
+						Mittel \(\mu_0 = 500\) g Kaffee enthalten. Wir wiegen 10
 						Packungen und erhalten die Stichprobe:
 						[495, 496, 502, 498, 492, 497, 501, 493, 495, 499].
 						Weicht das Gewicht signifikant nach unten ab?
 					</p>
-					<p>H₀: μ ≥ 500 g &nbsp;vs.&nbsp; H₁: μ &lt; 500 g (einseitiger Test)</p>
+					<p>\(H_0: \mu \ge 500\text{ g}\) &nbsp;vs.&nbsp; \(H_1: \mu < 500\text{ g}\) (einseitiger Test)</p>
 				</div>
 				<p class="hint"><b>Beispiel.</b> Einstichproben-t-Test in Python</p>
 				<div class="workbench" data-id="wbex2" data-files="python" data-height="260">
@@ -246,7 +262,7 @@ plt.show()
 					</template>
 				</div>
 				<p>
-					Der berechnete p-Wert ist ca. 0.0055. Da 0.0055 ≤ 0.05,
+					Der berechnete p-Wert ist ca. 0.0055. Da \(0.0055 \le 0.05\),
 					lehnen wir die Nullhypothese ab. Die Kaffeepackungen sind
 					signifikant unterfüllt.
 				</p>
@@ -259,7 +275,7 @@ plt.show()
 						Dünger (Gruppe A) höher wachsen als mit dem
 						Standarddünger (Gruppe B).
 					</p>
-					<p>H₀: μ<sub>A</sub> ≤ μ<sub>B</sub> &nbsp;vs.&nbsp; H₁: μ<sub>A</sub> &gt; μ<sub>B</sub> (einseitig)</p>
+					<p>\(H_0: \mu_A \le \mu_B\) &nbsp;vs.&nbsp; \(H_1: \mu_A > \mu_B\) (einseitig)</p>
 				</div>
 				<p class="hint"><b>Beispiel.</b> Zweistichproben-t-Test mit Boxplot-Visualisierung</p>
 				<div class="workbench" data-id="wbex3" data-files="python" data-height="260">
@@ -301,7 +317,7 @@ plt.show()
 						Lern-App und schreiben denselben Test nochmals. Hat
 						die App etwas gebracht?
 					</p>
-					<p>H₀: μ<sub>nachher</sub> ≤ μ<sub>vorher</sub> &nbsp;vs.&nbsp; H₁: μ<sub>nachher</sub> &gt; μ<sub>vorher</sub> (einseitig)</p>
+					<p>\(H_0: \mu_{\text{nachher}} \le \mu_{\text{vorher}}\) &nbsp;vs.&nbsp; \(H_1: \mu_{\text{nachher}} > \mu_{\text{vorher}}\) (einseitig)</p>
 				</div>
 				<p class="hint"><b>Beispiel.</b> Gepaarter t-Test in Python</p>
 				<div class="workbench" data-id="wbex4" data-files="python" data-height="160">
@@ -319,22 +335,22 @@ print(f"Mittlere Verbesserung: {np.mean(nachher - vorher):.2f} Punkte")
 print(f"t-Statistik: {t_stat:.4f}, p-Wert: {p_val:.6f}")
 					</template>
 				</div>
-				<p>Der p-Wert ist verschwindend klein (p ≈ 0.000003). Die Verbesserung ist hochsignifikant.</p>
+				<p>Der p-Wert ist verschwindend klein (\(p \approx 0.000003\)). Die Verbesserung ist hochsignifikant.</p>
 
 				<h3 id="binomialtest">4. Der Binomialtest</h3>
 				<p>
 					Diskrete Variante für dichotome Variablen
 					(Erfolg/Misserfolg). Er testet die hypothetische
-					Erfolgswahrscheinlichkeit <i>p</i> bei <i>n</i> Versuchen
+					Erfolgswahrscheinlichkeit \(p\) bei \(n\) Versuchen
 					exakt, ganz ohne Normalapproximation.
 				</p>
 				<div class="box box--note">
 					<p>
-						Ein fehlerhafter Münzwurfautomat liefert bei n=20
+						Ein fehlerhafter Münzwurfautomat liefert bei \(n=20\)
 						Würfen genau 17 Mal Kopf. Weicht die Münze signifikant
-						von einer fairen Münze (p₀=0.5) ab?
+						von einer fairen Münze (\(p_0=0.5\)) ab?
 					</p>
-					<p>H₀: p = 0.5 &nbsp;vs.&nbsp; H₁: p ≠ 0.5 (zweiseitig)</p>
+					<p>\(H_0: p = 0.5\) &nbsp;vs.&nbsp; \(H_1: p \neq 0.5\) (zweiseitig)</p>
 				</div>
 				<p class="hint"><b>Beispiel.</b> Binomialtest mit grafischer Darstellung der Extrembereiche</p>
 				<div class="workbench" data-id="wbex5" data-files="python" data-height="260">
@@ -365,7 +381,7 @@ plt.xticks(x)
 plt.show()
 					</template>
 				</div>
-				<p>Der p-Wert beträgt hier ca. 0.0026. Da 0.0026 ≤ 0.05, ist die Münze signifikant unfair.</p>
+				<p>Der p-Wert beträgt hier ca. 0.0026. Da \(0.0026 \le 0.05\), ist die Münze signifikant unfair.</p>
 
 				<h3 id="chi-quadrat">5. Der Chi-Quadrat-Test</h3>
 				<p>Damit lassen sich zwei verwandte Fragestellungen beantworten:</p>
@@ -400,9 +416,9 @@ plt.show()
 						</tbody>
 					</table>
 					<p>
-						H₀: Wohnort und Haustierwahl sind unabhängig
+						\(H_0\): Wohnort und Haustierwahl sind unabhängig
 						voneinander.<br />
-						H₁: Wohnort und Haustierwahl hängen voneinander ab.
+						\(H_1\): Wohnort und Haustierwahl hängen voneinander ab.
 					</p>
 				</div>
 				<p class="hint"><b>Beispiel.</b> Chi-Quadrat-Unabhängigkeitstest in Python</p>
@@ -424,7 +440,7 @@ print(erwartet)
 					</template>
 				</div>
 				<p>
-					Der p-Wert ist extrem klein (p ≈ 0.0006). Wir lehnen H₀
+					Der p-Wert ist extrem klein (\(p \approx 0.0006\)). Wir lehnen \(H_0\)
 					ab. Die Haustierpräferenz unterscheidet sich signifikant
 					zwischen Stadt und Land.
 				</p>
@@ -477,14 +493,14 @@ print(f"95%-Konfidenzintervall: {ergebnis.confidence_interval}")
 				<p>
 					Der eigentliche Sinn eines p-Wertes ist einfach: «Wie
 					wahrscheinlich ist ein mindestens so extremes Resultat,
-					wenn H₀ stimmt?» Diese Frage lässt sich <em>immer</em>
-					beantworten, indem man H₀ am Computer sehr oft simuliert
+					wenn \(H_0\) stimmt?» Diese Frage lässt sich <em>immer</em>
+					beantworten, indem man \(H_0\) am Computer sehr oft simuliert
 					und nachzählt — ganz ohne Formel, Tabelle oder
 					eingebaute Testfunktion. Das ist besonders nützlich, wenn
 					(wie oft im echten Leben) keine passende Testfunktion
 					existiert.
 				</p>
-				<p>Wir überprüfen dies am Münzbeispiel von oben (n=20, k=17, p₀=0.5) nochmals nach:</p>
+				<p>Wir überprüfen dies am Münzbeispiel von oben (\(n=20, k=17, p_0=0.5\)) nochmals nach:</p>
 				<p class="hint"><b>Beispiel.</b> Schätzung eines p-Wertes durch Simulation (Monte-Carlo-Methode)</p>
 				<div class="workbench" data-id="wbex8" data-files="python" data-height="180">
 					<template data-seed="python">
@@ -506,19 +522,19 @@ print(f"Simulierter p-Wert: {p_simuliert:.4f}")  # ca. 0.0025
 					</template>
 				</div>
 				<p>
-					Der simulierte p-Wert (≈ 0.0025) stimmt (bis auf den
+					Der simulierte p-Wert (\(\approx 0.0025\)) stimmt (bis auf den
 					unvermeidlichen Simulationsfehler) mit dem exakten Wert
-					von <code>stats.binomtest</code> (≈ 0.0026) überein.
+					von <code>stats.binomtest</code> (\(\approx 0.0026\)) überein.
 					Diese Technik heisst <em>Monte-Carlo-Simulation</em> und
 					funktioniert für praktisch jede denkbare Fragestellung,
-					solange man weiss, wie man H₀ simulieren kann.
+					solange man weiss, wie man \(H_0\) simulieren kann.
 				</p>
 				<div class="hint">
 					<p>
 						Genau aus diesem Grund braucht man in der Praxis keine
 						gedruckten Wahrscheinlichkeitstabellen mehr: Statt
 						eine Verteilung nachzuschlagen, lässt man den
-						Computer die Situation unter H₀ nachbauen (simulieren
+						Computer die Situation unter \(H_0\) nachbauen (simulieren
 						oder exakt berechnen) und liest den p-Wert direkt ab.
 					</p>
 				</div>
@@ -562,7 +578,7 @@ print(f"Simulierter p-Wert: {p_simuliert:.4f}")  # ca. 0.0025
 								<tr><td>Häufigkeit</td><td>50</td><td>38</td><td>45</td><td>42</td><td>25</td></tr>
 							</tbody>
 						</table>
-						<p>Ist diese Verteilung mit der Werbeaussage des Herstellers verträglich (Niveau α = 5%)?</p>
+						<p>Ist diese Verteilung mit der Werbeaussage des Herstellers verträglich (Niveau \(\alpha = 5\%\))?</p>
 						<p class="hint"><em>Hinweis:</em> <code>stats.chisquare</code>.</p>
 
 						<div
@@ -595,8 +611,8 @@ erwartet = np.full(5, beobachtet.sum() / 5)  # je 40 erwartet
 									200) passen:
 								</p>
 								<p>
-									H₀: Alle 5 Skins sind gleich
-									wahrscheinlich. &nbsp;vs.&nbsp; H₁: Die
+									\(H_0\): Alle 5 Skins sind gleich
+									wahrscheinlich. &nbsp;vs.&nbsp; \(H_1\): Die
 									Skins sind nicht gleich wahrscheinlich.
 								</p>
 								<div
@@ -614,8 +630,8 @@ erwartet = np.full(5, beobachtet.sum() / 5)  # je 40 erwartet
 									>)
 								</p>
 								<p>
-									Dies liefert p-Wert ≈ 0.0624. Da 0.0624 >
-									0.05, behalten wir H₀ bei: Die
+									Dies liefert p-Wert \(\approx 0.0624\). Da \(0.0624 >
+									0.05\), behalten wir \(H_0\) bei: Die
 									Abweichungen sind (knapp) noch mit einer
 									Gleichverteilung verträglich, auch wenn
 									Skin E auffällig selten vorkam.
@@ -634,12 +650,12 @@ erwartet = np.full(5, beobachtet.sum() / 5)  # je 40 erwartet
 							Besuchenden mit Layout A schliessen 120 einen Kauf
 							ab, von 1000 Besuchenden mit Layout B sind es 158.
 							Unterscheiden sich die beiden Layouts bezüglich
-							der Kaufwahrscheinlichkeit signifikant (Niveau α =
-							5%)?
+							der Kaufwahrscheinlichkeit signifikant (Niveau \(\alpha =
+							5\%\))?
 						</p>
 						<p class="hint">
 							<em>Hinweis:</em> Stellen Sie die Daten als
-							2×2-Kontingenztabelle (gekauft/nicht gekauft) dar
+							\(2\times2\)-Kontingenztabelle (gekauft/nicht gekauft) dar
 							und benutzen Sie <code>stats.chi2_contingency</code>.
 						</p>
 
@@ -675,9 +691,9 @@ tabelle = np.array([[120, 880],
 									die Käufe, die zweite die Nicht-Käufe:
 								</p>
 								<p>
-									H₀: Layout und Kaufentscheid sind
+									\(H_0\): Layout und Kaufentscheid sind
 									unabhängig (gleiche Conversion-Rate).
-									&nbsp;vs.&nbsp; H₁: Sie hängen zusammen.
+									&nbsp;vs.&nbsp; \(H_1\): Sie hängen zusammen.
 								</p>
 								<div
 									class="workbench"
@@ -694,8 +710,8 @@ tabelle = np.array([[120, 880],
 									>)
 								</p>
 								<p>
-									Dies liefert p-Wert ≈ 0.0140. Da 0.0140 ≤
-									0.05, lehnen wir H₀ ab: Layout B hat eine
+									Dies liefert p-Wert \(\approx 0.0140\). Da \(0.0140 \le
+									0.05\), lehnen wir \(H_0\) ab: Layout B hat eine
 									signifikant höhere Conversion-Rate (15.8%
 									statt 12.0%).
 								</p>
@@ -721,7 +737,7 @@ tabelle = np.array([[120, 880],
 							[9800, 9200, 10100, 8950, 9400, 9600, 9300, 10050,
 							8800, 9500]
 						</p>
-						<p>Ist die Werbeaussage auf dem Niveau α = 5% widerlegt?</p>
+						<p>Ist die Werbeaussage auf dem Niveau \(\alpha = 5\%\) widerlegt?</p>
 						<p class="hint">
 							<em>Hinweis:</em> einseitiger
 							Einstichproben-t-Test,
@@ -752,8 +768,8 @@ schritte = np.array([9800, 9200, 10100, 8950, 9400,
 							<summary>Lösungsvorschlag</summary>
 							<div class="sol__body">
 								<p>
-									Wir setzen H₀: μ ≥ 10'000 (Werbeaussage
-									stimmt) &nbsp;vs.&nbsp; H₁: μ &lt; 10'000
+									Wir setzen \(H_0: \mu \ge 10\,000\) (Werbeaussage
+									stimmt) &nbsp;vs.&nbsp; \(H_1: \mu < 10\,000\)
 									(Werbeaussage ist übertrieben).
 								</p>
 								<div
@@ -772,8 +788,8 @@ schritte = np.array([9800, 9200, 10100, 8950, 9400,
 								</p>
 								<p>
 									Der Mittelwert der Stichprobe beträgt 9470
-									Schritte, und es ergibt sich p-Wert ≈
-									0.0019. Da 0.0019 ≤ 0.05, lehnen wir H₀ ab:
+									Schritte, und es ergibt sich p-Wert \(\approx
+									0.0019\). Da \(0.0019 \le 0.05\), lehnen wir \(H_0\) ab:
 									Die durchschnittliche Schrittzahl liegt
 									signifikant unter den beworbenen 10'000.
 								</p>
@@ -812,7 +828,7 @@ schritte = np.array([9800, 9200, 10100, 8950, 9400,
 								</tr>
 							</tbody>
 						</table>
-						<p>Hat die App auf dem Niveau α = 5% zu einer signifikanten Verbesserung geführt?</p>
+						<p>Hat die App auf dem Niveau \(\alpha = 5\%\) zu einer signifikanten Verbesserung geführt?</p>
 						<p class="hint">
 							<em>Hinweis:</em> Dieselben Personen werden
 							zweimal gemessen – gepaarter t-Test,
@@ -846,9 +862,9 @@ nachher = np.array([13, 12, 15, 10, 14, 12, 14, 12, 13, 12])
 									zweimal getestet wurden, sind die
 									Stichproben nicht unabhängig. Wir
 									verwenden einen gepaarten, einseitigen
-									t-Test: H₀: μ<sub>nachher</sub> ≤
-									μ<sub>vorher</sub> &nbsp;vs.&nbsp; H₁:
-									μ<sub>nachher</sub> > μ<sub>vorher</sub>.
+									t-Test: \(H_0: \mu_{\text{nachher}} \le
+									\mu_{\text{vorher}}\) &nbsp;vs.&nbsp; \(H_1:
+									\mu_{\text{nachher}} > \mu_{\text{vorher}}\).
 								</p>
 								<div
 									class="workbench"
@@ -865,8 +881,8 @@ nachher = np.array([13, 12, 15, 10, 14, 12, 14, 12, 13, 12])
 									>)
 								</p>
 								<p>
-									Der p-Wert ist verschwindend klein (p ≈
-									0.0000028). Wir lehnen H₀ klar ab: Die
+									Der p-Wert ist verschwindend klein (\(p \approx
+									0.0000028\)). Wir lehnen \(H_0\) klar ab: Die
 									Verbesserung um durchschnittlich 2 Punkte
 									ist hochsignifikant.
 								</p>
@@ -906,7 +922,7 @@ nachher = np.array([13, 12, 15, 10, 14, 12, 14, 12, 13, 12])
 								</tr>
 							</tbody>
 						</table>
-						<p>Bestätigt sich die Vermutung auf dem Niveau α = 5%?</p>
+						<p>Bestätigt sich die Vermutung auf dem Niveau \(\alpha = 5\%\)?</p>
 						<p class="hint">
 							<em>Hinweis:</em> zwei unabhängige Gruppen –
 							Zweistichproben-t-Test, <code>stats.ttest_ind</code>.
@@ -939,10 +955,10 @@ controller = np.array([230, 225, 240, 220, 235, 245, 228, 232])
 									unterschiedlichen Personen und sind daher
 									unabhängig. Da eine <em>tiefere</em>
 									Reaktionszeit «schneller» bedeutet, lautet
-									der einseitige Test: H₀:
-									μ<sub>Maus</sub> ≥ μ<sub>Controller</sub>
-									&nbsp;vs.&nbsp; H₁: μ<sub>Maus</sub> &lt;
-									μ<sub>Controller</sub>.
+									der einseitige Test: \(H_0:
+									\mu_{\text{Maus}} \ge \mu_{\text{Controller}}\)
+									&nbsp;vs.&nbsp; \(H_1: \mu_{\text{Maus}} <
+									\mu_{\text{Controller}}\).
 								</p>
 								<div
 									class="workbench"
@@ -959,8 +975,8 @@ controller = np.array([230, 225, 240, 220, 235, 245, 228, 232])
 									>)
 								</p>
 								<p>
-									Es ergibt sich p-Wert ≈ 0.0000026. Wir
-									lehnen H₀ klar ab: Mit der Maus wird
+									Es ergibt sich p-Wert \(\approx 0.0000026\). Wir
+									lehnen \(H_0\) klar ab: Mit der Maus wird
 									hochsignifikant schneller reagiert als mit
 									dem Controller.
 								</p>
@@ -1051,7 +1067,7 @@ daten = np.array([210, 245, 190, 260, 300, 175, 220, 255,
 						<p>
 							Eine App simuliert einen «fairen» Münzwurf. Bei
 							100 Würfen erhält man 62 Mal «Kopf». Schätzen Sie
-							den zweiseitigen p-Wert für H₀: p=0.5 <em>durch
+							den zweiseitigen p-Wert für \(H_0: p=0.5\) <em>durch
 							eine eigene Simulation</em> (nicht mit
 							<code>stats.binomtest</code>!) und vergleichen Sie
 							anschliessend mit dem exakten Wert von
@@ -1114,7 +1130,7 @@ anzahl_simulationen = 200_000
 								<p>
 									Beide Methoden liefern (bis auf den
 									kleinen Simulationsfehler) denselben Wert:
-									p ≈ 0.021. Da 0.021 ≤ 0.05, ist die Münze
+									\(p \approx 0.021\). Da \(0.021 \le 0.05\), ist die Münze
 									auf dem 5%-Niveau signifikant unfair. Die
 									Simulation zeigt, dass man für diese Frage
 									gar keine eingebaute Testfunktion braucht,

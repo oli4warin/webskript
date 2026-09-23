@@ -20,6 +20,22 @@
 			rel="icon"
 			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235fc9ae'/%3E%3Ctext x='16' y='23' font-family='system-ui,sans-serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230f1f1b'%3EW%3C/text%3E%3C/svg%3E"
 		/>
+		<script>
+			window.MathJax = {
+				tex: {
+					inlineMath: [["\\(", "\\)"]],
+					displayMath: [["\\[", "\\]"]],
+				},
+				options: {
+					skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code", "template"],
+				},
+			};
+		</script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+			id="MathJax-script"
+			async
+		></script>
 	</head>
 
 	<body>
@@ -57,8 +73,8 @@
 					Trotzdem möchte man aus den gestreuten Datenpunkten die
 					zugrundeliegende lineare Beziehung rekonstruieren, um damit
 					Vorhersagen treffen oder den Zusammenhang quantitativ beschreiben
-					zu können. Gesucht ist also diejenige Gerade y = a·x + b, die die
-					Punktwolke möglichst gut beschreibt. Dieses Vorgehen nennt man
+					zu können. Gesucht ist also diejenige Gerade \(y = a \cdot x + b\), die
+					die Punktwolke möglichst gut beschreibt. Dieses Vorgehen nennt man
 					<em>lineare Regression</em>, und die gesuchte Gerade heisst
 					<em>Regressionsgerade</em>.
 				</p>
@@ -176,15 +192,15 @@ print("Summe der Residuenquadrate:", summe)
 				<div class="box">
 					<p class="box__label" id="thm-schwerpunkt">Satz: Schwerpunkt der Regressionsgeraden</p>
 					<p>
-						Gegeben seien die Datenpunkte (x<sub>1</sub>,y<sub>1</sub>),
-						(x<sub>2</sub>,y<sub>2</sub>), …, (x<sub>n</sub>,y<sub>n</sub>).
-						Dann liegt der Punkt (x̄,ȳ) automatisch auf der entsprechenden
+						Gegeben seien die Datenpunkte \((x_1,y_1)\),
+						\((x_2,y_2)\), …, \((x_n,y_n)\).
+						Dann liegt der Punkt \((\bar x,\bar y)\) automatisch auf der entsprechenden
 						Regressionsgeraden, wobei
 					</p>
 					<p style="text-align: center">
-						x̄ = (x<sub>1</sub>+x<sub>2</sub>+…+x<sub>n</sub>) / n
+						\(\bar x = \dfrac{x_1+x_2+\dots+x_n}{n}\)
 						&nbsp;und&nbsp;
-						ȳ = (y<sub>1</sub>+y<sub>2</sub>+…+y<sub>n</sub>) / n.
+						\(\bar y = \dfrac{y_1+y_2+\dots+y_n}{n}.\)
 					</p>
 				</div>
 
@@ -207,7 +223,7 @@ print("Summe der Residuenquadrate:", summe)
 						<ol class="tasks">
 							<li>
 								Berechnen Sie die Summe der Residuenquadrate für die
-								Gerade y = 9/10 · x − 1.
+								Gerade \(y = \dfrac{9}{10} \cdot x - 1\).
 								<span class="hint">
 									(Hinweis: Das ist <em>nicht</em> die zugehörige
 									Regressionsgerade.)
@@ -247,26 +263,26 @@ y = np.array([0, 2, 1])
 								<p>
 									<b>(a)</b> Einsetzen der drei Punkte in die Gerade
 									liefert die Residuen −1, 0.9 und −1.3; die Summe der
-									Residuenquadrate ist damit 59/10 = 5.9.
+									Residuenquadrate ist damit \(\dfrac{59}{10} = 5.9\).
 								</p>
 								<p>
 									<b>(b)</b> Wir berechnen zuerst den Schwerpunkt der
-									Daten: x̄ = 4/3, ȳ = 1. Wegen des
+									Daten: \(\bar x = \dfrac{4}{3}\), \(\bar y = 1\). Wegen des
 									<a href="#thm-schwerpunkt">Schwerpunktsatzes</a>
-									verläuft die Regressionsgerade durch (4/3, 1), hat
-									also die Form y = m·(x − 4/3) + 1. Setzt man die drei
+									verläuft die Regressionsgerade durch \((4/3, 1)\), hat
+									also die Form \(y = m \cdot (x - \tfrac{4}{3}) + 1\). Setzt man die drei
 									Punkte ein und quadriert, ergibt sich für die Summe
 									der Residuenquadrate der Ausdruck
-									14/3 · m² − 2·m + 2, der (quadratische Ergänzung) bei
-									m = 3/14 minimal wird. Damit lautet die
+									\(\dfrac{14}{3} m^2 - 2m + 2\), der (quadratische Ergänzung) bei
+									\(m = \dfrac{3}{14}\) minimal wird. Damit lautet die
 									Regressionsgerade
 								</p>
 								<p style="text-align: center">
-									y = 3/14 · x + 5/7,
+									\[y = \frac{3}{14} x + \frac{5}{7},\]
 								</p>
 								<p>
 									mit einer minimalen Summe der Residuenquadrate von
-									25/14 ≈ 1.7857.
+									\(\dfrac{25}{14} \approx 1.7857\).
 								</p>
 								<div
 									class="workbench"
@@ -322,13 +338,13 @@ y = np.array([0, 3, 4, 5])
 									Der Schwerpunkt der Daten ist (3, 3), die
 									Regressionsgerade hat also die Form
 									y = m·(x − 3) + 3. Die Summe der Residuenquadrate ist
-									26·m² − 34·m + 14, minimal bei m = 17/26. Damit
+									\(26m^2 - 34m + 14\), minimal bei \(m = \dfrac{17}{26}\). Damit
 									lautet die Regressionsgerade
 								</p>
-								<p style="text-align: center">y = 17/26 · x + 27/26,</p>
+								<p style="text-align: center">\[y = \frac{17}{26} x + \frac{27}{26},\]</p>
 								<p>
 									mit einer minimalen Summe der Residuenquadrate von
-									75/26 ≈ 2.8846.
+									\(\dfrac{75}{26} \approx 2.8846\).
 								</p>
 								<div
 									class="workbench"
@@ -354,7 +370,7 @@ y = np.array([0, 3, 4, 5])
 					Für nur drei oder vier Punkte lässt sich die Regressionsgerade
 					noch von Hand mit quadratischer Ergänzung bestimmen. Sobald es um
 					grössere Datenmengen geht, wird das schnell mühsam. Wir vermuten
-					einen linearen Zusammenhang zwischen Körpergrösse (=x) und
+					einen linearen Zusammenhang zwischen Körpergrösse (=\(x\)) und
 					Körpermasse (=y). In einer Untersuchung haben sich die folgenden
 					Daten ergeben (Körpergrösse in cm und Körpermasse in kg):
 				</p>
@@ -548,14 +564,14 @@ bremsweg = np.array([50, 80, 70, 45])
 						<ol class="tasks">
 							<li>
 								Wir nehmen an, dass die Schaumhöhe exponentiell mit
-								der Zeit abnimmt: h(t) = a · e<sup>k·t</sup>. Führen
+								der Zeit abnimmt: \(h(t) = a \cdot e^{k \cdot t}\). Führen
 								Sie mit diesen Daten eine Regression durch und
 								bestimmen Sie damit die Parameter a und k auf 2
 								Nachkommastellen genau.
 								<span class="hint">
-									(Hinweis: Logarithmieren Sie h(t) = a·e<sup>k·t</sup>
-									— das linearisiert den Zusammenhang zwischen t und
-									ln(h). Details dazu in
+									(Hinweis: Logarithmieren Sie \(h(t) = a \cdot e^{k \cdot t}\)
+									— das linearisiert den Zusammenhang zwischen \(t\) und
+									\(\ln(h)\). Details dazu in
 									<a href="02-regression-mit-python.html#linearisierung"
 										>Abschnitt 2</a
 									>.)
@@ -588,7 +604,7 @@ h = np.array([90, 62, 43, 30, 21, 14, 10, 7, 5, 3, 2])
 							<summary>Lösungsvorschlag</summary>
 							<div class="sol__body">
 								<p>
-									<b>(a)</b> h(t) ≈ 92.09 · e<sup>−0.75·t</sup>
+									<b>(a)</b> \(h(t) \approx 92.09 \cdot e^{-0.75 \cdot t}\)
 								</p>
 								<p><b>(b)</b> Etwa 52.8 % Abnahme pro Minute.</p>
 								<div
