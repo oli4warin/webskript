@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>2 Vorbereitung: Python und Matplotlib – Regression</title>
+		<script>
+			/* Farbschema vor dem ersten Zeichnen setzen, damit beim Laden nichts
+			   aufblitzt. Dunkel ist der Standard, siehe ../assets/css/style.css. */
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.regression.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="../assets/css/style.css" />
+		<link
+			rel="icon"
+			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235fc9ae'/%3E%3Ctext x='16' y='23' font-family='system-ui,sans-serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230f1f1b'%3EW%3C/text%3E%3C/svg%3E"
+		/>
+		<script>
+			window.MathJax = {
+				tex: {
+					inlineMath: [["\\(", "\\)"]],
+					displayMath: [["\\[", "\\]"]],
+				},
+				options: {
+					skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code", "template"],
+				},
+			};
+		</script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+			id="MathJax-script"
+			async
+		></script>
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html">Regr<span>ession</span></a>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-regressionsgerade.html">1 Die Regressionsgerade</a>
+				<a href="02-python-matplotlib.html">2 Python und Matplotlib</a>
+				<a href="03-regression-mit-python.html">3 Regression mit Python</a>
+				<a href="04-korrelationskoeffizient.html">4 Korrelationskoeffizient</a>
+				<a href="05-herleitung.html">5 Allgemeine Herleitung</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main class="layout" data-ex-chapter="1" data-ex-offset="4">
+			<div class="content">
+				<p class="eyebrow">Abschnitt 2</p>
+				<h1>Vorbereitung: Python und Matplotlib</h1>
+
+				<div class="progress" data-progress>
+					<span class="meter"><i style="width: 0"></i></span>
+					<span data-progress-text>0 von 1 Übungen erledigt</span>
+					<button type="button" data-reset>zurücksetzen</button>
+				</div>
+
+				<p>
+					Da wir im Folgenden Daten mit dem Computer auswerten und
+					visualisieren wollen, ist Python ein unverzichtbares Werkzeug. Wir
+					nutzen Python und die Bibliothek <code>matplotlib</code>, um Daten
+					zu berechnen und zu visualisieren. Hier ist eine kurze
+					Wiederholung der wichtigsten Konzepte aus dem Informatikunterricht.
+				</p>
+
+				<div class="box box--note">
+					<p class="box__label">Anders als im gedruckten Skript</p>
+					<p>
+						Alle Code-Beispiele auf dieser Seite stehen in einer Werkbank:
+						Sie lassen sich frei verändern und mit <em>Ausführen</em>
+						starten. Erzeugt der Code einen Plot, erscheint er unter der
+						Konsolenausgabe — genau die Werkbank, von der im Text unten die
+						Rede ist.
+					</p>
+				</div>
+
+				<h2 id="code-ausfuehren">Python Code ausführen</h2>
+				<p>Um den Python-Code ausführen zu können, haben Sie zwei Möglichkeiten:</p>
+				<ul>
+					<li>
+						Sie können Python lokal auf Ihrem Rechner installieren und in
+						einem Editor oder einer IDE Ihrer Wahl arbeiten (zum Beispiel
+						<a href="https://vscodium.com/">VSCodium</a>). Diese Methode wird
+						empfohlen.
+					</li>
+					<li>
+						Sie können den entsprechenden Python-Code auch online unter
+						<a href="https://matplotlib.codeutility.io/"
+							>matplotlib.codeutility.io</a
+						>
+						ausführen.
+					</li>
+				</ul>
+
+				<h2 id="funktionen">Funktionen</h2>
+				<p>
+					Um den Code sauber zu halten, lagern wir Berechnungsvorschriften
+					oft in eigene Funktionen aus.
+				</p>
+
+				<p class="hint"><b>Beispiel.</b> Definition einer einfachen Funktion</p>
+				<div class="workbench" data-id="wbex1" data-files="python" data-height="160">
+					<template data-seed="python">
+def wachstum(x, r):
+    return x * r
+
+startwert = 100
+# Funktionsaufruf
+ergebnis = wachstum(startwert, 1.1)
+print(ergebnis) # Ausgabe: 110.0
+					</template>
+				</div>
+
+				<h2 id="matplotlib">Daten visualisieren mit Matplotlib</h2>
+				<p>
+					Die Bibliothek <code>matplotlib.pyplot</code> (meistens als
+					<code>plt</code> importiert) ist der Standard für wissenschaftliche
+					Diagramme in Python. Ein typischer Plot besteht aus drei
+					Schritten: Daten bereitstellen, Plot-Befehl ausführen, Anzeigen.
+				</p>
+
+				<h3 id="liniendiagramme">Liniendiagramme</h3>
+				<p>
+					In einem Liniendiagramm werden Punkte miteinander verbunden. Wir
+					müssen dazu einfach eine Liste von x-Koordinaten (<code>x</code>)
+					und eine Liste von y-Koordinaten (<code>y</code>) angeben. Die
+					entsprechenden Punkte werden dann in dieser Reihenfolge
+					miteinander verbunden. Geben wir keine Liste von x-Koordinaten an,
+					so wird dafür einfach <code>[0, 1, 2, …]</code> verwendet.
+				</p>
+
+				<p class="hint"><b>Beispiel.</b> Grundgerüst eines Linien-Plots</p>
+				<div class="workbench" data-id="wbex2" data-files="python" data-height="260">
+					<template data-seed="python">
+import matplotlib.pyplot as plt
+
+x = [0, 5, 1, 6, 4]
+y = [10, 12, 18, 15, 22]
+z = [12, 10, 20, 14, 10, 22, 10]
+
+
+plt.plot(x, y, "-o", label="mit X")
+plt.plot(z, label="ohne X", color="red")
+plt.title("Liniendiagramm")
+
+plt.xlabel("x")
+plt.ylabel("y")
+plt.legend()
+
+plt.show()
+					</template>
+				</div>
+
+				<h3 id="streudiagramme">Streudiagramme (Scatter Plots)</h3>
+				<p>
+					Manchmal wollen wir Punkte nur als Einzelwerte darstellen, ohne
+					sie mit einer Linie zu verbinden (z.&nbsp;B. wenn es keinen
+					sinnvollen zeitlichen Zusammenhang gibt, wie es bei Messdaten oft
+					der Fall ist). Dafür nutzen wir den Befehl <code>plt.scatter</code>.
+					Dieser funktioniert genau analog zu <code>plt.plot</code>, nur
+					werden da die Punkte nicht miteinander verbunden.
+				</p>
+
+				<p class="hint"><b>Beispiel.</b> Erstellen eines Streudiagramms</p>
+				<div class="workbench" data-id="wbex3" data-files="python" data-height="260">
+					<template data-seed="python">
+import matplotlib.pyplot as plt
+
+x = [2.5, 2.8, 3.0, 3.2, 3.5]
+y = [0.6, 0.65, 0.4, 0.7, 0.5]
+
+# Punkte zeichnen (s=Grösse)
+plt.scatter(x, y, s=30, color="red", label="Punkte")
+
+plt.title("Beispiel eines Streudiagramms")
+plt.xlabel("x")
+plt.ylabel("y")
+plt.legend()
+
+plt.show()
+					</template>
+				</div>
+
+				<p>
+					In der offiziellen
+					<a href="https://matplotlib.org/stable/users/index.html"
+						>Dokumentation</a
+					>
+					finden Sie zahlreiche nützliche Beispiele zur umfangreichen
+					Bibliothek.
+				</p>
+
+				<h2 id="uebung">Übung</h2>
+
+				<!-- ============================================== Übung 1.05 -->
+				<section class="exercise" id="ex-matplotlib-beispiel">
+					<div class="exercise__body">
+						<p>
+							Schreiben Sie mit Hilfe der Bibliothek Matplotlib in Python
+							ein Programm, das die folgende Grafik erzeugt.
+						</p>
+						<figure class="shot">
+							<img
+								src="assets/img/matplotlib-example.svg"
+								alt="Eine mit Matplotlib gezeichnete M-Kurve mit drei roten Punkten"
+							/>
+							<figcaption>Zielgrafik</figcaption>
+						</figure>
+
+						<div
+							class="workbench"
+							data-id="wb105"
+							data-files="python"
+							data-sol-python="dynamic-systems/matplotlib-example.py"
+							data-height="220"
+						>
+							<template data-seed="python">
+import matplotlib.pyplot as plt
+
+# TODO: Zeichnen Sie die Linie (M-Form) und die drei roten Punkte.
+plt.show()
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<div
+									class="workbench"
+									data-id="sol105"
+									data-files="python"
+									data-seed-python="dynamic-systems/matplotlib-example.py"
+									data-height="220"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/dynamic-systems/matplotlib-example.py"
+										>matplotlib-example.py</a
+									>)
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<nav class="pager">
+					<a href="01-regressionsgerade.html">← <b>Abschnitt 1 Die Regressionsgerade</b></a>
+					<a href="03-regression-mit-python.html" style="text-align: right"
+						>Abschnitt 3 <b>Regression mit Python →</b></a
+					>
+				</nav>
+			</div>
+
+			<aside class="minitoc">
+				<h2>Auf dieser Seite</h2>
+				<ol></ol>
+			</aside>
+		</main>
+
+		<script src="assets/examples.js"></script>
+		<script src="../assets/js/editor.js"></script>
+		<script src="../assets/js/pyrunner.js"></script>
+		<script src="../assets/js/site.js"></script>
+	</body>
+</html>

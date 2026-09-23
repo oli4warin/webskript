@@ -34,15 +34,17 @@ IMG = WEB / "assets" / "img"
 # erlaubt keine Weiterverbreitung auf einer oeffentlichen Webseite. Fuer
 # dieselbe Abbildung im Skript zeigt die Webseite darum nur noch Volterras
 # Portrait (Public Domain). Nicht wieder eintragen.
+#
+# matplotlib-example.svg (Zielgrafik der frueheren Matplotlib-Uebung) wird
+# hier nicht mehr gebraucht: Der Abschnitt "Vorbereitung: Python und
+# Matplotlib" samt dieser Uebung wurde ins Kapitel Regression verschoben
+# (siehe chap_regression/build.py). Nicht wieder eintragen.
 FIGURES = {
     "wolfram.jpg": REPO / "images" / "wolfram.jpg",
     "volterra.jpg": REPO / "images" / "volterra.jpg",
     "feigenbaum.jpg": REPO / "images" / "feigenbaum.jpg",
     "feigenbaum-diagram.png": REPO / "images" / "feigenbaum-diagram.png",
     "hudson.jpg": REPO / "images" / "hudson.jpg",
-    # Ergebnis von matplotlib-example.py, selbst erzeugt -- kein Urheberrecht
-    # Dritter, dient als Zielgrafik von Uebung 2.01.
-    "matplotlib-example.svg": REPO / "images" / "matplotlib-example.svg",
 }
 
 

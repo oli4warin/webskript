@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>1 Listen und Iterationen in Python – Dynamische Systeme</title>
+		<script>
+			/* Farbschema vor dem ersten Zeichnen setzen, damit beim Laden nichts
+			   aufblitzt. Dunkel ist der Standard, siehe ../assets/css/style.css. */
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.bio.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="../assets/css/style.css" />
+		<link
+			rel="icon"
+			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235fc9ae'/%3E%3Ctext x='16' y='23' font-family='system-ui,sans-serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230f1f1b'%3EW%3C/text%3E%3C/svg%3E"
+		/>
+		<script>
+			window.MathJax = {
+				tex: {
+					inlineMath: [["\\(", "\\)"]],
+					displayMath: [["\\[", "\\]"]],
+				},
+				options: {
+					skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code", "template"],
+				},
+			};
+		</script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+			id="MathJax-script"
+			async
+		></script>
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html"
+				>Dynamische<span>Systeme</span></a
+			>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-listen-iterationen.html">1 Listen und Iterationen</a>
+				<a href="02-iterationen.html">2 Iterationen</a>
+				<a href="03-wachstumsmodelle.html">3 Wachstumsmodelle</a>
+				<a href="04-mehrere-zustandsgroessen.html">4 Mehrere Zustandsgrössen</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main class="layout" data-ex-chapter="2" data-ex-offset="0">
+			<div class="content">
+				<p class="eyebrow">Abschnitt 1</p>
+				<h1>Vorbereitung: Listen und Iterationen in Python</h1>
+
+				<p>
+					Da wir im Folgenden komplexe Iterationen und dynamische Systeme
+					untersuchen wollen, ist der Computer ein unverzichtbares
+					Werkzeug. Die Grundlagen zu Python und <code>matplotlib</code>
+					haben Sie bereits im Abschnitt
+					<a href="../chap_regression/02-python-matplotlib.html"
+						>«Vorbereitung: Python und Matplotlib»</a
+					>
+					im Kapitel Regression kennengelernt: wie man Python-Code
+					ausführt, wie man Funktionen definiert und wie man mit
+					<code>plt.plot</code> bzw. <code>plt.scatter</code> Diagramme
+					zeichnet.
+				</p>
+				<p>
+					Hier wiederholen wir das kurz und ergänzen die Konzepte, die
+					wir zusätzlich für Simulationen benötigen: den Umgang mit
+					Listen und mit Schleifen.
+				</p>
+
+				<div class="box box--note">
+					<p class="box__label">Anders als im gedruckten Skript</p>
+					<p>
+						Die Code-Beispiele auf dieser Seite stehen in einer
+						Werkbank: Sie lassen sich frei verändern und mit
+						<em>Ausführen</em> starten.
+					</p>
+				</div>
+
+				<h2 id="listen">Listen, Indizes und Slicing</h2>
+				<p>
+					Um eine Folge von Zahlen zu speichern (z.&nbsp;B. die
+					Entwicklung einer Population über die Zeit), verwenden wir
+					Listen. In Python sind Listen geordnet, und jedes Element hat
+					eine Position (Index).
+				</p>
+				<p>
+					Besonders wichtig für unsere Simulationen sind der Zugriff auf
+					das letzte Element (um den nächsten Wert zu berechnen) und das
+					«Ausschneiden» (Slicing) von Teilen der Liste.
+				</p>
+				<dl class="deflist">
+					<div>
+						<dt>Vorwärts-Index</dt>
+						<dd>
+							Beginnt bei 0. <code>liste[0]</code> ist das erste
+							Element.
+						</dd>
+					</div>
+					<div>
+						<dt>Rückwärts-Index</dt>
+						<dd>
+							Beginnt bei −1. <code>liste[-1]</code> ist das letzte
+							Element. Das ist extrem praktisch für Iterationen
+							(\(x_n\) hängt von \(x_{n-1}\) ab), da wir
+							nicht wissen müssen, wie lang die Liste gerade ist.
+						</dd>
+					</div>
+					<div>
+						<dt>Slicing</dt>
+						<dd>
+							Mit dem Doppelpunkt <code>:</code> können wir
+							Teilbereiche wählen. Die Syntax ist
+							<code>[Start:Ende]</code>. Dabei ist das Element beim
+							Ende-Index <em>nicht</em> mehr enthalten.
+						</dd>
+					</div>
+				</dl>
+
+				<p class="hint"><b>Beispiel.</b> Zugriff auf Listenelemente</p>
+				<div class="workbench" data-id="wbex1" data-files="python" data-height="200">
+					<template data-seed="python">
+werte = [10, 20, 30, 40, 50]
+
+# 1. Einzelne Elemente
+erstes = werte[0]     # 10
+letztes = werte[-1]   # 50 (sehr wichtig!)
+vorletztes = werte[-2] # 40
+
+# 2. Slicing (Teilbereiche)
+teil = werte[1:3]     # [20, 30] (Index 1 bis exklusive 3)
+anfang = werte[:3]    # [10, 20, 30] (Vom Anfang bis Index 3)
+ende = werte[2:]      # [30, 40, 50] (Von Index 2 bis zum Schluss)
+
+# Die letzten 2 Elemente für einen schnellen Blick
+die_letzten = werte[-2:] # [40, 50]
+
+print(erstes, letztes, vorletztes)
+print(teil, anfang, ende, die_letzten)
+					</template>
+				</div>
+
+				<h2 id="schleifen">Schleifen und Listenmanipulation</h2>
+				<p>
+					Für Simulationen starten wir oft mit einer Liste, die nur den
+					Startwert enthält, und fügen dann Schritt für Schritt neue
+					Werte hinzu.
+				</p>
+
+				<p class="hint"><b>Beispiel.</b> Iteratives Füllen einer Liste</p>
+				<div class="workbench" data-id="wbex2" data-files="python" data-height="220">
+					<template data-seed="python">
+# Eine Liste mit Startwert erstellen
+population = [10]
+
+# Eine Schleife (Loop), die 5 mal läuft
+# range(5) erzeugt Zahlen von 0 bis 4
+for _ in range(5):
+    # Zugriff auf das aktuell letzte Element
+    x_alt = population[-1]
+
+    # Neuer Wert berechnen (z.B. Wachstum +5)
+    x_neu = x_alt + 5
+
+    # Zur Liste hinzufügen
+    population.append(x_neu)
+
+print(population)
+# Ausgabe: [10, 15, 20, 25, 30, 35]
+					</template>
+				</div>
+
+				<nav class="pager">
+					<a href="index.html">← <b>Übersicht</b></a>
+					<a href="02-iterationen.html" style="text-align: right"
+						>Abschnitt 2 <b>Iterationen →</b></a
+					>
+				</nav>
+			</div>
+
+			<aside class="minitoc">
+				<h2>Auf dieser Seite</h2>
+				<ol></ol>
+			</aside>
+		</main>
+
+		<script src="assets/examples.js"></script>
+		<script src="../assets/js/editor.js"></script>
+		<script src="../assets/js/pyrunner.js"></script>
+		<script src="../assets/js/site.js"></script>
+	</body>
+</html>

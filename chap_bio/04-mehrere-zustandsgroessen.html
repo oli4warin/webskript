@@ -45,7 +45,7 @@
 			>
 			<nav>
 				<a href="index.html">Übersicht</a>
-				<a href="01-python-matplotlib.html">1 Python und Matplotlib</a>
+				<a href="01-listen-iterationen.html">1 Listen und Iterationen</a>
 				<a href="02-iterationen.html">2 Iterationen</a>
 				<a href="03-wachstumsmodelle.html">3 Wachstumsmodelle</a>
 				<a href="04-mehrere-zustandsgroessen.html">4 Mehrere Zustandsgrössen</a>
@@ -53,7 +53,7 @@
 			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
 		</header>
 
-		<main class="layout" data-ex-chapter="2" data-ex-offset="13">
+		<main class="layout" data-ex-chapter="2" data-ex-offset="12">
 			<div class="content">
 				<p class="eyebrow">Abschnitt 4</p>
 				<h1>Modelle mit mehreren Zustandsgrössen</h1>
@@ -117,7 +117,7 @@
 
 				<h2 id="uebungen-rb">Übungen</h2>
 
-				<!-- ============================================== Übung 2.14 -->
+				<!-- ============================================== Übung 2.13 -->
 				<section class="exercise" id="ex-raeuber-beute-simulieren">
 					<div class="exercise__body">
 						<p>Simulieren Sie das Räuber-Beute-Modell</p>
@@ -164,7 +164,7 @@
 
 						<div
 							class="workbench"
-							data-id="wb14"
+							data-id="wb13"
 							data-files="python"
 							data-sol-python="dynamic-systems/lotka-volterra.py"
 							data-height="260"
@@ -193,7 +193,7 @@ def simulate(h0, l0, a, b, c, d, steps):
 							<div class="sol__body">
 								<div
 									class="workbench"
-									data-id="sol14"
+									data-id="sol13"
 									data-files="python"
 									data-seed-python="dynamic-systems/lotka-volterra.py"
 									data-height="260"
@@ -204,7 +204,7 @@ def simulate(h0, l0, a, b, c, d, steps):
 										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/dynamic-systems/lotka-volterra.py"
 										>lotka-volterra.py</a
 									>) — die Werkbank führt die ganze Datei aus, das erzeugt
-									vier Diagramme (siehe auch Übungen 2.17 und 2.18 unten).
+									vier Diagramme (siehe auch Übungen 2.16 und 2.17 unten).
 								</p>
 								<p>
 									Wie bei den Hudson's-Bay-Aufzeichnungen pendeln beide
@@ -216,7 +216,7 @@ def simulate(h0, l0, a, b, c, d, steps):
 					</div>
 				</section>
 
-				<!-- ============================================== Übung 2.15 -->
+				<!-- ============================================== Übung 2.14 -->
 				<section class="exercise" id="ex-raeuber-beute-parameter">
 					<div class="exercise__body">
 						<p>
@@ -238,7 +238,7 @@ def simulate(h0, l0, a, b, c, d, steps):
 
 						<div
 							class="workbench"
-							data-id="wb15"
+							data-id="wb14"
 							data-files="python"
 							data-seed-python="dynamic-systems/lotka-volterra.py"
 							data-height="260"
@@ -246,7 +246,7 @@ def simulate(h0, l0, a, b, c, d, steps):
 					</div>
 				</section>
 
-				<!-- ============================================== Übung 2.16 -->
+				<!-- ============================================== Übung 2.15 -->
 				<section class="exercise" id="ex-raeuber-beute-fixpunkte">
 					<div class="exercise__body">
 						<p>Berechnen Sie alle Fixpunkte des Räuber-Beute-Modells</p>
@@ -273,11 +273,11 @@ def simulate(h0, l0, a, b, c, d, steps):
 					</div>
 				</section>
 
-				<!-- ============================================== Übung 2.17 -->
+				<!-- ============================================== Übung 2.16 -->
 				<section class="exercise" id="ex-raeuber-beute-startwerte">
 					<div class="exercise__body">
 						<p>
-							Betrachten Sie nochmals das Modell aus Übung 2.14. Wie
+							Betrachten Sie nochmals das Modell aus Übung 2.13. Wie
 							sieht das Diagramm aus, wenn Sie die Fixpunkte als
 							Startwerte verwenden? Wie sieht es aus, wenn Sie
 							Startwerte verwenden, die nahe bei den Fixpunkten liegen?
@@ -285,7 +285,7 @@ def simulate(h0, l0, a, b, c, d, steps):
 
 						<div
 							class="workbench"
-							data-id="wb17"
+							data-id="wb16"
 							data-files="python"
 							data-sol-python="dynamic-systems/lotka-volterra.py"
 							data-height="260"
@@ -323,7 +323,7 @@ def plot_lotka_volterra(h0, l0, a, b, c, d, steps):
 							<div class="sol__body">
 								<div
 									class="workbench"
-									data-id="sol17"
+									data-id="sol16"
 									data-files="python"
 									data-height="260"
 								>
@@ -390,12 +390,12 @@ plot_lotka_volterra(59, 26, 0.05, 0.002, 0.06, 0.001, 300)
 					besser abgelesen werden als mit den bisherigen Diagrammen.
 				</p>
 
-				<!-- ============================================== Übung 2.18 -->
+				<!-- ============================================== Übung 2.17 -->
 				<section class="exercise" id="ex-phasendiagramm">
 					<div class="exercise__body">
 						<p>
 							Erstellen Sie mit Hilfe des Computers ein Phasendiagramm
-							für die Simulation aus Übung 2.14. Die x-Achse sei den
+							für die Simulation aus Übung 2.13. Die x-Achse sei den
 							Hasen zugeordnet.
 						</p>
 						<ol class="tasks">
@@ -430,7 +430,7 @@ plot_lotka_volterra(59, 26, 0.05, 0.002, 0.06, 0.001, 300)
 
 						<div
 							class="workbench"
-							data-id="wb18"
+							data-id="wb17"
 							data-files="python"
 							data-sol-python="dynamic-systems/lotka-volterra.py"
 							data-height="260"
@@ -459,7 +459,7 @@ def simulate(h0, l0, a, b, c, d, steps):
 							<div class="sol__body">
 								<div
 									class="workbench"
-									data-id="sol18"
+									data-id="sol17"
 									data-files="python"
 									data-height="260"
 								>
@@ -513,7 +513,7 @@ plot_lotka_volterra_phase_diagram(100, 30, 0.05, 0.002, 0.06, 0.001, 300)
 					</div>
 				</section>
 
-				<!-- ============================================== Übung 2.19 -->
+				<!-- ============================================== Übung 2.18 -->
 				<section class="exercise" id="ex-adria">
 					<div class="exercise__body">
 						<p>
@@ -599,7 +599,7 @@ plot_lotka_volterra_phase_diagram(100, 30, 0.05, 0.002, 0.06, 0.001, 300)
 
 				<h3 id="uebungen-si">Übungen</h3>
 
-				<!-- ============================================== Übung 2.20 -->
+				<!-- ============================================== Übung 2.19 -->
 				<section class="exercise" id="ex-si-simulieren">
 					<div class="exercise__body">
 						<p>Gegeben ist das SI-Modell:</p>
@@ -630,7 +630,7 @@ plot_lotka_volterra_phase_diagram(100, 30, 0.05, 0.002, 0.06, 0.001, 300)
 
 						<div
 							class="workbench"
-							data-id="wb20"
+							data-id="wb19"
 							data-files="python"
 							data-height="260"
 						>
@@ -655,7 +655,7 @@ def simulate(s0, i0, a, b, steps):
 					</div>
 				</section>
 
-				<!-- ============================================== Übung 2.21 -->
+				<!-- ============================================== Übung 2.20 -->
 				<section class="exercise" id="ex-si-raten">
 					<div class="exercise__body">
 						<ol class="tasks">
@@ -751,7 +751,7 @@ def simulate(s0, i0, a, b, steps):
 
 				<h3 id="uebung-sir">Übung</h3>
 
-				<!-- ============================================== Übung 2.22 -->
+				<!-- ============================================== Übung 2.21 -->
 				<section class="exercise" id="ex-sir">
 					<div class="exercise__body">
 						<p>Implementieren Sie das SIR-Modell auf dem Computer. Wählen Sie dazu</p>
@@ -784,7 +784,7 @@ def simulate(s0, i0, a, b, steps):
 
 						<div
 							class="workbench"
-							data-id="wb22"
+							data-id="wb21"
 							data-files="python"
 							data-sol-python="dynamic-systems/sir.py"
 							data-height="280"
@@ -815,7 +815,7 @@ def simulate(s0, i0, r0, a, b, c, steps):
 							<div class="sol__body">
 								<div
 									class="workbench"
-									data-id="sol22"
+									data-id="sol21"
 									data-files="python"
 									data-seed-python="dynamic-systems/sir.py"
 									data-height="280"

@@ -22,9 +22,10 @@ deckt darum nur den tatsächlich gedruckten Teil ab, beginnend bei
 | ----------------------------------- | ----------------------------------------------------------------- | ------- |
 | `index.html`                        | Kapiteleinstieg, Zitat, Linksammlung                              | –       |
 | `01-regressionsgerade.html`         | «Die Regressionsgerade» (Methode der kleinsten Fehlerquadrate, Schwerpunktsatz) | 1.01–1.04 |
-| `02-regression-mit-python.html`     | «Regression mit Python» (lineare/nicht-lineare Regression, `curve_fit`) | 1.05–1.12 |
-| `03-korrelationskoeffizient.html`   | «Der empirische Korrelationskoeffizient»                          | – |
-| `04-herleitung.html`                | «Allgemeine Herleitung»                                            | 1.13–1.19 |
+| `02-python-matplotlib.html`         | «Vorbereitung: Python und Matplotlib» (Code ausführen, Funktionen, `plt.plot`/`plt.scatter`) | 1.05 |
+| `03-regression-mit-python.html`     | «Regression mit Python» (lineare/nicht-lineare Regression, `curve_fit`) | 1.06–1.12 |
+| `04-korrelationskoeffizient.html`   | «Der empirische Korrelationskoeffizient»                          | – |
+| `05-herleitung.html`                | «Allgemeine Herleitung»                                            | 1.13–1.19 |
 
 Die Übungen sind durchgehend numeriert wie im Skript (`\thechapter.NN`). Jede
 Seite trägt dazu `data-ex-chapter` und `data-ex-offset` auf `<main>`; die
@@ -34,19 +35,39 @@ Mechanik). **`data-ex-chapter="1"`**: `chap_modellieren.tex` ist das erste
 `am-profilb-skript.tex`, also Kapitel 1 in beiden Kursbüchern — anders als bei
 `chap_hypothesen/` braucht es darum keine zusätzliche Annahme. Verschiebt
 sich das Kapitel in einem der beiden Master-Dokumente, muss die Zahl auf
-allen vier Inhaltsseiten angepasst werden.
+allen fünf Inhaltsseiten angepasst werden.
+
+`02-python-matplotlib.html` ist neu (Stand: Commit "moved matplotlib stuff to
+chap_modellieren") — der Abschnitt «Vorbereitung: Python und Matplotlib» kam
+ursprünglich aus `chap_bio.tex` (dessen Vorbereitungsseite in `chap_bio/`
+seither wieder auf Listen/Iterationen gekürzt wurde, ohne die
+Matplotlib-Teile) und steht jetzt im gedruckten Kapitel, direkt vor
+«Regression mit Python». Die alten
+`02-…`/`03-…`/`04-…` Dateien heissen darum jetzt `03-…`/`04-…`/`05-…`
+(`data-ex-offset` von `03-regression-mit-python.html` steigt von 4 auf 5).
+Auf den beiden letzten Seiten bleibt `data-ex-offset` trotzdem bei 12: Die
+neue Übung 1.05 verschiebt alles um eins nach oben, aber im selben Commit ist
+`ex:zweivar` (Übung 1.07 alter Zählung) auskommentiert worden und damit
+weggefallen — die beiden Verschiebungen heben sich für alles ab Abschnitt 4
+gerade auf. Details dazu bei den Abweichungen unten.
 
 ## Bauen
 
-Alle Lösungsvorschläge kommen aus dem Submodul
-`code/gyminf/python/regression/`. `build.py` bündelt sie in
-`assets/examples.js` und kopiert das Gauss-Portrait:
+Fast alle Lösungsvorschläge kommen aus dem Submodul
+`code/gyminf/python/regression/`. Die eine Ausnahme ist Übung 1.05
+(«Vorbereitung: Python und Matplotlib»): deren Lösung ist
+`code/gyminf/python/dynamic-systems/matplotlib-example.py` — der Abschnitt
+kam ursprünglich aus `chap_bio.tex` (siehe oben), die Lösungsdatei blieb
+dabei im `dynamic-systems/`-Ordner des Submoduls, statt nach `regression/`
+zu wandern. `build.py` bündelt beides in `assets/examples.js` und kopiert
+das Gauss-Portrait sowie die Zielgrafik der Matplotlib-Übung:
 
 ```sh
 python3 webskript/chap_regression/build.py     # aus dem Wurzelverzeichnis des Hauptrepos
 ```
 
-Nach jeder Änderung in `code/gyminf/python/regression/` neu ausführen.
+Nach jeder Änderung in `code/gyminf/python/regression/` oder an
+`code/gyminf/python/dynamic-systems/matplotlib-example.py` neu ausführen.
 `assets/examples.js` und `assets/img/` sind erzeugt — nicht von Hand ändern.
 
 ## Anschauen
@@ -67,37 +88,48 @@ also über einen Server öffnen und eine Internetverbindung haben.
   Datensammel-Übungen zu Stau/Hautfläche/Büchern/da-Vinci-Proportionen usw.)
   wird nicht kompiliert und steht darum auch hier nicht. Dasselbe gilt für
   den Abschnitt «Der Regressionseffekt» samt der Skisprung-Übung, der im
-  `.tex` inzwischen auskommentiert ist (`% \subsection{Der
-  Regressionseffekt}` bis `% \end{ex}`, vor «Der empirische
-  Korrelationskoeffizient») — `03-korrelationskoeffizient.html` deckt darum
-  nur noch den Korrelationskoeffizienten ab und hat keine eigenen Übungen
-  mehr.
+  `.tex` inzwischen auskommentiert ist (`% \section{Der Regressionseffekt}`
+  bis `% \end{ex}`, vor «Der empirische Korrelationskoeffizient») —
+  `04-korrelationskoeffizient.html` deckt darum nur noch den
+  Korrelationskoeffizienten ab und hat keine eigenen Übungen mehr. Ebenso
+  auskommentiert (im selben Commit wie der Umzug des Matplotlib-Abschnitts)
+  ist die Zwei-Variablen-Statistik-Übung `ex:zweivar` in «Regression mit
+  Python» — sie stand früher als Übung 1.07 auf dieser Webseite und wurde
+  jetzt entfernt, alle folgenden Übungsnummern rücken entsprechend nach.
 - **Taschenrechner- und GeoGebra-Anleitungen sind auf einen kurzen Hinweis
   gekürzt.** Das gedruckte Kapitel erklärt die Regressionsgerade in einem
   grossen Beispiel (Körpergrösse/Körpermasse) Schritt für Schritt mit
   Bildschirmfotos sowohl für den TI-30 Pro als auch für den TI-Nspire, dazu
   eine eigene Anleitung für GeoGebra. Diese Webseite konzentriert sich
   konsequent auf Python (das ist schliesslich der Sinn einer Seite mit
-  Python-Werkbänken) und verweist stattdessen kurz auf GeoGebra und das im
-  Skript verlinkte Taschenrechner-Video.
+  Python-Werkbänken) und verweist stattdessen kurz auf GeoGebra.
 - **Übungen, die im Skript mit dem Taschenrechner gelöst werden, haben hier
   eine Python-Werkbank.** Betrifft insbesondere die Bremsweg-Alter- und die
-  Schaumkronen-Übung in Abschnitt 1 sowie die Zwei-Variablen-Statistik-Übung
-  (`ex:zweivar`) in Abschnitt 2: Im Skript wird dort `LinReg`/`ExpReg`/
-  `2-Var Stats` des Taschenrechners verwendet, auf der Webseite die
-  entsprechende `numpy`-Berechnung. Die Zahlenwerte sind identisch.
+  Schaumkronen-Übung in Abschnitt 1 sowie die Occasionspreis-, Bremsweg-,
+  Koffein-, Kepler- und Wortschatz-Übungen in Abschnitt 3: Im Skript wird
+  dort `LinReg`/`QuadReg`/`ExpReg`/`LnReg`/`PwrReg` des Taschenrechners
+  verwendet, auf der Webseite die entsprechende `numpy`-Berechnung. Die
+  Zahlenwerte sind identisch.
 - **Die Wetter-Übung ist zusammengeführt.** Im Skript gibt es dazu zwei
   aufeinanderfolgende `ex`-Umgebungen: eine allgemeine Programmieraufgabe
   (die bereits auf die Tabelle der zweiten Übung vorausverweist) und die
   eigentliche Übung mit Tabelle und Zusatzfrage zur Anbaufähigkeit. Diese
-  Webseite fasst beide zu einer Übung (1.05) zusammen, um die Dopplung zu
+  Webseite fasst beide zu einer Übung (1.06) zusammen, um die Dopplung zu
   vermeiden — ähnlich wie bei den vielen einzelnen Spinnwebdiagrammen in
   `chap_bio/`.
 - **Ein Diagramm statt einer Aufgabenserie.** Die fünf Punktwolken, die im
   Skript die Eigenschaften des Korrelationskoeffizienten illustrieren
   (`tasks`-Umgebung mit fünf TikZ-Abbildungen), stehen auf der Webseite als
-  eine Werkbank mit fünf Teildiagrammen (`03-korrelationskoeffizient.html`).
+  eine Werkbank mit fünf Teildiagrammen (`04-korrelationskoeffizient.html`).
   Die zugrundeliegenden Datenpunkte sind identisch mit dem Skript.
+- **«Vorbereitung: Python und Matplotlib» nennt nur zwei der drei im Skript
+  vorgeschlagenen Wege, Python auszuführen.** Die erste im Skript genannte
+  Option («Sie finden unter … eine Online Version dieses Skripts») verweist
+  auf genau diese Webseite selbst — auf der Seite, auf der man diesen Satz
+  liest, ergibt der Verweis keinen Sinn mehr und wird darum weggelassen,
+  gleiches Vorgehen wie beim entsprechenden Absatz in «Regression mit
+  Python» weiter unten. Übrig bleiben die lokale Installation (empfohlen)
+  und der Online-Runner `matplotlib.codeutility.io`.
 - **Eine Übung ohne Musterlösung im Skript hat trotzdem eine Werkbank.** Die
   Statistiker-Übung zu Quadrat- vs. Betragskriterium (1.16, im Skript ohne
   `\sol`) hat eine Werkbank zum Experimentieren, aber **keinen**
@@ -117,7 +149,7 @@ webskript/
 ├── index.html                     Startseite mit Links zu allen Kapiteln
 ├── assets/                        gemeinsam mit chap_html/, chap_svg/, chap_bio/, chap_hypothesen/
 └── chap_regression/
-    ├── index.html, 01-…, 02-…, 03-…, 04-…   Inhalt (der Prosatext steht hier)
+    ├── index.html, 01-…, 02-…, 03-…, 04-…, 05-…   Inhalt (der Prosatext steht hier)
     ├── build.py                              Bündelt das Submodul
     └── assets/
         ├── examples.js                       erzeugt

@@ -45,7 +45,7 @@
 			>
 			<nav>
 				<a href="index.html">Übersicht</a>
-				<a href="01-python-matplotlib.html">1 Python und Matplotlib</a>
+				<a href="01-listen-iterationen.html">1 Listen und Iterationen</a>
 				<a href="02-iterationen.html">2 Iterationen</a>
 				<a href="03-wachstumsmodelle.html">3 Wachstumsmodelle</a>
 				<a href="04-mehrere-zustandsgroessen.html">4 Mehrere Zustandsgrössen</a>
@@ -53,7 +53,7 @@
 			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
 		</header>
 
-		<main class="layout" data-ex-chapter="2" data-ex-offset="1">
+		<main class="layout" data-ex-chapter="2" data-ex-offset="0">
 			<div class="content">
 				<p class="eyebrow">Abschnitt 2</p>
 				<h1>Iterationen</h1>
@@ -288,7 +288,7 @@ plt.show()
 
 				<h2 id="uebungen">Übungen</h2>
 
-				<!-- ============================================== Übung 2.02 -->
+				<!-- ============================================== Übung 2.01 -->
 				<section class="exercise" id="ex-quadrieren">
 					<div class="exercise__body">
 						<p>
@@ -313,7 +313,7 @@ plt.show()
 
 						<div
 							class="workbench"
-							data-id="wb02"
+							data-id="wb01"
 							data-files="python"
 							data-sol-python="dynamic-systems/quadr.py"
 							data-height="220"
@@ -346,7 +346,7 @@ def count_steps(startx, condition):
 								</ol>
 								<div
 									class="workbench"
-									data-id="sol02"
+									data-id="sol01"
 									data-files="python"
 									data-seed-python="dynamic-systems/quadr.py"
 									data-height="220"
@@ -363,7 +363,7 @@ def count_steps(startx, condition):
 					</div>
 				</section>
 
-				<!-- ============================================== Übung 2.03 -->
+				<!-- ============================================== Übung 2.02 -->
 				<section class="exercise" id="ex-spinnweb-programm">
 					<div class="exercise__body">
 						<p>
@@ -382,7 +382,7 @@ def count_steps(startx, condition):
 
 						<div
 							class="workbench"
-							data-id="wb03"
+							data-id="wb02"
 							data-files="python"
 							data-height="220"
 						>
@@ -400,7 +400,7 @@ spinnweb(lambda x: 0.7 * x + 2, 1, 15, xmin=-1, xmax=9)
 					</div>
 				</section>
 
-				<!-- ============================================== Übung 2.04 -->
+				<!-- ============================================== Übung 2.03 -->
 				<section class="exercise" id="ex-r-minus-eins">
 					<div class="exercise__body">
 						<p>
@@ -429,7 +429,7 @@ spinnweb(lambda x: 0.7 * x + 2, 1, 15, xmin=-1, xmax=9)
 
 						<div
 							class="workbench"
-							data-id="wb04"
+							data-id="wb03"
 							data-files="python"
 							data-sol-python="dynamic-systems/recursion1.py"
 							data-height="220"
@@ -482,7 +482,7 @@ def simulate(n, r, startx):
 								</ol>
 								<div
 									class="workbench"
-									data-id="sol04"
+									data-id="sol03"
 									data-files="python"
 									data-seed-python="dynamic-systems/recursion1.py"
 									data-height="220"
@@ -499,7 +499,7 @@ def simulate(n, r, startx):
 					</div>
 				</section>
 
-				<!-- ============================================== Übung 2.05 -->
+				<!-- ============================================== Übung 2.04 -->
 				<section class="exercise" id="ex-fixpunkte-allgemein">
 					<div class="exercise__body">
 						<p>
@@ -555,7 +555,7 @@ def simulate(n, r, startx):
 					</div>
 				</section>
 
-				<!-- ============================================== Übung 2.06 -->
+				<!-- ============================================== Übung 2.05 -->
 				<section class="exercise" id="ex-spiegel-iteration">
 					<div class="exercise__body">
 						<p>
@@ -577,7 +577,7 @@ def simulate(n, r, startx):
 					</div>
 				</section>
 
-				<!-- ============================================== Übung 2.07 -->
+				<!-- ============================================== Übung 2.06 -->
 				<section class="exercise" id="ex-feigenbaum">
 					<div class="exercise__body">
 						<p>
@@ -655,10 +655,12 @@ def simulate(n, r, startx):
 									Pyodide ist das unpraktisch langsam. Diese Werkbank
 									führt den Code darum <em>nicht</em> live aus; probieren
 									Sie ihn stattdessen lokal aus (siehe
-									<a href="01-python-matplotlib.html#code-ausfuehren"
-										>Abschnitt 1</a
-									>), notfalls mit kleineren Werten für <code>nr</code>
-									und <code>steps</code>.
+									<a
+										href="../chap_regression/02-python-matplotlib.html#code-ausfuehren"
+										>Python Code ausführen</a
+									>
+									im Kapitel Regression), notfalls mit kleineren Werten
+									für <code>nr</code> und <code>steps</code>.
 								</p>
 								<p>
 									Unter
@@ -673,7 +675,7 @@ def simulate(n, r, startx):
 					</div>
 				</section>
 
-				<!-- ============================================== Übung 2.08 -->
+				<!-- ============================================== Übung 2.07 -->
 				<section class="exercise" id="ex-fischzucht">
 					<div class="exercise__body">
 						<p>
@@ -709,7 +711,7 @@ def simulate(n, r, startx):
 
 						<div
 							class="workbench"
-							data-id="wb08"
+							data-id="wb07"
 							data-files="python"
 							data-sol-python="dynamic-systems/fishing.py"
 							data-height="260"
@@ -747,7 +749,7 @@ def simulate(r, s, x0, steps):
 								</ol>
 								<div
 									class="workbench"
-									data-id="sol08"
+									data-id="sol07"
 									data-files="python"
 									data-seed-python="dynamic-systems/fishing.py"
 									data-height="260"
@@ -764,7 +766,7 @@ def simulate(r, s, x0, steps):
 					</div>
 				</section>
 
-				<!-- ============================================== Übung 2.09 -->
+				<!-- ============================================== Übung 2.08 -->
 				<section class="exercise" id="ex-bottich">
 					<div class="exercise__body">
 						<p>
@@ -795,7 +797,7 @@ def simulate(r, s, x0, steps):
 
 						<div
 							class="workbench"
-							data-id="wb09"
+							data-id="wb08"
 							data-files="python"
 							data-sol-python="dynamic-systems/bottich.py"
 							data-height="220"
@@ -825,7 +827,7 @@ plt.show()
 								<p>\[x_n = 0.9 \cdot x_{n-1} + 5\]</p>
 								<div
 									class="workbench"
-									data-id="sol09"
+									data-id="sol08"
 									data-files="python"
 									data-seed-python="dynamic-systems/bottich.py"
 									data-height="220"
@@ -844,7 +846,7 @@ plt.show()
 				</section>
 
 				<nav class="pager">
-					<a href="01-python-matplotlib.html">← <b>Abschnitt 1 Python und Matplotlib</b></a>
+					<a href="01-listen-iterationen.html">← <b>Abschnitt 1 Listen und Iterationen</b></a>
 					<a href="03-wachstumsmodelle.html" style="text-align: right"
 						>Abschnitt 3 <b>Das Schaefer'sche Modell →</b></a
 					>

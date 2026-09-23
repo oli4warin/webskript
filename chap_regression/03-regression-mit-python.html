@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>2 Regression mit Python – Regression</title>
+		<title>3 Regression mit Python – Regression</title>
 		<script>
 			(function () {
 				try {
@@ -42,21 +42,22 @@
 			<nav>
 				<a href="index.html">Übersicht</a>
 				<a href="01-regressionsgerade.html">1 Die Regressionsgerade</a>
-				<a href="02-regression-mit-python.html">2 Regression mit Python</a>
-				<a href="03-korrelationskoeffizient.html">3 Korrelationskoeffizient</a>
-				<a href="04-herleitung.html">4 Allgemeine Herleitung</a>
+				<a href="02-python-matplotlib.html">2 Python und Matplotlib</a>
+				<a href="03-regression-mit-python.html">3 Regression mit Python</a>
+				<a href="04-korrelationskoeffizient.html">4 Korrelationskoeffizient</a>
+				<a href="05-herleitung.html">5 Allgemeine Herleitung</a>
 			</nav>
 			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
 		</header>
 
-		<main class="layout" data-ex-chapter="1" data-ex-offset="4">
+		<main class="layout" data-ex-chapter="1" data-ex-offset="5">
 			<div class="content">
-				<p class="eyebrow">Abschnitt 2</p>
+				<p class="eyebrow">Abschnitt 3</p>
 				<h1>Regression mit Python</h1>
 
 				<div class="progress" data-progress>
 					<span class="meter"><i style="width: 0"></i></span>
-					<span data-progress-text>0 von 8 Übungen erledigt</span>
+					<span data-progress-text>0 von 7 Übungen erledigt</span>
 					<button type="button" data-reset>zurücksetzen</button>
 				</div>
 
@@ -104,7 +105,7 @@
 						<dt><code>np.corrcoef(x, y)[0, 1]</code></dt>
 						<dd>
 							liefert den empirischen Korrelationskoeffizienten \(r\)
-							(siehe <a href="03-korrelationskoeffizient.html">Abschnitt 3</a>).
+							(siehe <a href="04-korrelationskoeffizient.html">Abschnitt 4</a>).
 						</dd>
 					</div>
 					<div>
@@ -278,7 +279,7 @@ print(f"G = {G:.2f}, A = {A:.2f}, c = {c:.4f}")
 					Die Grösse \(G \approx 10\,880.01\) ist hier die sogenannte
 					<em>Kapazitätsgrenze</em>: Mehr als etwa 10&nbsp;880 Kranke sind
 					in diesem Modell nie möglich — vergleichen Sie mit
-					<a href="#ex-virus">Übung 1.06</a> weiter unten.
+					<a href="#ex-virus">Übung 1.07</a> weiter unten.
 				</p>
 				<div class="box box--warn">
 					<p class="box__label">Ohne Startwerte geht es meist nicht</p>
@@ -294,7 +295,7 @@ print(f"G = {G:.2f}, A = {A:.2f}, c = {c:.4f}")
 
 				<h2 id="uebungen">Übungen</h2>
 
-				<!-- ============================================== Übung 1.05 -->
+				<!-- ============================================== Übung 1.06 -->
 				<section class="exercise" id="ex-wetter">
 					<div class="exercise__body">
 						<p>
@@ -363,7 +364,7 @@ print(f"G = {G:.2f}, A = {A:.2f}, c = {c:.4f}")
 
 						<div
 							class="workbench"
-							data-id="wb105"
+							data-id="wb106"
 							data-files="python"
 							data-sol-python="regression/wetter-sin.py"
 							data-height="240"
@@ -400,7 +401,7 @@ def modell(x, a, b, c, d):
 								</p>
 								<div
 									class="workbench"
-									data-id="sol105"
+									data-id="sol106"
 									data-files="python"
 									data-seed-python="regression/wetter-sin.py"
 									data-height="240"
@@ -417,7 +418,7 @@ def modell(x, a, b, c, d):
 					</div>
 				</section>
 
-				<!-- ============================================== Übung 1.06 -->
+				<!-- ============================================== Übung 1.07 -->
 				<section class="exercise" id="ex-virus">
 					<div class="exercise__body">
 						<p>
@@ -478,7 +479,7 @@ def modell(x, a, b, c, d):
 
 						<div
 							class="workbench"
-							data-id="wb106"
+							data-id="wb107"
 							data-files="python"
 							data-sol-python="regression/virus.py"
 							data-height="240"
@@ -512,7 +513,7 @@ def logistisch(x, G, A, c):
 								</p>
 								<div
 									class="workbench"
-									data-id="sol106"
+									data-id="sol107"
 									data-files="python"
 									data-seed-python="regression/virus.py"
 									data-height="240"
@@ -522,106 +523,6 @@ def logistisch(x, G, A, c):
 									(<a
 										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/regression/virus.py"
 										>virus.py</a
-									>)
-								</p>
-							</div>
-						</details>
-					</div>
-				</section>
-
-				<!-- ============================================== Übung 1.07 -->
-				<section class="exercise" id="ex-zweivar">
-					<div class="exercise__body">
-						<p>Gegeben sind die folgenden fünf Datenpunkte:</p>
-						<table class="data">
-							<tbody>
-								<tr>
-									<th>x</th>
-									<td>1</td>
-									<td>2</td>
-									<td>3</td>
-									<td>4</td>
-									<td>5</td>
-								</tr>
-								<tr>
-									<th>y</th>
-									<td>2</td>
-									<td>3</td>
-									<td>5</td>
-									<td>4</td>
-									<td>6</td>
-								</tr>
-							</tbody>
-						</table>
-						<ol class="tasks">
-							<li>
-								Berechnen Sie mit numpy die Werte \(n\), \(\bar{x}\), \(\bar{y}\), \(\sum x_i\),
-								\(\sum y_i\), \(\sum x_i \cdot y_i\) und
-								\(\sum x_i^2\).
-							</li>
-							<li>
-								Berechnen Sie damit von Hand die Steigung \(m\) und
-								den y-Achsenabschnitt \(b\) der Regressionsgeraden.
-								<span class="hint">
-									(Hinweis: Es gilt \(s_{xy} = \sum x_i y_i
-									- n \cdot \bar{x} \cdot \bar{y}\) und \(s_{xx} = \sum x_i^2
-									- n \cdot \bar{x}^2\). Benutzen Sie dann
-									<a href="04-herleitung.html#thm-regall">den Satz aus
-										Abschnitt 4</a
-									>.)
-								</span>
-							</li>
-							<li>
-								Kontrollieren Sie Ihr Ergebnis mit
-								<code>np.polyfit</code>.
-							</li>
-						</ol>
-
-						<div
-							class="workbench"
-							data-id="wb107"
-							data-files="python"
-							data-sol-python="regression/zweivar.py"
-							data-height="220"
-						>
-							<template data-seed="python">
-import numpy as np
-
-x = np.array([1, 2, 3, 4, 5])
-y = np.array([2, 3, 5, 4, 6])
-
-# TODO: (a) n, x.mean(), y.mean(), x.sum(), y.sum(), (x*y).sum(), (x**2).sum()
-# TODO: (b) s_xy, s_xx, dann m = s_xy/s_xx und b = y.mean() - m*x.mean()
-# TODO: (c) np.polyfit(x, y, 1) zur Kontrolle
-							</template>
-						</div>
-
-						<details class="sol">
-							<summary>Lösungsvorschlag</summary>
-							<div class="sol__body">
-								<p>
-									<b>(a)</b> \(n=5\), \(\bar{x}=3\), \(\bar{y}=4\), \(\sum x=15\), \(\sum y=20\), \(\sum xy=69\),
-									\(\sum x^2=55\).
-								</p>
-								<p>
-									<b>(b)</b> \(s_{xy} = 69 - 5 \cdot 3 \cdot 4 = 9\) und
-									\(s_{xx} = 55 - 5 \cdot 3^2 = 10\), also \(m = 9/10 = 0.9\)
-									und \(b = 4 - 0.9 \cdot 3 = 1.3\). Die Regressionsgerade lautet
-									\(y = 0.9 \cdot x + 1.3\).
-								</p>
-								<p><b>(c)</b> <code>np.polyfit</code> liefert dieselben Werte.</p>
-								<div
-									class="workbench"
-									data-id="sol107"
-									data-files="python"
-									data-seed-python="regression/zweivar.py"
-									data-height="220"
-								></div>
-								<p class="hint">
-									Lösungsvorschlag
-									(<a
-										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/regression/zweivar.py"
-										>zweivar.py</a
 									>)
 								</p>
 							</div>
@@ -908,7 +809,7 @@ import numpy as np
 t = np.arange(0, 7)
 c = np.array([120, 104, 89, 78, 67, 58, 50])
 
-# TODO: Linearisierung wie in Abschnitt 2 (ln(c) gegen t), dann (b)-(d).
+# TODO: Linearisierung wie in Abschnitt 3 (ln(c) gegen t), dann (b)-(d).
 							</template>
 						</div>
 
@@ -1173,9 +1074,9 @@ y = np.array([20, 42, 52, 62, 68, 73, 80, 88])
 				</section>
 
 				<nav class="pager">
-					<a href="01-regressionsgerade.html">← <b>Abschnitt 1 Die Regressionsgerade</b></a>
-					<a href="03-korrelationskoeffizient.html" style="text-align: right"
-						>Abschnitt 3 <b>Korrelationskoeffizient →</b></a
+					<a href="02-python-matplotlib.html">← <b>Abschnitt 2 Python und Matplotlib</b></a>
+					<a href="04-korrelationskoeffizient.html" style="text-align: right"
+						>Abschnitt 4 <b>Korrelationskoeffizient →</b></a
 					>
 				</nav>
 			</div>

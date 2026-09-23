@@ -12,10 +12,25 @@ zu diesem Kapitel stehen weiter unten.
 | Datei                             | Entspricht im Skript                                    | Übungen |
 | ---------------------------------- | --------------------------------------------------------- | ------- |
 | `index.html`                       | Kapiteleinstieg, Zitat, Linksammlung                       | –       |
-| `01-python-matplotlib.html`        | «Vorbereitung: Python und Matplotlib»                      | 2.01    |
-| `02-iterationen.html`              | «Iterationen» (inkl. Schaefer'sches Modell, Definition)    | 2.02–2.09 |
-| `03-wachstumsmodelle.html`         | «Das Schaefer'sche Modell», Übungsteil                     | 2.10–2.13 |
-| `04-mehrere-zustandsgroessen.html` | «Modelle mit mehreren Zustandsgrössen» (Räuber-Beute, SI, SIR) | 2.14–2.22 |
+| `01-listen-iterationen.html`       | «Vorbereitung: Listen und Iterationen in Python»            | –       |
+| `02-iterationen.html`              | «Iterationen» (inkl. Schaefer'sches Modell, Definition)    | 2.01–2.08 |
+| `03-wachstumsmodelle.html`         | «Das Schaefer'sche Modell», Übungsteil                     | 2.09–2.12 |
+| `04-mehrere-zustandsgroessen.html` | «Modelle mit mehreren Zustandsgrössen» (Räuber-Beute, SI, SIR) | 2.13–2.21 |
+
+Der frühere Abschnitt «Vorbereitung: Python und Matplotlib» (Python-Code
+ausführen, Funktionen, `plt.plot`/`plt.scatter`, inkl. der
+Matplotlib-Nachbau-Übung, ehemals 2.01) wurde im Skript ins Kapitel
+Regression verschoben (`chap_modellieren.tex`, `\autoref{sec:pythonvorbereitung}`)
+und ist dort neu als Webseite umgesetzt, siehe
+[`chap_regression/02-python-matplotlib.html`](../chap_regression/02-python-matplotlib.html)
+(Dateiname zum Zeitpunkt dieser Änderung — dort ggf. nochmals
+gegenprüfen, falls sich das noch verschiebt). `01-listen-iterationen.html`
+(vormals `01-python-matplotlib.html`) deckt seither nur noch den
+schlankeren Rest ab, der in `chap_bio.tex` verblieben ist (Listen,
+Indizes/Slicing, Schleifen) und verweist mit einem Link auf jene Seite für
+die Grundlagen. Dadurch fiel die alte Übung 2.01 weg und **alle übrigen
+Übungsnummern verschoben sich um 1 nach unten** (ehemals 2.02–2.22, neu
+2.01–2.21).
 
 Die Übungen sind durchgehend numeriert wie im Skript (`\thechapter.NN`).
 Jede Seite trägt dazu `data-ex-chapter` und `data-ex-offset` auf `<main>`;
@@ -65,7 +80,6 @@ Volterra** nebeneinander. Für die öffentliche Webseite wurde das geprüft:
 | `hudson.jpg`             | CC BY-SA 4.0 (`pic:hudson`)                                       | Ja, mit Lizenzlink |
 | `wolfram.jpg`            | CC BY-SA 3.0 (`pic:wolfram`)                                      | Ja, mit Lizenzlink |
 | `feigenbaum-diagram.png` | selbst erzeugt (Ausgabe von `feigenbaum.py`)                      | Ja, kein Urheberrecht Dritter |
-| `matplotlib-example.svg` | selbst erzeugt (Ausgabe von `matplotlib-example.py`)              | Ja, kein Urheberrecht Dritter |
 
 «Fair use» erlaubt die Nutzung nur in einem begrenzten, meist redaktionellen
 Rahmen (wie es z.&nbsp;B. Wikipedia für sich beansprucht) — nicht die freie
@@ -81,7 +95,7 @@ entspricht dem bereits bestehenden Vorgehen bei `bezier.jpg` in
 - **Lotka-Porträt fehlt** (siehe oben, Urheberrecht).
 - **Feigenbaumdiagramm bleibt statisch.** `feigenbaum.py` rechnet
   10'000 × 2000 Iterationen in reinem Python — nativ schon mehrere
-  Sekunden, im Browser über Pyodide unpraktikabel langsam. Übung 2.07
+  Sekunden, im Browser über Pyodide unpraktikabel langsam. Übung 2.06
   zeigt darum den Code nur als Listing (`<pre data-src="…">`, nicht
   ausführbar) zusammen mit dem vorgerechneten Bild
   `feigenbaum-diagram.png`, statt als laufende Werkbank.
@@ -92,7 +106,7 @@ entspricht dem bereits bestehenden Vorgehen bei `bezier.jpg` in
   stattdessen eine Werkbank, die das Diagramm für eine editierbare
   Trägerfunktion live zeichnet (`02-iterationen.html`, Abschnitt
   «Spinnwebdiagramm«) — das deckt dieselbe Idee ab und ist zugleich die
-  Grundlage für Übung 2.03 (eigene, allgemeine `spinnweb(f, x0, n)`-Funktion
+  Grundlage für Übung 2.02 (eigene, allgemeine `spinnweb(f, x0, n)`-Funktion
   schreiben). Aus demselben Grund verzichtet die Webseite auf die vielen
   einzelnen Wachstums-/Zerfalls-Abbildungen aus dem Beispielteil
   «Weitere Beispiele» und beschreibt diese stattdessen mit einer
@@ -100,7 +114,7 @@ entspricht dem bereits bestehenden Vorgehen bei `bezier.jpg` in
   Experimentieren.
 - **Vollständig lauffähiger Code statt Zeilenausschnitten.** Das Skript
   zeigt bei `lotka-volterra.py` drei verschiedene `\inputminted`-Ausschnitte
-  (Zeilen 1–25, 25–26, 29–37) für die Übungen 2.14, 2.17 und 2.18. Eine
+  (Zeilen 1–25, 25–26, 29–37) für die Übungen 2.13, 2.16 und 2.17. Eine
   Werkbank muss aber tatsächlich lauffähigen Code enthalten (das ist der
   ganze Sinn dieser Webseite), darum enthält jede Lösungs-Werkbank die
   vollständigen, für die jeweilige Übung nötigen Funktionsdefinitionen
@@ -108,7 +122,7 @@ entspricht dem bereits bestehenden Vorgehen bei `bezier.jpg` in
   demonstriert — nicht den exakten, teils mitten in einer Funktion
   endenden Zeilenausschnitt selbst.
 - **R₀ vs. R₀.** Das SIR-Modell verwendet `R` bereits für die Gruppe der
-  Removed (mit Anfangswert R(0)=0 in Übung 2.22); dieselbe Bezeichnung
+  Removed (mit Anfangswert R(0)=0 in Übung 2.21); dieselbe Bezeichnung
   R₀ wird in der Epidemiologie zugleich für die Basisreproduktionszahl
   verwendet (neu in `chap_bio.tex` ergänzt, siehe Definitionsbox in
   `04-mehrere-zustandsgroessen.html`). Diese Doppelbedeutung ist in der
@@ -116,7 +130,7 @@ entspricht dem bereits bestehenden Vorgehen bei `bezier.jpg` in
   die Webseite schreibt den Anfangswert der Removed-Gruppe darum explizit
   als «R(0)=0», um beim ersten Lesen keine Verwechslung aufkommen zu
   lassen.
-- Übung 2.12 (Rehe/Schaefer'sches Modell) und Übung 2.15
+- Übung 2.11 (Rehe/Schaefer'sches Modell) und Übung 2.14
   (Parameter-Experimente beim Räuber-Beute-Modell) haben im Skript keine
   `\sol`/keinen expliziten Programmierauftrag, verlangen aber inhaltlich
   eine Simulation. Die Webseite gibt ihnen darum zusätzlich eine
