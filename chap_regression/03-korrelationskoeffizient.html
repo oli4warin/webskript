@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>3 Der empirische Korrelationskoeffizient – Regression</title>
+		<script>
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.regression.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="../assets/css/style.css" />
+		<link
+			rel="icon"
+			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235fc9ae'/%3E%3Ctext x='16' y='23' font-family='system-ui,sans-serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230f1f1b'%3EW%3C/text%3E%3C/svg%3E"
+		/>
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html">Regr<span>ession</span></a>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-regressionsgerade.html">1 Die Regressionsgerade</a>
+				<a href="02-regression-mit-python.html">2 Regression mit Python</a>
+				<a href="03-korrelationskoeffizient.html">3 Korrelationskoeffizient</a>
+				<a href="04-herleitung.html">4 Allgemeine Herleitung</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main class="layout" data-ex-chapter="1" data-ex-offset="12">
+			<div class="content">
+				<p class="eyebrow">Abschnitt 3</p>
+				<h1>Der empirische Korrelationskoeffizient</h1>
+
+				<h2 id="definition">Definition und Beispiel</h2>
+				<p>
+					Bei der Regression haben wir bereits den sogenannten empirischen
+					Korrelationskoeffizienten <var>r</var> angesprochen (zum Beispiel
+					über <code>np.corrcoef</code>). Wir legen unseren Fokus nun
+					darauf, die Bedeutung dieser Zahl genauer zu verstehen.
+				</p>
+
+				<div class="box">
+					<p class="box__label" id="def-kor">Definition: Empirischer Korrelationskoeffizient</p>
+					<p>
+						Gegeben seien die Datenpunkte (x<sub>1</sub>,y<sub>1</sub>), …,
+						(x<sub>n</sub>,y<sub>n</sub>). Wir definieren dann den
+						<em>empirischen Korrelationskoeffizienten</em> wie folgt:
+					</p>
+					<p style="text-align: center">
+						r = s<sub>xy</sub> / √(s<sub>xx</sub> · s<sub>yy</sub>),
+					</p>
+					<p>wobei</p>
+					<p style="text-align: center">
+						s<sub>xy</sub> = Σ (x<sub>i</sub>−x̄)·(y<sub>i</sub>−ȳ),
+						&nbsp; s<sub>xx</sub> = Σ (x<sub>i</sub>−x̄)²
+						&nbsp;und&nbsp; s<sub>yy</sub> = Σ (y<sub>i</sub>−ȳ)².
+					</p>
+				</div>
+
+				<p>
+					Diese Definition wirkt im ersten Moment etwas abschreckend. Am
+					einfachsten ist es, wenn wir uns dazu ein Beispiel anschauen.
+				</p>
+
+				<p class="hint">
+					<b>Beispiel.</b> Punkte A(3,3), B(1,2), C(2,1) — Berechnung von
+					<var>r</var> mit Hilfe der Definition
+				</p>
+				<div class="workbench" data-id="wbex1" data-files="python" data-height="240">
+					<template data-seed="python">
+import numpy as np
+
+x = np.array([3, 1, 2])
+y = np.array([3, 2, 1])
+
+x_mean, y_mean = x.mean(), y.mean()
+s_xy = np.sum((x - x_mean) * (y - y_mean))
+s_xx = np.sum((x - x_mean) ** 2)
+s_yy = np.sum((y - y_mean) ** 2)
+r = s_xy / np.sqrt(s_xx * s_yy)
+print(f"s_xy={s_xy}, s_xx={s_xx}, s_yy={s_yy}")
+print("r =", r)
+
+# Kontrolle
+print("Kontrolle mit np.corrcoef:", np.corrcoef(x, y)[0, 1])
+					</template>
+				</div>
+
+				<h2 id="eigenschaften">Eigenschaften von r</h2>
+				<p>Für den empirischen Korrelationskoeffizienten <var>r</var> gilt immer</p>
+				<p style="text-align: center">−1 ≤ r ≤ 1.</p>
+
+				<p class="hint">
+					<b>Zum Ausprobieren.</b> Fünf Punktwolken mit unterschiedlichem
+					Korrelationskoeffizienten
+				</p>
+				<div class="workbench" data-id="wbex2" data-files="python" data-height="520">
+					<template data-seed="python">
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Fuenf Beispiel-Punktwolken mit unterschiedlichem Korrelationskoeffizienten r.
+faelle = {
+    "exakt auf einer Geraden": [
+        (3.0018,3.4014),(0.7174,1.5740),(1.4195,2.1356),(1.0260,1.8208),
+        (1.7052,2.3642),(4.3835,4.5068),(3.9539,4.1631),(3.3154,3.6524),
+        (3.1094,3.4875),(1.3675,2.0940),(1.7201,2.3761),(3.8018,4.0414),
+        (1.1608,1.9287),(4.8829,4.9064),(1.0571,1.8457),(2.8072,3.2458),
+        (3.8602,4.0882),(4.1282,4.3026),(0.6847,1.5478),(3.3962,3.7170),
+    ],
+    "r = 0.92 (steigender Trend)": [
+        (2.64369,2.963257),(4.282399,4.60808),(3.76069,4.548803),(1.007606,1.363695),
+        (0.7113252,-0.1214673),(4.379118,3.701605),(3.918538,4.008684),(3.57597,5.370507),
+        (2.721527,2.319372),(0.9058399,0.5095736),(0.8483407,0.4662049),(1.893792,2.868083),
+        (3.456522,3.53839),(0.8145312,0.7761911),(0.4239677,0.2889099),(0.2601869,1.635291),
+        (1.285071,1.615109),(2.820041,3.632526),(4.44069,4.819443),(2.466774,3.120282),
+    ],
+    "r = -0.54 (fallender Trend)": [
+        (2.699061,1.972597),(1.495184,1.604428),(0.4616351,3.72253),(2.349524,2.228503),
+        (4.922075,3.017222),(1.531391,4.206804),(2.511203,3.518301),(4.741368,1.559269),
+        (3.825396,1.043265),(0.86552,3.49823),(1.787507,3.12102),(2.028006,4.043522),
+        (2.593012,2.194169),(4.617354,1.553184),(1.251901,2.845943),(2.414597,2.487232),
+        (2.707164,2.012513),(1.990344,4.543014),(1.031867,3.81085),(2.98174,3.672397),
+    ],
+    "r = -0.99 (nah an der Geraden)": [
+        (3.812756,2.509236),(4.290004,2.036362),(2.255944,3.815022),(4.428849,1.810197),
+        (4.720925,1.597861),(4.912751,1.560656),(2.244059,3.689125),(4.368093,1.790596),
+        (4.053547,1.912645),(1.046369,4.372987),(4.902131,1.478915),(3.382225,2.657777),
+        (1.623395,4.104786),(2.500223,3.342199),(1.483016,3.926244),(1.647546,3.977731),
+        (2.411269,3.09508),(4.151762,2.142941),(0.9395014,4.424394),(4.186489,2.259767),
+    ],
+    "r = 0.32 (weit weg von der Geraden)": [
+        (4.764369,1.486773),(0.435139,0.7442385),(1.946685,4.687594),(0.0238582,-0.8334849),
+        (4.718684,0.668222),(2.221915,1.051965),(2.589297,1.159005),(4.531441,5.451987),
+        (2.969259,3.993313),(4.910615,5.076664),(2.345389,0.1080648),(3.10596,2.517448),
+        (1.174873,2.481106),(1.756514,2.107178),(1.488538,1.420274),(0.8043282,4.069927),
+        (0.158956,3.110291),(3.913447,2.33702),(1.347348,1.268542),(2.096054,1.962924),
+    ],
+}
+
+fig, axes = plt.subplots(2, 3, figsize=(10, 6))
+for ax, (titel, punkte) in zip(axes.flat, faelle.items()):
+    xs = np.array([p[0] for p in punkte])
+    ys = np.array([p[1] for p in punkte])
+    r = np.corrcoef(xs, ys)[0, 1]
+    m, b = np.polyfit(xs, ys, 1)
+
+    ax.scatter(xs, ys, s=12, color="black")
+    linie = np.linspace(min(xs), max(xs), 20)
+    ax.plot(linie, m * linie + b, color="red")
+    ax.set_title(f"{titel}\nr = {r:.2f}", fontsize=8)
+axes.flat[-1].axis("off")
+plt.tight_layout()
+plt.show()
+					</template>
+				</div>
+				<ul>
+					<li>Falls r = ±1 ist, liegen alle Datenpunkte exakt auf einer Geraden.</li>
+					<li>Falls r &gt; 0 ist, liegt ein steigender Trend vor.</li>
+					<li>Falls r &lt; 0 ist, liegt ein fallender Trend vor.</li>
+					<li>
+						Falls |r| gross ist (d.h. nahe bei 1), liegen die
+						Datenpunkte in der Nähe der Regressionsgeraden.
+					</li>
+					<li>
+						Falls |r| klein ist (d.h. nahe bei 0), liegen die
+						Datenpunkte weiter von der Regressionsgeraden entfernt.
+					</li>
+				</ul>
+
+				<div class="box box--warn">
+					<p class="box__label">Korrelation ist nicht Kausalität</p>
+					<p>
+						Ein grosser Betrag von <var>r</var> bedeutet nur, dass ein
+						<em>statistischer</em> Zusammenhang zwischen den beiden
+						Grössen besteht — er sagt nichts darüber aus, ob die eine
+						Grösse die andere auch <em>verursacht</em>. Ein klassisches
+						Beispiel: An Tagen mit hohem Glace-Konsum ertrinken auch mehr
+						Menschen. Der Grund dafür ist aber nicht, dass Glace-Essen
+						gefährlich wäre, sondern dass an heissen Tagen sowohl mehr
+						Glace gegessen wird als auch mehr Menschen baden gehen. Die
+						Temperatur ist hier eine gemeinsame Ursache
+						(<em>Drittvariable</em>) für beide beobachteten Grössen. Man
+						fasst dies oft mit dem Merksatz «Korrelation ist nicht
+						Kausalität» zusammen.
+					</p>
+				</div>
+
+				<nav class="pager">
+					<a href="02-regression-mit-python.html">← <b>Abschnitt 2 Regression mit Python</b></a>
+					<a href="04-herleitung.html" style="text-align: right"
+						>Abschnitt 4 <b>Allgemeine Herleitung →</b></a
+					>
+				</nav>
+			</div>
+
+			<aside class="minitoc">
+				<h2>Auf dieser Seite</h2>
+				<ol></ol>
+			</aside>
+		</main>
+
+		<script src="assets/examples.js"></script>
+		<script src="../assets/js/editor.js"></script>
+		<script src="../assets/js/pyrunner.js"></script>
+		<script src="../assets/js/site.js"></script>
+	</body>
+</html>

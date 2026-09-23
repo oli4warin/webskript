@@ -1,0 +1,1178 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>2 Regression mit Python – Regression</title>
+		<script>
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.regression.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="../assets/css/style.css" />
+		<link
+			rel="icon"
+			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235fc9ae'/%3E%3Ctext x='16' y='23' font-family='system-ui,sans-serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230f1f1b'%3EW%3C/text%3E%3C/svg%3E"
+		/>
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html">Regr<span>ession</span></a>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-regressionsgerade.html">1 Die Regressionsgerade</a>
+				<a href="02-regression-mit-python.html">2 Regression mit Python</a>
+				<a href="03-korrelationskoeffizient.html">3 Korrelationskoeffizient</a>
+				<a href="04-herleitung.html">4 Allgemeine Herleitung</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main class="layout" data-ex-chapter="1" data-ex-offset="4">
+			<div class="content">
+				<p class="eyebrow">Abschnitt 2</p>
+				<h1>Regression mit Python</h1>
+
+				<div class="progress" data-progress>
+					<span class="meter"><i style="width: 0"></i></span>
+					<span data-progress-text>0 von 8 Übungen erledigt</span>
+					<button type="button" data-reset>zurücksetzen</button>
+				</div>
+
+				<p>
+					Sobald es um grössere Datenmengen oder um schöne Grafiken geht,
+					sind Taschenrechner und Tabellenkalkulation schnell am Ende. In
+					der Praxis werden Regressionen deshalb meist programmiert. Wir
+					benutzen dazu Python mit zwei Bibliotheken:
+				</p>
+				<ul>
+					<li>
+						<code>numpy</code> (meistens als <code>np</code> importiert)
+						für das Rechnen mit Zahlenlisten,
+					</li>
+					<li>
+						<code>matplotlib.pyplot</code> (meistens als
+						<code>plt</code> importiert) für die grafische Darstellung.
+					</li>
+				</ul>
+
+				<h2 id="befehle">Die wichtigsten Befehle</h2>
+				<dl class="deflist">
+					<div>
+						<dt><code>np.array([2, 3, 5])</code></dt>
+						<dd>
+							erzeugt ein <em>Array</em>, also eine Liste von Zahlen, mit
+							der man rechnen kann. Es gilt zum Beispiel
+							<code>2 * np.array([2, 3, 5])</code> =
+							<code>np.array([4, 6, 10])</code>.
+						</dd>
+					</div>
+					<div>
+						<dt><code>np.polyfit(x, y, 1)</code></dt>
+						<dd>
+							berechnet die Regressionsgerade zu den Datenpunkten und
+							liefert die Liste <code>[m, b]</code> mit der Steigung
+							<var>m</var> und dem y-Achsenabschnitt <var>b</var> zurück.
+							Die <code>1</code> steht für den Grad des Polynoms: Mit
+							einer <code>2</code> erhalten wir eine <em>quadratische</em>
+							Regression (also die Liste <code>[a, b, c]</code> zu
+							y = a·x² + b·x + c).
+						</dd>
+					</div>
+					<div>
+						<dt><code>np.corrcoef(x, y)[0, 1]</code></dt>
+						<dd>
+							liefert den empirischen Korrelationskoeffizienten <var>r</var>
+							(siehe <a href="03-korrelationskoeffizient.html">Abschnitt 3</a>).
+						</dd>
+					</div>
+					<div>
+						<dt><code>np.linspace(0, 5, 100)</code></dt>
+						<dd>
+							liefert 100 gleichmässig verteilte Werte zwischen 0 und 5.
+							Damit zeichnen wir Kurven.
+						</dd>
+					</div>
+					<div>
+						<dt><code>plt.scatter(x, y)</code></dt>
+						<dd>
+							zeichnet ein Streudiagramm, <code>plt.plot(x, y)</code>
+							verbindet die Punkte zu einer Linie.
+						</dd>
+					</div>
+				</dl>
+
+				<h2 id="lineare-regression">Lineare Regression</h2>
+				<p>
+					Wir bestimmen die Regressionsgerade zu den Daten aus
+					<a href="01-regressionsgerade.html#tab-groessemasse"
+						>Abschnitt 1</a
+					>
+					(Körpergrösse gegen Körpermasse) noch einmal, diesmal mit Python:
+				</p>
+
+				<p class="hint"><b>Beispiel.</b> Lineare Regression mit numpy</p>
+				<div class="workbench" data-id="wbex1" data-files="python" data-height="360">
+					<template data-seed="python">
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Daten: Körpergrösse (in cm) und Körpermasse (in kg)
+x = np.array([185, 170, 201, 162, 188, 171])
+y = np.array([85, 64, 87, 50, 83, 73])
+
+# Regressionsgerade y = m * x + b bestimmen
+m, b = np.polyfit(x, y, 1)
+r = np.corrcoef(x, y)[0, 1]
+
+print(f"m = {m:.4f}, b = {b:.4f}, r = {r:.4f}")
+# m = 0.9095, b = -89.5941, r = 0.9035
+
+# Voraussage für eine Person von 175 cm
+print(f"f(175) = {m * 175 + b:.1f} kg")   # f(175) = 69.6 kg
+
+# Streudiagramm und Regressionsgerade zeichnen
+xs = np.array([160, 205])   # zwei Punkte genügen für eine Gerade
+plt.scatter(x, y, color="red", label="Messdaten")
+plt.plot(xs, m * xs + b, color="blue", label=f"y = {m:.2f}x - {abs(b):.2f}")
+
+plt.title("Körpergrösse und Körpermasse")
+plt.xlabel("Körpergrösse [cm]")
+plt.ylabel("Körpermasse [kg]")
+plt.legend()
+plt.grid(True)
+plt.show()
+					</template>
+				</div>
+				<p>
+					Wir erhalten also genau dieselbe Regressionsgerade
+					y ≈ 0.9095·x − 89.5941 und denselben empirischen
+					Korrelationskoeffizienten r ≈ 0.9035 wie zuvor mit dem
+					Taschenrechner. Das ist wenig überraschend: Der Rechner und
+					Python lösen dasselbe Minimierungsproblem, nur eben mit
+					unterschiedlichen Knöpfen.
+				</p>
+
+				<h2 id="linearisierung">Nicht-lineare Regression durch Linearisierung</h2>
+				<p>
+					Für eine <em>exponentielle</em> Regression suchen wir eine
+					Funktion der Form h(t) = a · e<sup>k·t</sup>. Logarithmieren wir
+					diese Gleichung, so erhalten wir
+				</p>
+				<p style="text-align: center">ln(h(t)) = k·t + ln(a),</p>
+				<p>
+					also einen <em>linearen</em> Zusammenhang zwischen t und ln(h).
+					Damit lässt sich das Problem auf eine lineare Regression
+					zurückführen: Wir führen die lineare Regression nicht mit den
+					Daten (t<sub>i</sub>, h<sub>i</sub>), sondern mit den Daten
+					(t<sub>i</sub>, ln(h<sub>i</sub>)) durch. Genauso rechnet auch der
+					Taschenrechner.
+				</p>
+
+				<p class="hint">
+					<b>Beispiel.</b> Exponentielle Regression durch Linearisierung —
+					die Schaumkronen-Daten aus
+					<a href="01-regressionsgerade.html#ex-schaumkrone">Abschnitt 1</a>
+				</p>
+				<div class="workbench" data-id="wbex2" data-files="python" data-height="360">
+					<template data-seed="python">
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Zeit (in min) und Höhe der Schaumkrone (in mm)
+t = np.array([0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5])
+h = np.array([90, 62, 43, 30, 21, 14, 10, 7, 5, 3, 2])
+
+# Lineare Regression von ln(h) gegen t: ln(h) = k * t + ln(a)
+k, lna = np.polyfit(t, np.log(h), 1)
+a = np.exp(lna)
+q = np.exp(k)   # Faktor, mit dem sich die Höhe pro Minute ändert
+
+print(f"h(t) = {a:.2f} * e^({k:.2f} * t) = {a:.2f} * {q:.2f}^t")
+# h(t) = 92.09 * e^(-0.75 * t) = 92.09 * 0.47^t
+print(f"Abnahme pro Minute: {(1 - q) * 100:.1f} %")   # 52.8 %
+
+ts = np.linspace(0, 5, 100)
+plt.scatter(t, h, color="red", label="Messdaten")
+plt.plot(ts, a * np.exp(k * ts), color="blue", label="Regressionskurve")
+
+plt.title("Höhe der Schaumkrone")
+plt.xlabel("Zeit [min]")
+plt.ylabel("Schaumhöhe [mm]")
+plt.legend()
+plt.grid(True)
+plt.show()
+					</template>
+				</div>
+
+				<div class="box box--note">
+					<p class="box__label">Derselbe Trick für eine Potenzregression</p>
+					<p>
+						Für y = a · x<sup>n</sup> (<em>Potenzregression</em>) gilt
+						ln(y) = n · ln(x) + ln(a). Wir führen die lineare Regression
+						also mit den Daten (ln(x<sub>i</sub>), ln(y<sub>i</sub>)) durch,
+						in Python mit
+						<code>np.polyfit(np.log(x), np.log(y), 1)</code>.
+					</p>
+				</div>
+
+				<h2 id="beliebige-modelle">Beliebige Modelle</h2>
+				<p>
+					Nicht jedes Modell lässt sich linearisieren (zum Beispiel eine
+					sinusförmige oder eine logistische Funktion). Für solche Fälle
+					gibt es in der Bibliothek <code>scipy</code> die Funktion
+					<code>curve_fit</code>: Wir geben die Gestalt der gesuchten
+					Funktion als Python-Funktion vor, und <code>curve_fit</code>
+					bestimmt diejenigen Parameter, für welche die Summe der
+					Residuenquadrate minimal wird.
+				</p>
+
+				<p class="hint">
+					<b>Beispiel.</b> Logistische Regression mit
+					<code>curve_fit</code>
+				</p>
+				<div class="workbench" data-id="wbex3" data-files="python" data-height="280">
+					<template data-seed="python">
+import numpy as np
+from scipy.optimize import curve_fit
+
+# Woche und Anzahl Kranke am Ende der Woche
+x = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])
+y = np.array([2, 4, 7, 17, 32, 60, 129, 254, 502, 979,
+              1862, 3365, 5614, 8076, 9645, 9986])
+
+# Gestalt des Modells: logistisches Wachstum
+def modell(x, G, A, c):
+    return G / (1 + A * np.exp(-c * x))
+
+# p0 sind die Startwerte für die Suche nach den Parametern
+parameter, _ = curve_fit(modell, x, y, p0=(11000, 70000, 0.9))
+G, A, c = parameter
+
+print(f"G = {G:.2f}, A = {A:.2f}, c = {c:.4f}")
+# G = 10880.01, A = 70563.49, c = 0.8681
+					</template>
+				</div>
+				<p>
+					Die Grösse G ≈ 10&nbsp;880.01 ist hier die sogenannte
+					<em>Kapazitätsgrenze</em>: Mehr als etwa 10&nbsp;880 Kranke sind
+					in diesem Modell nie möglich — vergleichen Sie mit
+					<a href="#ex-virus">Übung 1.06</a> weiter unten.
+				</p>
+				<div class="box box--warn">
+					<p class="box__label">Ohne Startwerte geht es meist nicht</p>
+					<p>
+						Anders als <code>np.polyfit</code> sucht
+						<code>curve_fit</code> die Parameter iterativ, ausgehend von
+						den Startwerten <code>p0</code>. Ohne sinnvolle Startwerte
+						findet <code>curve_fit</code> die Parameter oft gar nicht (oder
+						ein falsches Minimum). Eine grobe Schätzung «von Auge» reicht
+						meistens.
+					</p>
+				</div>
+
+				<h2 id="uebungen">Übungen</h2>
+
+				<!-- ============================================== Übung 1.05 -->
+				<section class="exercise" id="ex-wetter">
+					<div class="exercise__body">
+						<p>
+							Für die Wetterstation Basel/Binningen sind die folgenden
+							monatlichen Temperaturdurchschnitte bekannt:
+						</p>
+						<table class="data">
+							<tbody>
+								<tr>
+									<th>Monat</th>
+									<td>1</td>
+									<td>2</td>
+									<td>3</td>
+									<td>4</td>
+									<td>5</td>
+									<td>6</td>
+									<td>7</td>
+									<td>8</td>
+									<td>9</td>
+									<td>10</td>
+									<td>11</td>
+									<td>12</td>
+								</tr>
+								<tr>
+									<th>Temperatur (°C)</th>
+									<td>1.6</td>
+									<td>2.7</td>
+									<td>6.6</td>
+									<td>10.0</td>
+									<td>14.2</td>
+									<td>17.4</td>
+									<td>19.7</td>
+									<td>19.1</td>
+									<td>15.1</td>
+									<td>10.9</td>
+									<td>5.5</td>
+									<td>2.6</td>
+								</tr>
+							</tbody>
+						</table>
+						<ol class="tasks">
+							<li>
+								Stellen Sie die Daten in einem Streudiagramm dar und
+								passen Sie mit <code>curve_fit</code> eine Funktion der
+								Form f(x) = a · sin(b·x + c) + d an die Daten an.
+								Zeichnen Sie die gefundene Kurve zusammen mit den Daten.
+								<span class="hint">
+									(Hinweis: Wählen Sie als Startwerte
+									<code>p0=(9, 0.5, -2, 10)</code>. Ohne sinnvolle
+									Startwerte findet <code>curve_fit</code> die
+									Parameter nicht.)
+								</span>
+							</li>
+							<li>
+								Unter der <em>minimalen Wachstumszeit</em> einer
+								Kulturpflanze versteht man die kleinste Anzahl Tage im
+								Jahr, an denen die Tagesmitteltemperatur über 10 °C
+								liegen muss, damit die Pflanze erfolgreich angebaut
+								werden kann. Ist die Region Basel für den Anbau einer
+								Nutzpflanze mit einer minimalen Wachstumszeit von 190
+								Tagen geeignet? Werten Sie dazu Ihr Modell an vielen
+								Tagen im Jahr aus und zählen Sie, an wie vielen Tagen
+								die Temperatur über 10 °C liegt.
+							</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb105"
+							data-files="python"
+							data-sol-python="regression/wetter-sin.py"
+							data-height="240"
+						>
+							<template data-seed="python">
+import numpy as np
+from scipy.optimize import curve_fit
+
+monat = np.arange(1, 13)
+temperatur = np.array(
+    [1.6, 2.7, 6.6, 10.0, 14.2, 17.4, 19.7, 19.1, 15.1, 10.9, 5.5, 2.6]
+)
+
+def modell(x, a, b, c, d):
+    return a * np.sin(b * x + c) + d
+
+# TODO: curve_fit mit p0=(9, 0.5, -2, 10) aufrufen, plotten, dann fuer (b)
+# viele Tage im Jahr auswerten und zaehlen.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>
+									<b>(a)</b> f(x) ≈ 8.92 · sin(0.53·x − 2.16) + 10.54
+								</p>
+								<p>
+									<b>(b)</b> Die Daten lassen auf etwa 188 Tage im Jahr
+									mit Tagesmitteltemperatur über 10 °C schliessen. Die
+									Region ist für eine Pflanze mit einer minimalen
+									Wachstumszeit von 190 Tagen also knapp
+									<em>nicht</em> geeignet.
+								</p>
+								<div
+									class="workbench"
+									data-id="sol105"
+									data-files="python"
+									data-seed-python="regression/wetter-sin.py"
+									data-height="240"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/regression/wetter-sin.py"
+										>wetter-sin.py</a
+									>)
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 1.06 -->
+				<section class="exercise" id="ex-virus">
+					<div class="exercise__body">
+						<p>
+							Für die Ausbreitung einer Viruserkrankung wurde die Anzahl
+							Kranker am Ende jeder Woche erfasst:
+						</p>
+						<table class="data">
+							<tbody>
+								<tr>
+									<th>Woche</th>
+									<td>1</td>
+									<td>2</td>
+									<td>3</td>
+									<td>4</td>
+									<td>5</td>
+									<td>6</td>
+									<td>7</td>
+									<td>8</td>
+									<td>9</td>
+									<td>10</td>
+									<td>11</td>
+									<td>12</td>
+									<td>13</td>
+									<td>14</td>
+									<td>15</td>
+									<td>16</td>
+								</tr>
+								<tr>
+									<th>Kranke</th>
+									<td>2</td>
+									<td>4</td>
+									<td>7</td>
+									<td>17</td>
+									<td>32</td>
+									<td>60</td>
+									<td>129</td>
+									<td>254</td>
+									<td>502</td>
+									<td>979</td>
+									<td>1862</td>
+									<td>3365</td>
+									<td>5614</td>
+									<td>8076</td>
+									<td>9645</td>
+									<td>9986</td>
+								</tr>
+							</tbody>
+						</table>
+						<ol class="tasks">
+							<li>
+								Wie lautet die Gleichung der entsprechenden
+								Regressionskurve, wenn wir annehmen, dass die
+								Ausbreitung logistisch erfolgt (siehe Beispiel oben)?
+								Runden Sie die Parameter auf zwei Nachkommastellen.
+							</li>
+							<li>Gibt es nach diesem Modell jemals mehr als 11'000 Kranke?</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb106"
+							data-files="python"
+							data-sol-python="regression/virus.py"
+							data-height="240"
+						>
+							<template data-seed="python">
+import numpy as np
+from scipy.optimize import curve_fit
+
+woche = np.arange(1, 17)
+kranke = np.array([2, 4, 7, 17, 32, 60, 129, 254, 502, 979,
+                    1862, 3365, 5614, 8076, 9645, 9986])
+
+def logistisch(x, G, A, c):
+    return G / (1 + A * np.exp(-c * x))
+
+# TODO: curve_fit mit p0=(11000, 70000, 0.9) aufrufen.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>
+									<b>(a)</b> y ≈ 10&nbsp;880.01 / (1 + 70&nbsp;563.49 ·
+									e<sup>−0.87·x</sup>)
+								</p>
+								<p>
+									<b>(b)</b> Nein: Die Anzahl Kranker kann in diesem
+									Modell niemals G ≈ 10&nbsp;880.01 übersteigen, bleibt
+									also immer unter 11'000.
+								</p>
+								<div
+									class="workbench"
+									data-id="sol106"
+									data-files="python"
+									data-seed-python="regression/virus.py"
+									data-height="240"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/regression/virus.py"
+										>virus.py</a
+									>)
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 1.07 -->
+				<section class="exercise" id="ex-zweivar">
+					<div class="exercise__body">
+						<p>Gegeben sind die folgenden fünf Datenpunkte:</p>
+						<table class="data">
+							<tbody>
+								<tr>
+									<th>x</th>
+									<td>1</td>
+									<td>2</td>
+									<td>3</td>
+									<td>4</td>
+									<td>5</td>
+								</tr>
+								<tr>
+									<th>y</th>
+									<td>2</td>
+									<td>3</td>
+									<td>5</td>
+									<td>4</td>
+									<td>6</td>
+								</tr>
+							</tbody>
+						</table>
+						<ol class="tasks">
+							<li>
+								Berechnen Sie mit numpy die Werte n, x̄, ȳ, Σx<sub>i</sub>,
+								Σy<sub>i</sub>, Σx<sub>i</sub>·y<sub>i</sub> und
+								Σx<sub>i</sub>².
+							</li>
+							<li>
+								Berechnen Sie damit von Hand die Steigung <var>m</var> und
+								den y-Achsenabschnitt <var>b</var> der Regressionsgeraden.
+								<span class="hint">
+									(Hinweis: Es gilt s<sub>xy</sub> = Σx<sub>i</sub>y<sub>i</sub>
+									− n·x̄·ȳ und s<sub>xx</sub> = Σx<sub>i</sub>²
+									− n·x̄². Benutzen Sie dann
+									<a href="04-herleitung.html#thm-regall">den Satz aus
+										Abschnitt 4</a
+									>.)
+								</span>
+							</li>
+							<li>
+								Kontrollieren Sie Ihr Ergebnis mit
+								<code>np.polyfit</code>.
+							</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb107"
+							data-files="python"
+							data-sol-python="regression/zweivar.py"
+							data-height="220"
+						>
+							<template data-seed="python">
+import numpy as np
+
+x = np.array([1, 2, 3, 4, 5])
+y = np.array([2, 3, 5, 4, 6])
+
+# TODO: (a) n, x.mean(), y.mean(), x.sum(), y.sum(), (x*y).sum(), (x**2).sum()
+# TODO: (b) s_xy, s_xx, dann m = s_xy/s_xx und b = y.mean() - m*x.mean()
+# TODO: (c) np.polyfit(x, y, 1) zur Kontrolle
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>
+									<b>(a)</b> n=5, x̄=3, ȳ=4, Σx=15, Σy=20, Σxy=69,
+									Σx²=55.
+								</p>
+								<p>
+									<b>(b)</b> s<sub>xy</sub> = 69 − 5·3·4 = 9 und
+									s<sub>xx</sub> = 55 − 5·3² = 10, also m = 9/10 = 0.9
+									und b = 4 − 0.9·3 = 1.3. Die Regressionsgerade lautet
+									y = 0.9·x + 1.3.
+								</p>
+								<p><b>(c)</b> <code>np.polyfit</code> liefert dieselben Werte.</p>
+								<div
+									class="workbench"
+									data-id="sol107"
+									data-files="python"
+									data-seed-python="regression/zweivar.py"
+									data-height="220"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/regression/zweivar.py"
+										>zweivar.py</a
+									>)
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 1.08 -->
+				<section class="exercise" id="ex-auto">
+					<div class="exercise__body">
+						<p>
+							Ein Autohändler notiert für sechs gleichaltrige Occasionen
+							des gleichen Modells den Kilometerstand x (in 1000 km) und
+							den Verkaufspreis y (in 1000 CHF):
+						</p>
+						<table class="data">
+							<tbody>
+								<tr>
+									<th>x (1000 km)</th>
+									<td>15</td>
+									<td>38</td>
+									<td>52</td>
+									<td>71</td>
+									<td>96</td>
+									<td>120</td>
+								</tr>
+								<tr>
+									<th>y (1000 CHF)</th>
+									<td>24.5</td>
+									<td>20.8</td>
+									<td>18.9</td>
+									<td>15.4</td>
+									<td>12.1</td>
+									<td>9.0</td>
+								</tr>
+							</tbody>
+						</table>
+						<ol class="tasks">
+							<li>
+								Führen Sie eine lineare Regression durch und geben Sie
+								die Gleichung der Regressionsgeraden sowie den
+								empirischen Korrelationskoeffizienten <var>r</var> an.
+							</li>
+							<li>
+								Was bedeuten die Steigung und der y-Achsenabschnitt in
+								dieser Situation konkret?
+							</li>
+							<li>
+								Welchen Preis erwarten Sie für ein Auto mit einem
+								Kilometerstand von 60'000 km, welchen für ein Auto mit
+								150'000 km?
+							</li>
+							<li>
+								Bei welchem Kilometerstand wäre das Auto nach diesem
+								Modell gratis? Was sagt das über die Aussagekraft des
+								Modells?
+							</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb108"
+							data-files="python"
+							data-sol-python="regression/auto.py"
+							data-height="240"
+						>
+							<template data-seed="python">
+import numpy as np
+
+km = np.array([15, 38, 52, 71, 96, 120])
+preis = np.array([24.5, 20.8, 18.9, 15.4, 12.1, 9.0])
+
+# TODO: (a)-(d) siehe Aufgabenstellung.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<ol class="tasks">
+									<li>y ≈ −0.1487·x + 26.4994 mit r ≈ −0.9985</li>
+									<li>
+										Der Preis sinkt um etwa 149 CHF pro 1000 km. Der
+										y-Achsenabschnitt ist der Preis, den ein solches
+										Auto mit Kilometerstand 0 hätte, also etwa
+										26'499 CHF.
+									</li>
+									<li>Etwa 17'576 CHF beziehungsweise etwa 4'192 CHF.</li>
+									<li>
+										Bei etwa 178'189 km. Das Modell darf also nicht
+										beliebig weit extrapoliert werden: Ein reales Auto
+										wird nicht gratis, und der Preis fällt
+										erfahrungsgemäss nicht linear.
+									</li>
+								</ol>
+								<div
+									class="workbench"
+									data-id="sol108"
+									data-files="python"
+									data-seed-python="regression/auto.py"
+									data-height="240"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/regression/auto.py"
+										>auto.py</a
+									>)
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 1.09 -->
+				<section class="exercise" id="ex-bremsquad">
+					<div class="exercise__body">
+						<p>
+							Für ein Automodell wird der Bremsweg s (in m) bei
+							verschiedenen Geschwindigkeiten v (in km/h) gemessen:
+						</p>
+						<table class="data">
+							<tbody>
+								<tr>
+									<th>v (km/h)</th>
+									<td>30</td>
+									<td>50</td>
+									<td>70</td>
+									<td>90</td>
+									<td>110</td>
+									<td>130</td>
+								</tr>
+								<tr>
+									<th>s (m)</th>
+									<td>6</td>
+									<td>15</td>
+									<td>29</td>
+									<td>48</td>
+									<td>72</td>
+									<td>100</td>
+								</tr>
+							</tbody>
+						</table>
+						<ol class="tasks">
+							<li>
+								Führen Sie eine lineare Regression durch. Wie gross ist
+								<var>r</var>? Zeichnen Sie zusätzlich ein
+								Streudiagramm. Was fällt auf?
+							</li>
+							<li>
+								Führen Sie nun eine quadratische Regression durch.
+								Geben Sie die Parameter auf fünf Nachkommastellen genau
+								an.
+							</li>
+							<li>
+								Welchen Bremsweg sagen die beiden Modelle für
+								v = 160 km/h voraus?
+							</li>
+							<li>
+								Aus der Physik wissen wir, dass der Bremsweg
+								proportional zum Quadrat der Geschwindigkeit ist.
+								Welches der beiden Modelle ist also vorzuziehen?
+								Vergleichen Sie dazu auch die Summe der
+								Residuenquadrate beider Modelle.
+							</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb109"
+							data-files="python"
+							data-sol-python="regression/bremsquad.py"
+							data-height="260"
+						>
+							<template data-seed="python">
+import numpy as np
+
+v = np.array([30, 50, 70, 90, 110, 130])
+s = np.array([6, 15, 29, 48, 72, 100])
+
+# TODO: np.polyfit(v, s, 1) und np.polyfit(v, s, 2) vergleichen.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<ol class="tasks">
+									<li>
+										s ≈ 0.94286·v − 30.42857 mit r ≈ 0.98300. Obwohl
+										<var>r</var> nahe bei 1 liegt, sieht man im
+										Streudiagramm deutlich, dass die Punkte auf einer
+										nach oben gekrümmten Kurve und nicht auf einer
+										Geraden liegen.
+									</li>
+									<li>
+										s ≈ 0.00603·v² − 0.02143·v + 1.11161
+									</li>
+									<li>
+										Das lineare Modell liefert etwa 120.43 m, das
+										quadratische etwa 151.97 m.
+									</li>
+									<li>
+										Das quadratische Modell. Es passt nicht nur besser
+										zu den Daten (Summe der Residuenquadrate
+										≈0.1786 statt ≈217.1429), sondern auch zur Physik.
+										Das lineare Modell unterschätzt den Bremsweg bei
+										hohen Geschwindigkeiten deutlich.
+									</li>
+								</ol>
+								<div
+									class="workbench"
+									data-id="sol109"
+									data-files="python"
+									data-seed-python="regression/bremsquad.py"
+									data-height="260"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/regression/bremsquad.py"
+										>bremsquad.py</a
+									>)
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 1.10 -->
+				<section class="exercise" id="ex-koffein">
+					<div class="exercise__body">
+						<p>
+							Nach dem Trinken eines Espressos wird die Koffeinmenge c
+							(in mg) im Blut stündlich gemessen:
+						</p>
+						<table class="data">
+							<tbody>
+								<tr>
+									<th>t (h)</th>
+									<td>0</td>
+									<td>1</td>
+									<td>2</td>
+									<td>3</td>
+									<td>4</td>
+									<td>5</td>
+									<td>6</td>
+								</tr>
+								<tr>
+									<th>c (mg)</th>
+									<td>120</td>
+									<td>104</td>
+									<td>89</td>
+									<td>78</td>
+									<td>67</td>
+									<td>58</td>
+									<td>50</td>
+								</tr>
+							</tbody>
+						</table>
+						<ol class="tasks">
+							<li>
+								Führen Sie eine exponentielle Regression durch und
+								geben Sie die Funktionsgleichung an.
+							</li>
+							<li>Um wie viel Prozent nimmt die Koffeinmenge pro Stunde ab?</li>
+							<li>
+								Nach welcher Zeit ist nur noch die Hälfte des Koffeins
+								im Blut (Halbwertszeit)?
+							</li>
+							<li>Wann sind weniger als 20 mg Koffein im Blut?</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb110"
+							data-files="python"
+							data-sol-python="regression/koffein.py"
+							data-height="240"
+						>
+							<template data-seed="python">
+import numpy as np
+
+t = np.arange(0, 7)
+c = np.array([120, 104, 89, 78, 67, 58, 50])
+
+# TODO: Linearisierung wie in Abschnitt 2 (ln(c) gegen t), dann (b)-(d).
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<ol class="tasks">
+									<li>c(t) ≈ 120.01 · 0.86<sup>t</sup></li>
+									<li>Um etwa 13.6 % pro Stunde.</li>
+									<li>Nach etwa 4.76 h.</li>
+									<li>Nach etwa 12.30 h, also nach gut einem halben Tag.</li>
+								</ol>
+								<div
+									class="workbench"
+									data-id="sol110"
+									data-files="python"
+									data-seed-python="regression/koffein.py"
+									data-height="240"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/regression/koffein.py"
+										>koffein.py</a
+									>)
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 1.11 -->
+				<section class="exercise" id="ex-kepler">
+					<div class="exercise__body">
+						<p>
+							Für die sechs klassischen Planeten sind der mittlere
+							Sonnenabstand a (in astronomischen Einheiten AE, wobei 1 AE
+							der Abstand Erde–Sonne ist) und die Umlaufzeit T (in
+							Jahren) gegeben:
+						</p>
+						<table class="data">
+							<tbody>
+								<tr>
+									<th>Planet</th>
+									<td>Merkur</td>
+									<td>Venus</td>
+									<td>Erde</td>
+									<td>Mars</td>
+									<td>Jupiter</td>
+									<td>Saturn</td>
+								</tr>
+								<tr>
+									<th>a (AE)</th>
+									<td>0.387</td>
+									<td>0.723</td>
+									<td>1.000</td>
+									<td>1.524</td>
+									<td>5.203</td>
+									<td>9.537</td>
+								</tr>
+								<tr>
+									<th>T (Jahre)</th>
+									<td>0.241</td>
+									<td>0.615</td>
+									<td>1.000</td>
+									<td>1.881</td>
+									<td>11.862</td>
+									<td>29.457</td>
+								</tr>
+							</tbody>
+						</table>
+						<ol class="tasks">
+							<li>
+								Führen Sie eine Potenzregression durch, also eine
+								Regression mit einer Funktion der Form
+								T = c · a<sup>n</sup> (siehe Hinweis zur
+								Linearisierung weiter oben). Wie gross ist <var>r</var>?
+							</li>
+							<li>
+								Der gefundene Exponent liegt sehr nahe bei einem Bruch
+								mit kleinem Nenner. Bei welchem? Formulieren Sie damit
+								einen Zusammenhang zwischen T und a ohne Kommazahlen.
+								<span class="hint">
+									(Bemerkung: Sie haben damit das dritte Keplersche
+									Gesetz aus Daten «wiederentdeckt».)
+								</span>
+							</li>
+							<li>
+								Neptun ist 30.07 AE von der Sonne entfernt. Wie lange
+								dauert dort ein Jahr?
+							</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb111"
+							data-files="python"
+							data-sol-python="regression/kepler.py"
+							data-height="220"
+						>
+							<template data-seed="python">
+import numpy as np
+
+a = np.array([0.387, 0.723, 1.000, 1.524, 5.203, 9.537])
+T = np.array([0.241, 0.615, 1.000, 1.881, 11.862, 29.457])
+
+# TODO: Potenzregression per Linearisierung:
+# n, ln(c) = np.polyfit(np.log(a), np.log(T), 1)
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<ol class="tasks">
+									<li>
+										T ≈ 1.00 · a<sup>1.4997</sup> mit r ≈ 1 (genauer:
+										r ≈ 0.99999998).
+									</li>
+									<li>
+										Der Exponent ist praktisch genau 3/2. Es gilt also
+										T ≈ a<sup>3/2</sup> und damit T² ≈ a³.
+									</li>
+									<li>
+										Etwa 164.78 Jahre (der tatsächliche Wert ist
+										164.8 Jahre).
+									</li>
+								</ol>
+								<div
+									class="workbench"
+									data-id="sol111"
+									data-files="python"
+									data-seed-python="regression/kepler.py"
+									data-height="220"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/regression/kepler.py"
+										>kepler.py</a
+									>)
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 1.12 -->
+				<section class="exercise" id="ex-modellwahl">
+					<div class="exercise__body">
+						<p>
+							Eine Schülerin lernt jeden Tag Vokabeln und notiert, wie
+							viele Wörter einer Liste sie nach x Tagen auswendig kennt:
+						</p>
+						<table class="data">
+							<tbody>
+								<tr>
+									<th>x (Tage)</th>
+									<td>1</td>
+									<td>2</td>
+									<td>3</td>
+									<td>4</td>
+									<td>5</td>
+									<td>6</td>
+									<td>8</td>
+									<td>10</td>
+								</tr>
+								<tr>
+									<th>y (Wörter)</th>
+									<td>20</td>
+									<td>42</td>
+									<td>52</td>
+									<td>62</td>
+									<td>68</td>
+									<td>73</td>
+									<td>80</td>
+									<td>88</td>
+								</tr>
+							</tbody>
+						</table>
+						<ol class="tasks">
+							<li>
+								Probieren Sie die vier Regressionstypen linear,
+								logarithmisch (y = a + b·ln(x)), exponentiell und
+								Potenz aus und notieren Sie jeweils <var>r</var>
+								(nutzen Sie dazu <code>np.corrcoef</code> auf den
+								passend linearisierten Daten). Welches Modell passt am
+								besten zu den Daten?
+							</li>
+							<li>Geben Sie die Funktionsgleichung des besten Modells an.</li>
+							<li>
+								Wie viele Wörter kennt die Schülerin nach diesem Modell
+								nach 20 Tagen? Nach wie vielen Tagen kennt sie 100
+								Wörter?
+							</li>
+							<li>
+								Die Liste enthält 100 Wörter. Was sagt das über die
+								Grenzen des Modells?
+							</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb112"
+							data-files="python"
+							data-sol-python="regression/modellwahl.py"
+							data-height="260"
+						>
+							<template data-seed="python">
+import numpy as np
+
+x = np.array([1, 2, 3, 4, 5, 6, 8, 10])
+y = np.array([20, 42, 52, 62, 68, 73, 80, 88])
+
+# TODO: r fuer linear (x,y), logarithmisch (ln(x),y), exponentiell
+# (x,ln(y)) und Potenz (ln(x),ln(y)) berechnen und vergleichen.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<ol class="tasks">
+									<li>
+										Man erhält r ≈ 0.9395 (linear), r ≈ 0.9993
+										(logarithmisch), r ≈ 0.8466 (exponentiell) und
+										r ≈ 0.9708 (Potenz). Am besten passt die
+										logarithmische Regression.
+									</li>
+									<li>y ≈ 20.76 + 29.10 · ln(x)</li>
+									<li>
+										Etwa 108 Wörter nach 20 Tagen und 100 Wörter nach
+										etwa 15.23 Tagen.
+									</li>
+									<li>
+										Das Modell wächst unbeschränkt und sagt nach 20
+										Tagen mehr Wörter voraus, als die Liste überhaupt
+										enthält. Ein Modell mit einer Sättigung (zum
+										Beispiel ein logistisches) wäre hier
+										realistischer. Ausserhalb des erhobenen Bereichs
+										darf man einer Regression also nicht blind
+										vertrauen.
+									</li>
+								</ol>
+								<div
+									class="workbench"
+									data-id="sol112"
+									data-files="python"
+									data-seed-python="regression/modellwahl.py"
+									data-height="260"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/regression/modellwahl.py"
+										>modellwahl.py</a
+									>)
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<nav class="pager">
+					<a href="01-regressionsgerade.html">← <b>Abschnitt 1 Die Regressionsgerade</b></a>
+					<a href="03-korrelationskoeffizient.html" style="text-align: right"
+						>Abschnitt 3 <b>Korrelationskoeffizient →</b></a
+					>
+				</nav>
+			</div>
+
+			<aside class="minitoc">
+				<h2>Auf dieser Seite</h2>
+				<ol></ol>
+			</aside>
+		</main>
+
+		<script src="assets/examples.js"></script>
+		<script src="../assets/js/editor.js"></script>
+		<script src="../assets/js/pyrunner.js"></script>
+		<script src="../assets/js/site.js"></script>
+	</body>
+</html>

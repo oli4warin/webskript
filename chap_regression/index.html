@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Regression – Gymnasium Muttenz</title>
+		<meta
+			name="description"
+			content="Webversion des Kapitels Regression des AM-Skripts des Gymnasiums Muttenz: Regressionsgerade, nicht-lineare Modelle und der empirische Korrelationskoeffizient, live in Python berechnet."
+		/>
+		<script>
+			/* Farbschema vor dem ersten Zeichnen setzen, damit beim Laden nichts
+			   aufblitzt. Dunkel ist der Standard, siehe ../assets/css/style.css. */
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.regression.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="../assets/css/style.css" />
+		<link
+			rel="icon"
+			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235fc9ae'/%3E%3Ctext x='16' y='23' font-family='system-ui,sans-serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230f1f1b'%3EW%3C/text%3E%3C/svg%3E"
+		/>
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html">Regr<span>ession</span></a>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-regressionsgerade.html">1 Die Regressionsgerade</a>
+				<a href="02-regression-mit-python.html">2 Regression mit Python</a>
+				<a href="03-korrelationskoeffizient.html">3 Korrelationskoeffizient</a>
+				<a href="04-herleitung.html">4 Allgemeine Herleitung</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main>
+			<div class="hero">
+				<p class="eyebrow">Angewandte Mathematik · Gymnasium Muttenz</p>
+				<h1>Regression</h1>
+				<p class="lead">
+					Aus gestreuten Messdaten die zugrundeliegende Funktion
+					rekonstruieren: die Regressionsgerade, nicht-lineare Modelle durch
+					Linearisierung oder <code>curve_fit</code>, und wie gut ein Modell
+					überhaupt zu den Daten passt. Jede Übung hat eine Werkbank, in der
+					Sie Code direkt im Browser schreiben, ausführen und verändern
+					können, inklusive der erzeugten Diagramme.
+				</p>
+
+				<div class="box box--note">
+					<p class="box__label">So arbeiten Sie mit dieser Seite</p>
+					<ul>
+						<li>
+							Jede Übung hat eine <strong>Werkbank</strong> mit
+							Python-Editor. Mit <em>Ausführen</em> oder
+							<code>Ctrl</code>/<code>⌘</code> + <code>Enter</code>
+							läuft Ihr Code, Konsolenausgabe und erzeugte
+							<code>matplotlib</code>-Diagramme erscheinen darunter.
+						</li>
+						<li>
+							Der Code läuft wirklich in Ihrem Browser (mit
+							<a href="https://pyodide.org/">Pyodide</a>, inklusive
+							<code>numpy</code>, <code>scipy</code> und
+							<code>matplotlib</code>) — dafür lädt die Werkbank beim
+							ersten <em>Ausführen</em> auf einer Seite eine
+							Python-Umgebung aus dem Internet nach. Das dauert je nach
+							Verbindung bis zu einer Minute; danach ist es für den Rest
+							des Seitenaufrufs schnell. Ohne Internetverbindung
+							funktioniert das Ausführen nicht.
+						</li>
+						<li>
+							Ihr Code bleibt in diesem Browser gespeichert, auch wenn
+							Sie die Seite schliessen. Mit <em>Herunterladen</em>
+							holen Sie eine Datei auf den Computer.
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<ul class="cards">
+				<li>
+					<a
+						class="card"
+						href="01-regressionsgerade.html"
+						data-page="01-regressionsgerade.html"
+						data-total="4"
+					>
+						<span class="card__no">Abschnitt 1</span>
+						<h2>Die Regressionsgerade</h2>
+						<p>
+							Die Methode der kleinsten Fehlerquadrate, der
+							Schwerpunktsatz und die Regressionsgerade von Hand mit
+							quadratischer Ergänzung berechnet.
+						</p>
+						<span class="card__meter">
+							<span class="meter"><i style="width: 0"></i></span>
+							<span data-count>0 / 4 Übungen erledigt</span>
+						</span>
+					</a>
+				</li>
+				<li>
+					<a
+						class="card"
+						href="02-regression-mit-python.html"
+						data-page="02-regression-mit-python.html"
+						data-total="8"
+					>
+						<span class="card__no">Abschnitt 2</span>
+						<h2>Regression mit Python</h2>
+						<p>
+							<code>np.polyfit</code> für lineare, exponentielle und
+							Potenzregression durch Linearisierung, und
+							<code>scipy.optimize.curve_fit</code> für beliebige
+							Modelle — von der Bremsweg-Tabelle bis zur
+							Epidemie-Kurve.
+						</p>
+						<span class="card__meter">
+							<span class="meter"><i style="width: 0"></i></span>
+							<span data-count>0 / 8 Übungen erledigt</span>
+						</span>
+					</a>
+				</li>
+				<li>
+					<a class="card" href="03-korrelationskoeffizient.html">
+						<span class="card__no">Abschnitt 3</span>
+						<h2>Der empirische Korrelationskoeffizient</h2>
+						<p>
+							Was die Zahl <var>r</var> über die Güte eines Modells
+							aussagt (und was nicht: Korrelation ist nicht
+							Kausalität) — mit einer Definition, einem
+							Rechenbeispiel und fünf Punktwolken zum Ausprobieren.
+						</p>
+					</a>
+				</li>
+				<li>
+					<a
+						class="card"
+						href="04-herleitung.html"
+						data-page="04-herleitung.html"
+						data-total="7"
+					>
+						<span class="card__no">Abschnitt 4</span>
+						<h2>Allgemeine Herleitung</h2>
+						<p>
+							Die allgemeine Formel für Steigung und
+							y-Achsenabschnitt der Regressionsgeraden, und der Beweis
+							des Schwerpunktsatzes.
+						</p>
+						<span class="card__meter">
+							<span class="meter"><i style="width: 0"></i></span>
+							<span data-count>0 / 7 Übungen erledigt</span>
+						</span>
+					</a>
+				</li>
+			</ul>
+
+			<div class="hero" style="padding-top: 3rem">
+				<blockquote>
+					<p>
+						«Alle Modelle sind falsch, aber manche sind nützlich.»
+					</p>
+					<p>
+						<img
+							src="assets/img/gauss.jpg"
+							alt="Carl Friedrich Gauss"
+							width="90"
+							style="border-radius: 6px; vertical-align: middle"
+						/>
+						nach einer Idee von Carl Friedrich Gauss (1777–1855), der die
+						Methode der kleinsten Fehlerquadrate begründete
+					</p>
+					<p class="credit">
+						Foto: Wikimedia Commons,
+						<a
+							href="https://commons.wikimedia.org/wiki/File:Carl_Friedrich_Gauss_1840_by_Jensen.jpg"
+							>Carl Friedrich Gauss 1840 by Jensen</a
+						>, Public Domain
+					</p>
+				</blockquote>
+
+				<h2 id="nachschlagen">Zum Nachschlagen</h2>
+				<ul class="linkrow">
+					<li><a href="https://numpy.org/">numpy – Referenz</a></li>
+					<li>
+						<a href="https://docs.scipy.org/doc/scipy/reference/optimize.html"
+							>scipy.optimize – Referenz</a
+						>
+					</li>
+					<li><a href="https://matplotlib.org/stable/">matplotlib – Referenz</a></li>
+					<li><a href="https://pyodide.org/">Pyodide</a></li>
+					<li>
+						<a href="https://www.geogebra.org/calculator"
+							>GeoGebra Rechner Suite</a
+						>
+					</li>
+				</ul>
+			</div>
+		</main>
+
+		<footer class="pagefoot">
+			<p>
+				Webversion des Kapitels <em>Regression</em> aus dem AM-Skript des
+				Gymnasiums Muttenz. Die Lösungsvorschläge stammen aus dem Repository
+				<a
+					href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/regression"
+					>oli4warin/gyminf</a
+				>.
+			</p>
+			<p>
+				Ihre Eingaben und Häkchen werden nur in diesem Browser gespeichert
+				und nirgends hochgeladen. Ihr Python-Code wird zum Ausführen an
+				keinen Server geschickt — er läuft direkt im Browser
+				(Pyodide/WebAssembly); geladen wird nur die Python-Umgebung selbst,
+				von einem CDN.
+			</p>
+		</footer>
+
+		<script src="assets/examples.js"></script>
+		<script src="../assets/js/site.js"></script>
+	</body>
+</html>

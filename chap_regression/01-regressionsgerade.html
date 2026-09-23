@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>1 Die Regressionsgerade – Regression</title>
+		<script>
+			/* Farbschema vor dem ersten Zeichnen setzen, damit beim Laden nichts
+			   aufblitzt. Dunkel ist der Standard, siehe ../assets/css/style.css. */
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.regression.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="../assets/css/style.css" />
+		<link
+			rel="icon"
+			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235fc9ae'/%3E%3Ctext x='16' y='23' font-family='system-ui,sans-serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230f1f1b'%3EW%3C/text%3E%3C/svg%3E"
+		/>
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html">Regr<span>ession</span></a>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-regressionsgerade.html">1 Die Regressionsgerade</a>
+				<a href="02-regression-mit-python.html">2 Regression mit Python</a>
+				<a href="03-korrelationskoeffizient.html">3 Korrelationskoeffizient</a>
+				<a href="04-herleitung.html">4 Allgemeine Herleitung</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main class="layout" data-ex-chapter="1" data-ex-offset="0">
+			<div class="content">
+				<p class="eyebrow">Abschnitt 1</p>
+				<h1>Die Regressionsgerade</h1>
+
+				<div class="progress" data-progress>
+					<span class="meter"><i style="width: 0"></i></span>
+					<span data-progress-text>0 von 4 Übungen erledigt</span>
+					<button type="button" data-reset>zurücksetzen</button>
+				</div>
+
+				<p>
+					Ist der funktionale Zusammenhang zwischen zwei Grössen x und y
+					linear und werden für diese Situation Daten gesammelt, so liegen
+					die Punkte in der Praxis <em>nicht</em> exakt auf einer Geraden —
+					Messfehler, Rundungen oder zufällige Schwankungen sorgen für eine
+					Streuung um den eigentlichen linearen Zusammenhang.
+				</p>
+				<p>
+					Trotzdem möchte man aus den gestreuten Datenpunkten die
+					zugrundeliegende lineare Beziehung rekonstruieren, um damit
+					Vorhersagen treffen oder den Zusammenhang quantitativ beschreiben
+					zu können. Gesucht ist also diejenige Gerade y = a·x + b, die die
+					Punktwolke möglichst gut beschreibt. Dieses Vorgehen nennt man
+					<em>lineare Regression</em>, und die gesuchte Gerade heisst
+					<em>Regressionsgerade</em>.
+				</p>
+
+				<p class="hint">
+					<b>Welche Gerade ist die passende?</b> Drei Kandidaten für
+					dieselben Datenpunkte.
+				</p>
+				<div class="workbench" data-id="wbex1" data-files="python" data-height="280">
+					<template data-seed="python">
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.array([0.2,0.6,1.1,1.5,1.9,2.3,2.8,3.1,3.6,3.9,
+              4.2,4.6,5.0,5.3,5.7,6.0,6.3,6.6,6.9,7.0])
+y = np.array([2.43,1.62,3.25,2.32,3.70,2.77,3.67,2.41,3.64,3.09,
+              4.34,2.93,4.12,3.74,5.05,3.85,4.82,3.94,5.24,4.60])
+
+plt.scatter(x, y, color="black", label="Messdaten")
+
+xs = np.linspace(0, 7, 50)
+plt.plot(xs, 0.3 * xs + 2.3, label="y = 0.3x + 2.3")
+plt.plot(xs, 0.4 * xs + 2, label="y = 0.4x + 2")
+plt.plot(xs, 0.5 * xs + 1.7, label="y = 0.5x + 1.7")
+
+plt.legend()
+plt.show()
+					</template>
+				</div>
+				<p>
+					Alle drei Geraden liegen «ungefähr» in der Punktwolke — aber
+					welche passt am besten? Dafür brauchen wir ein genaues,
+					rechenbares Mass für «passt gut».
+				</p>
+
+				<h2 id="fehlerquadrate">Die Methode der kleinsten Fehlerquadrate</h2>
+				<p>
+					Um die sogenannte <em>Regressionsgerade</em> genau zu definieren
+					und zu bestimmen, verwenden wir die
+					<em>Methode der kleinsten Fehlerquadrate</em>. Dabei messen wir
+					von jedem Datenpunkt den vertikalen Abstand zur Geraden und
+					quadrieren diesen. Dieser Wert wird als <em>Residuenquadrat</em>
+					bezeichnet. Die Gerade wird so bestimmt, dass die Summe aller
+					Residuenquadrate minimal ist.
+				</p>
+
+				<p class="hint">
+					<b>Zum Ausprobieren.</b> Verändern Sie <code>m</code> und
+					<code>b</code> und beobachten Sie, wie die grauen Quadrate (und
+					ihre Summe) sich verändern.
+				</p>
+				<div class="workbench" data-id="wbex2" data-files="python" data-height="320">
+					<template data-seed="python">
+import matplotlib.pyplot as plt
+
+x = [2.2, 2.9, 4, 1, 5.2, 4.5]
+y = [2.4, 1.7, 2.2, 1.1, 2.7, 4]
+
+m = 0.9   # <- hier verändern
+b = -0.5  # <- hier verändern
+
+fig, ax = plt.subplots()
+summe = 0
+for xi, yi in zip(x, y):
+    residuum = (m * xi + b) - yi
+    summe += residuum**2
+    # Quadrat der Kantenlänge |residuum| einzeichnen
+    ax.add_patch(plt.Rectangle((xi, yi), residuum, residuum,
+                                color="grey", alpha=0.6))
+ax.scatter(x, y, color="black", zorder=3)
+
+xs = [min(x) - 0.5, max(x) + 0.5]
+ax.plot(xs, [m * xs[0] + b, m * xs[1] + b], color="red")
+ax.set_aspect("equal")
+ax.set_title(f"Summe der Residuenquadrate = {summe:.3f}")
+plt.show()
+
+print("Summe der Residuenquadrate:", summe)
+					</template>
+				</div>
+
+				<figure class="shot" style="max-width: 160px">
+					<img src="assets/img/gauss.jpg" alt="Porträt von Carl Friedrich Gauss" width="120" />
+					<figcaption>
+						Carl Friedrich Gauss (1777–1855)
+						<span class="credit">
+							Foto: Wikimedia Commons,
+							<a
+								href="https://commons.wikimedia.org/wiki/File:Carl_Friedrich_Gauss_1840_by_Jensen.jpg"
+								>Carl Friedrich Gauss 1840 by Jensen</a
+							>, Public Domain
+						</span>
+					</figcaption>
+				</figure>
+				<p>
+					Diese Methode geht auf eine Idee des deutschen Mathematikers Carl
+					Friedrich Gauss zurück und ist als Mass für die Abweichung
+					besonders gut geeignet.
+				</p>
+
+				<div class="box">
+					<p class="box__label">Definition: Regressionsgerade</p>
+					<p>
+						Die <em>Regressionsgerade</em> zu vorgegebenen Punkten ist die
+						Gerade mit der Eigenschaft, dass die Summe der
+						Residuenquadrate minimal wird.
+					</p>
+				</div>
+
+				<p>
+					Beispielsweise hat die Regressionsgerade die Eigenschaft, dass sie
+					automatisch durch den «Schwerpunkt» der Daten verläuft:
+				</p>
+
+				<div class="box">
+					<p class="box__label" id="thm-schwerpunkt">Satz: Schwerpunkt der Regressionsgeraden</p>
+					<p>
+						Gegeben seien die Datenpunkte (x<sub>1</sub>,y<sub>1</sub>),
+						(x<sub>2</sub>,y<sub>2</sub>), …, (x<sub>n</sub>,y<sub>n</sub>).
+						Dann liegt der Punkt (x̄,ȳ) automatisch auf der entsprechenden
+						Regressionsgeraden, wobei
+					</p>
+					<p style="text-align: center">
+						x̄ = (x<sub>1</sub>+x<sub>2</sub>+…+x<sub>n</sub>) / n
+						&nbsp;und&nbsp;
+						ȳ = (y<sub>1</sub>+y<sub>2</sub>+…+y<sub>n</sub>) / n.
+					</p>
+				</div>
+
+				<p>
+					Die allgemeine Herleitung für die Berechnung der
+					Regressionsgeraden ist etwas aufwändig — wir führen sie in
+					<a href="04-herleitung.html">Abschnitt 4</a> an einem konkreten
+					Beispiel durch. Zunächst rechnen wir zwei kleine Beispiele von
+					Hand, mit Hilfe der quadratischen Ergänzung.
+				</p>
+
+				<h2 id="uebungen-hand">Übungen: Von Hand rechnen</h2>
+
+				<!-- ============================================== Übung 1.01 -->
+				<section class="exercise" id="ex-residuenquadrate">
+					<div class="exercise__body">
+						<p>
+							Gegeben sind die Punkte A(0,0), B(1,2) und C(3,1).
+						</p>
+						<ol class="tasks">
+							<li>
+								Berechnen Sie die Summe der Residuenquadrate für die
+								Gerade y = 9/10 · x − 1.
+								<span class="hint">
+									(Hinweis: Das ist <em>nicht</em> die zugehörige
+									Regressionsgerade.)
+								</span>
+							</li>
+							<li>
+								Berechnen Sie eine Gleichung der Regressionsgeraden zu
+								den Punkten A, B und C mit Hilfe der quadratischen
+								Ergänzung. Berechnen Sie auch hier die Summe der
+								Residuenquadrate.
+							</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb101"
+							data-files="python"
+							data-sol-python="regression/hand1.py"
+							data-height="200"
+						>
+							<template data-seed="python">
+import numpy as np
+
+x = np.array([0, 1, 3])
+y = np.array([0, 2, 1])
+
+# (a) Residuenquadrate fuer die Gerade y = 0.9x - 1 aufsummieren.
+
+# (b) Regressionsgerade von Hand (quadratische Ergaenzung) oder mit
+#     np.polyfit(x, y, 1) zur Kontrolle bestimmen.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>
+									<b>(a)</b> Einsetzen der drei Punkte in die Gerade
+									liefert die Residuen −1, 0.9 und −1.3; die Summe der
+									Residuenquadrate ist damit 59/10 = 5.9.
+								</p>
+								<p>
+									<b>(b)</b> Wir berechnen zuerst den Schwerpunkt der
+									Daten: x̄ = 4/3, ȳ = 1. Wegen des
+									<a href="#thm-schwerpunkt">Schwerpunktsatzes</a>
+									verläuft die Regressionsgerade durch (4/3, 1), hat
+									also die Form y = m·(x − 4/3) + 1. Setzt man die drei
+									Punkte ein und quadriert, ergibt sich für die Summe
+									der Residuenquadrate der Ausdruck
+									14/3 · m² − 2·m + 2, der (quadratische Ergänzung) bei
+									m = 3/14 minimal wird. Damit lautet die
+									Regressionsgerade
+								</p>
+								<p style="text-align: center">
+									y = 3/14 · x + 5/7,
+								</p>
+								<p>
+									mit einer minimalen Summe der Residuenquadrate von
+									25/14 ≈ 1.7857.
+								</p>
+								<div
+									class="workbench"
+									data-id="sol101"
+									data-files="python"
+									data-seed-python="regression/hand1.py"
+									data-height="200"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/regression/hand1.py"
+										>hand1.py</a
+									>)
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 1.02 -->
+				<section class="exercise" id="ex-regman">
+					<div class="exercise__body">
+						<p>
+							Berechnen Sie eine Geradengleichung der Regressionsgeraden
+							durch die Punkte A(0,0), B(2,3), C(3,4) und D(7,5), wieder
+							mit Hilfe der quadratischen Ergänzung.
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb102"
+							data-files="python"
+							data-sol-python="regression/regman.py"
+							data-height="200"
+						>
+							<template data-seed="python">
+import numpy as np
+
+x = np.array([0, 2, 3, 7])
+y = np.array([0, 3, 4, 5])
+
+# Schwerpunkt bestimmen, dann Summe der Residuenquadrate in Abhaengigkeit
+# von m aufstellen und quadratisch ergaenzen (oder mit np.polyfit
+# kontrollieren).
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>
+									Der Schwerpunkt der Daten ist (3, 3), die
+									Regressionsgerade hat also die Form
+									y = m·(x − 3) + 3. Die Summe der Residuenquadrate ist
+									26·m² − 34·m + 14, minimal bei m = 17/26. Damit
+									lautet die Regressionsgerade
+								</p>
+								<p style="text-align: center">y = 17/26 · x + 27/26,</p>
+								<p>
+									mit einer minimalen Summe der Residuenquadrate von
+									75/26 ≈ 2.8846.
+								</p>
+								<div
+									class="workbench"
+									data-id="sol102"
+									data-files="python"
+									data-seed-python="regression/regman.py"
+									data-height="200"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/regression/regman.py"
+										>regman.py</a
+									>)
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<h2 id="beispiel-koerpermasse">Ein grösseres Beispiel</h2>
+				<p>
+					Für nur drei oder vier Punkte lässt sich die Regressionsgerade
+					noch von Hand mit quadratischer Ergänzung bestimmen. Sobald es um
+					grössere Datenmengen geht, wird das schnell mühsam. Wir vermuten
+					einen linearen Zusammenhang zwischen Körpergrösse (=x) und
+					Körpermasse (=y). In einer Untersuchung haben sich die folgenden
+					Daten ergeben (Körpergrösse in cm und Körpermasse in kg):
+				</p>
+
+				<table class="data" id="tab-groessemasse">
+					<tbody>
+						<tr>
+							<th>x (cm)</th>
+							<td>185</td>
+							<td>170</td>
+							<td>201</td>
+							<td>162</td>
+							<td>188</td>
+							<td>171</td>
+						</tr>
+						<tr>
+							<th>y (kg)</th>
+							<td>85</td>
+							<td>64</td>
+							<td>87</td>
+							<td>50</td>
+							<td>83</td>
+							<td>73</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<p class="hint"><b>Streudiagramm.</b> Körpergrösse gegen Körpermasse</p>
+				<div class="workbench" data-id="wbex3" data-files="python" data-height="260">
+					<template data-seed="python">
+import matplotlib.pyplot as plt
+
+x = [185, 170, 201, 162, 188, 171]
+y = [85, 64, 87, 50, 83, 73]
+
+plt.scatter(x, y, color="red")
+plt.xlabel("Körpergrösse [cm]")
+plt.ylabel("Körpermasse [kg]")
+plt.show()
+					</template>
+				</div>
+				<p>
+					Diese Punkte liegen (wenig überraschend) nicht auf einer Geraden.
+					Die Frage ist nun, welche Gerade möglichst gut zu den Daten passt.
+				</p>
+
+				<div class="box box--note">
+					<p class="box__label">Und der Taschenrechner? Und GeoGebra?</p>
+					<p>
+						Im gedruckten Skript wird diese Aufgabe auch mit dem
+						Taschenrechner (<code>LinReg ax+b</code>) und mit
+						<a href="https://www.geogebra.org/calculator">GeoGebra</a>
+						gelöst — beide sind für den Schulalltag praktisch und
+						durchaus empfehlenswert. Ein Video dazu finden Sie
+						<a href="https://youtu.be/01_YiO0pjjw">hier</a>. Diese
+						Webseite konzentriert sich aber auf die dritte Variante:
+						Python. Das lohnt sich vor allem bei grossen Datenmengen oder
+						wenn eine schöne, individuell gestaltete Grafik gefragt ist —
+						und ist Thema von <a href="02-regression-mit-python.html"
+							>Abschnitt 2</a
+						>.
+					</p>
+				</div>
+
+				<h2 id="uebungen-weitere">Weitere Übungen</h2>
+
+				<!-- ============================================== Übung 1.03 -->
+				<section class="exercise" id="ex-bremsweg-alter">
+					<div class="exercise__body">
+						<p>
+							In einer Untersuchung wurde der Bremsweg bei einer
+							Vollbremsung aus Tempo 100 km/h von Automobilen des
+							gleichen Typs gemessen. Es stellte sich heraus, dass der
+							benötigte Bremsweg mit dem Alter zunimmt. Es wurden
+							folgende Daten erhoben:
+						</p>
+						<table class="data">
+							<tbody>
+								<tr>
+									<th>Alter (Jahre)</th>
+									<td>4</td>
+									<td>7</td>
+									<td>11</td>
+									<td>2</td>
+								</tr>
+								<tr>
+									<th>Bremsweg (m)</th>
+									<td>50</td>
+									<td>80</td>
+									<td>70</td>
+									<td>45</td>
+								</tr>
+							</tbody>
+						</table>
+						<p>
+							Es wird nun vermutet, dass ein linearer Zusammenhang
+							besteht. Führen Sie eine lineare Regression durch und
+							extrapolieren Sie den erwarteten Bremsweg für
+						</p>
+						<ol class="tasks">
+							<li>neuwertige,</li>
+							<li>15 Jahre alte und</li>
+							<li>30 Jahre alte Automobile.</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb103"
+							data-files="python"
+							data-sol-python="regression/bremsweg-alter.py"
+							data-height="220"
+						>
+							<template data-seed="python">
+import numpy as np
+
+alter = np.array([4, 7, 11, 2])
+bremsweg = np.array([50, 80, 70, 45])
+
+# TODO: Regressionsgerade mit np.polyfit bestimmen und fuer 0, 15 und
+# 30 Jahre auswerten.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<ol class="tasks tasks--cols">
+									<li>≈ 41.68 m</li>
+									<li>≈ 90.60 m</li>
+									<li>≈ 139.51 m</li>
+								</ol>
+								<div
+									class="workbench"
+									data-id="sol103"
+									data-files="python"
+									data-seed-python="regression/bremsweg-alter.py"
+									data-height="220"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/regression/bremsweg-alter.py"
+										>bremsweg-alter.py</a
+									>)
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 1.04 -->
+				<section class="exercise" id="ex-schaumkrone">
+					<div class="exercise__body">
+						<p>
+							Silvan schenkt sich ein Glas Bier ein und misst für
+							verschiedene Zeiten t (in Minuten) die Höhe der
+							Schaumkrone h (in Millimetern). Dabei erhält er die
+							folgende Tabelle:
+						</p>
+						<table class="data">
+							<tbody>
+								<tr>
+									<th>t (min)</th>
+									<td>0</td>
+									<td>0.5</td>
+									<td>1</td>
+									<td>1.5</td>
+									<td>2</td>
+									<td>2.5</td>
+									<td>3</td>
+									<td>3.5</td>
+									<td>4</td>
+									<td>4.5</td>
+									<td>5</td>
+								</tr>
+								<tr>
+									<th>h (mm)</th>
+									<td>90</td>
+									<td>62</td>
+									<td>43</td>
+									<td>30</td>
+									<td>21</td>
+									<td>14</td>
+									<td>10</td>
+									<td>7</td>
+									<td>5</td>
+									<td>3</td>
+									<td>2</td>
+								</tr>
+							</tbody>
+						</table>
+						<ol class="tasks">
+							<li>
+								Wir nehmen an, dass die Schaumhöhe exponentiell mit
+								der Zeit abnimmt: h(t) = a · e<sup>k·t</sup>. Führen
+								Sie mit diesen Daten eine Regression durch und
+								bestimmen Sie damit die Parameter a und k auf 2
+								Nachkommastellen genau.
+								<span class="hint">
+									(Hinweis: Logarithmieren Sie h(t) = a·e<sup>k·t</sup>
+									— das linearisiert den Zusammenhang zwischen t und
+									ln(h). Details dazu in
+									<a href="02-regression-mit-python.html#linearisierung"
+										>Abschnitt 2</a
+									>.)
+								</span>
+							</li>
+							<li>
+								Wie gross ist demnach die prozentuale Abnahme der
+								Schaumkronenhöhe pro Minute?
+							</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb104"
+							data-files="python"
+							data-sol-python="regression/schaumkrone.py"
+							data-height="240"
+						>
+							<template data-seed="python">
+import numpy as np
+
+t = np.array([0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5])
+h = np.array([90, 62, 43, 30, 21, 14, 10, 7, 5, 3, 2])
+
+# TODO: k, ln(a) = np.polyfit(t, np.log(h), 1), dann a = np.exp(ln(a)).
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>
+									<b>(a)</b> h(t) ≈ 92.09 · e<sup>−0.75·t</sup>
+								</p>
+								<p><b>(b)</b> Etwa 52.8 % Abnahme pro Minute.</p>
+								<div
+									class="workbench"
+									data-id="sol104"
+									data-files="python"
+									data-seed-python="regression/schaumkrone.py"
+									data-height="240"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/regression/schaumkrone.py"
+										>schaumkrone.py</a
+									>)
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<nav class="pager">
+					<a href="index.html">← <b>Übersicht</b></a>
+					<a href="02-regression-mit-python.html" style="text-align: right"
+						>Abschnitt 2 <b>Regression mit Python →</b></a
+					>
+				</nav>
+			</div>
+
+			<aside class="minitoc">
+				<h2>Auf dieser Seite</h2>
+				<ol></ol>
+			</aside>
+		</main>
+
+		<script src="assets/examples.js"></script>
+		<script src="../assets/js/editor.js"></script>
+		<script src="../assets/js/pyrunner.js"></script>
+		<script src="../assets/js/site.js"></script>
+	</body>
+</html>

@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="de-CH">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>4 Allgemeine Herleitung – Regression</title>
+		<script>
+			(function () {
+				try {
+					var t = localStorage.getItem("skript.regression.theme");
+					if (t === "light" || t === "dark")
+						document.documentElement.dataset.theme = t;
+				} catch (e) {}
+			})();
+		</script>
+		<link rel="stylesheet" href="../assets/css/style.css" />
+		<link
+			rel="icon"
+			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%235fc9ae'/%3E%3Ctext x='16' y='23' font-family='system-ui,sans-serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230f1f1b'%3EW%3C/text%3E%3C/svg%3E"
+		/>
+	</head>
+
+	<body>
+		<header class="topbar">
+			<a class="topbar__home" href="index.html">Regr<span>ession</span></a>
+			<nav>
+				<a href="index.html">Übersicht</a>
+				<a href="01-regressionsgerade.html">1 Die Regressionsgerade</a>
+				<a href="02-regression-mit-python.html">2 Regression mit Python</a>
+				<a href="03-korrelationskoeffizient.html">3 Korrelationskoeffizient</a>
+				<a href="04-herleitung.html">4 Allgemeine Herleitung</a>
+			</nav>
+			<button class="themetoggle" type="button" aria-label="Farbschema"></button>
+		</header>
+
+		<main class="layout" data-ex-chapter="1" data-ex-offset="12">
+			<div class="content">
+				<p class="eyebrow">Abschnitt 4</p>
+				<h1>Allgemeine Herleitung</h1>
+
+				<div class="progress" data-progress>
+					<span class="meter"><i style="width: 0"></i></span>
+					<span data-progress-text>0 von 7 Übungen erledigt</span>
+					<button type="button" data-reset>zurücksetzen</button>
+				</div>
+
+				<p>
+					Es ist nun Zeit, dass wir uns etwas an die allgemeine Herleitung
+					der Regressionsgeraden wagen. Genauer werden wir mit Hilfe des
+					<a href="01-regressionsgerade.html#thm-schwerpunkt"
+						>Schwerpunktsatzes</a
+					>
+					den folgenden Satz beweisen.
+				</p>
+
+				<div class="box">
+					<p class="box__label" id="thm-regall">Satz: Regressionsgerade</p>
+					<p>
+						Gegeben seien n (n&gt;1) Datenpunkte (x<sub>1</sub>,y<sub>1</sub>),
+						(x<sub>2</sub>,y<sub>2</sub>), …, (x<sub>n</sub>,y<sub>n</sub>).
+						Dann ist die Regressionsgerade y = m·x + b gegeben durch
+					</p>
+					<p style="text-align: center">
+						m = s<sub>xy</sub> / s<sub>xx</sub> &nbsp;und&nbsp;
+						b = ȳ − m·x̄,
+					</p>
+					<p>wobei</p>
+					<p style="text-align: center">
+						s<sub>xy</sub> = Σ (x<sub>i</sub>−x̄)·(y<sub>i</sub>−ȳ)
+						&nbsp;und&nbsp; s<sub>xx</sub> = Σ (x<sub>i</sub>−x̄)².
+					</p>
+				</div>
+
+				<!-- ============================================== Übung 1.13 -->
+				<section class="exercise" id="ex-regall-anwenden">
+					<div class="exercise__body">
+						<p>
+							Berechnen Sie eine Geradengleichung der Regressionsgeraden
+							durch die Punkte A(0,0), B(2,3), C(3,4) und D(7,5) — die
+							Punkte aus <a href="01-regressionsgerade.html#ex-regman"
+								>Übung 1.02</a
+							> — diesmal mit Hilfe des Satzes oben.
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb114"
+							data-files="python"
+							data-sol-python="regression/regman.py"
+							data-height="200"
+						>
+							<template data-seed="python">
+import numpy as np
+
+x = np.array([0, 2, 3, 7])
+y = np.array([0, 3, 4, 5])
+
+# TODO: s_xy und s_xx berechnen, dann m = s_xy/s_xx und b = y.mean() - m*x.mean().
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>
+									Natürlich dieselbe Gerade wie in
+									<a href="01-regressionsgerade.html#ex-regman"
+										>Übung 1.02</a
+									>: y = 17/26 · x + 27/26.
+								</p>
+								<div
+									class="workbench"
+									data-id="sol114"
+									data-files="python"
+									data-seed-python="regression/regman.py"
+									data-height="200"
+								></div>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<h2 id="beweis-regall">Beweis des Satzes</h2>
+				<p>
+					Der Beweis des Schwerpunktsatzes (der auf
+					<a href="01-regressionsgerade.html#thm-schwerpunkt"
+						>Seite 1</a
+					>
+					unbewiesen blieb) folgt weiter unten in einer eigenen Übung und
+					ist etwas trickreich.
+				</p>
+				<div class="box box--note">
+					<p class="box__label">Beweisskizze</p>
+					<p>
+						Wir müssen zeigen, dass m·x + b so gewählt werden muss, dass
+						die Summe der Residuenquadrate S(m,b) = Σ (m·x<sub>i</sub> + b
+						− y<sub>i</sub>)² minimal wird. Der Trick besteht darin, den
+						Term (m·x<sub>i</sub> + b − y<sub>i</sub>) geschickt um den
+						Schwerpunkt (x̄, ȳ) umzuschreiben:
+					</p>
+					<p style="text-align: center">
+						Σ (m·x<sub>i</sub>+b−y<sub>i</sub>)² = n·(m·x̄+b−ȳ)² +
+						Σ (m·(x<sub>i</sub>−x̄) − y<sub>i</sub>+ȳ)²
+					</p>
+					<p>
+						Der zweite Summand hängt gar nicht mehr von <var>b</var> ab.
+						Der erste Summand ist ein Quadrat und wird für festes
+						<var>m</var> genau dann minimal (nämlich 0), wenn
+						b = ȳ − m·x̄ gilt — das ist bereits die zweite Gleichung des
+						Satzes. Setzt man das ein, bleibt nur noch der zweite Summand
+						übrig, den man (quadratische Ergänzung nach <var>m</var>) für
+						m = s<sub>xy</sub>/s<sub>xx</sub> minimiert.
+					</p>
+				</div>
+
+				<h2 id="uebungen-abstrakt">Übungen: Abstrakter rechnen</h2>
+
+				<!-- ============================================== Übung 1.14 -->
+				<section class="exercise" id="ex-summen">
+					<div class="exercise__body">
+						<p>Berechnen Sie die folgenden Summen.</p>
+						<ol class="tasks tasks--cols">
+							<li>Σ (i=1 bis 4) 2·i</li>
+							<li>Σ (k=2 bis 6) k²</li>
+							<li>Σ (i=3 bis 5) ( Σ (k=2 bis 3) i·k )</li>
+						</ol>
+
+						<div
+							class="workbench"
+							data-id="wb115"
+							data-files="python"
+							data-sol-python="regression/summen.py"
+							data-height="160"
+						>
+							<template data-seed="python">
+# TODO: die drei Summen mit einer Schleife, sum() oder einer
+# Comprehension berechnen.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<ol class="tasks tasks--cols">
+									<li>20</li>
+									<li>90</li>
+									<li>60</li>
+								</ol>
+								<div
+									class="workbench"
+									data-id="sol115"
+									data-files="python"
+									data-seed-python="regression/summen.py"
+									data-height="160"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/regression/summen.py"
+										>summen.py</a
+									>)
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 1.15 -->
+				<section class="exercise" id="ex-r-rechteck">
+					<div class="exercise__body">
+						<p>
+							Gegeben sind die Punkte A(0,0), B(3,0) und C(0,3).
+							Berechnen Sie mit Hilfe der
+							<a href="03-korrelationskoeffizient.html#def-kor"
+								>Definition aus Abschnitt 3</a
+							>
+							den entsprechenden empirischen Korrelationskoeffizienten
+							<var>r</var>.
+						</p>
+
+						<div
+							class="workbench"
+							data-id="wb116"
+							data-files="python"
+							data-sol-python="regression/r-rechteck.py"
+							data-height="160"
+						>
+							<template data-seed="python">
+import numpy as np
+
+x = np.array([0, 3, 0])
+y = np.array([0, 0, 3])
+
+# TODO: r mit der Definition aus Abschnitt 3 (oder np.corrcoef) berechnen.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>r = −1/2</p>
+								<div
+									class="workbench"
+									data-id="sol116"
+									data-files="python"
+									data-seed-python="regression/r-rechteck.py"
+									data-height="160"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/regression/r-rechteck.py"
+										>r-rechteck.py</a
+									>)
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 1.16 -->
+				<section class="exercise" id="ex-statistiker">
+					<div class="exercise__body">
+						<p>
+							Der Statistiker bevorzugt im Allgemeinen das
+							Kleinste-Quadrate-Kriterium Σ e<sub>i</sub>² vor
+							Σ |e<sub>i</sub>| (bei uns war
+							e<sub>i</sub> = y<sub>i</sub> − m·x<sub>i</sub> − b), wenn er
+							seinen Daten eine Gerade anpasst. Tatsächlich sind Summen
+							von quadratischen Funktionen mathematisch einfacher zu
+							handhaben als Summen von Betragsfunktionen.
+						</p>
+						<ol class="tasks">
+							<li>
+								Stellen Sie die Funktionen y=(x−2)² und y=|x−2|
+								graphisch dar. Vergleichen Sie Verlauf, Symmetrie,
+								Minimum.
+							</li>
+							<li>
+								Vergleichen Sie entsprechend y=(x−2)²+(x+3)² und
+								y=|x−2|+|x+3|.
+							</li>
+							<li>
+								Betrachten Sie nun die Summen von mehr als zwei
+								Funktionen. Welchen Vorteil haben quadratische
+								Funktionen, wenn das Minimum der Summe interessiert?
+							</li>
+							<li>
+								Passen Sie dem (fiktiven) Datensatz {(1,1), (5,1)}
+								eine Ursprungsgerade y=m·x an, indem Sie einmal
+								Σ e<sub>i</sub>² und einmal Σ |e<sub>i</sub>|
+								minimieren.
+								<span class="hint">
+									(Hinweis: <code>scipy.optimize.minimize_scalar</code>
+									minimiert eine beliebige Funktion einer Variablen.)
+								</span>
+							</li>
+							<li>Vergleichen und kommentieren Sie beide Anpassungsmethoden.</li>
+						</ol>
+						<p class="hint">
+							Zu dieser Übung gibt es im gedruckten Skript keine
+							Musterlösung — probieren Sie sich unten aus.
+						</p>
+
+						<div class="workbench" data-id="wb117" data-files="python" data-height="280">
+							<template data-seed="python">
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import minimize_scalar
+
+xs = np.linspace(-2, 6, 200)
+
+# (a)+(b): Verlauf von Quadrat- und Betragsfunktion(en) vergleichen.
+plt.plot(xs, (xs - 2) ** 2, label="(x-2)^2")
+plt.plot(xs, np.abs(xs - 2), label="|x-2|")
+plt.legend()
+plt.show()
+
+# (d): Ursprungsgerade y = m*x an {(1,1), (5,1)} anpassen.
+x_data = np.array([1, 5])
+y_data = np.array([1, 1])
+
+def sum_quad(m):
+    return np.sum((m * x_data - y_data) ** 2)
+
+def sum_abs(m):
+    return np.sum(np.abs(m * x_data - y_data))
+
+m_quad = minimize_scalar(sum_quad).x
+m_abs = minimize_scalar(sum_abs).x
+print("m (kleinste Quadrate):", m_quad)
+print("m (kleinste Beträge):", m_abs)
+							</template>
+						</div>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 1.17 -->
+				<section class="exercise" id="ex-fuenf-punkte">
+					<div class="exercise__body">
+						<p>
+							Finden Sie ein Beispiel von 5 Punkten, die
+							<em>nicht</em> auf einer Geraden liegen, so dass der
+							empirische Korrelationskoeffizient gleich Null ist.
+						</p>
+
+						<div class="workbench" data-id="wb118" data-files="python" data-height="200">
+							<template data-seed="python">
+import numpy as np
+
+# TODO: 5 Punkte finden (z.B. eine symmetrische Parabel um x=0) und mit
+# np.corrcoef pruefen, ob r wirklich 0 ist.
+x = np.array([0, 0, 0, 0, 0])
+y = np.array([0, 0, 0, 0, 0])
+print("r =", np.corrcoef(x, y)[0, 1])
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>
+									Zum Beispiel A(0,0), B(1,1), C(2,4), D(−1,1) und
+									E(−2,4) — eine symmetrische Parabel um x=0: Für
+									jeden Anstieg auf der rechten Seite gibt es einen
+									spiegelbildlichen Punkt links, wodurch sich der
+									lineare Zusammenhang gegenseitig aufhebt.
+								</p>
+								<div
+									class="workbench"
+									data-id="sol118"
+									data-files="python"
+									data-seed-python="regression/fuenf-punkte-r0.py"
+									data-height="200"
+								></div>
+								<p class="hint">
+									Lösungsvorschlag
+									(<a
+										href="https://codeberg.org/oli4warin/gyminf/src/branch/main/python/regression/fuenf-punkte-r0.py"
+										>fuenf-punkte-r0.py</a
+									>)
+								</p>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 1.18 -->
+				<section class="exercise" id="ex-regman-quadratisch">
+					<div class="exercise__body">
+						<p>
+							Gegeben sind die Punkte A(0,0), B(1,2) und C(3,1), wie in
+							<a href="01-regressionsgerade.html#ex-residuenquadrate"
+								>Übung 1.01</a
+							>. Berechnen Sie eine Gleichung der Regressionsgeraden zu
+							den Punkten A, B und C mit Hilfe der quadratischen
+							Ergänzung. Sie dürfen jetzt aber den Schwerpunktsatz
+							<em>nicht</em> benutzen!
+						</p>
+						<p class="hint">
+							Hinweis: Stellen Sie die Summe der Residuenquadrate in
+							Abhängigkeit von <var>m</var> <em>und</em> <var>b</var>
+							auf. Dann ergänzen Sie erst quadratisch bezüglich
+							<var>m</var>.
+						</p>
+
+						<div class="workbench" data-id="wb119" data-files="python" data-height="200">
+							<template data-seed="python">
+import numpy as np
+
+x = np.array([0, 1, 3])
+y = np.array([0, 2, 1])
+
+# TODO: Ergebnis mit np.polyfit(x, y, 1) kontrollieren -- muss dasselbe
+# Ergebnis wie in Uebung 1.01 liefern, ganz ohne Schwerpunktsatz.
+							</template>
+						</div>
+
+						<details class="sol">
+							<summary>Lösungsvorschlag</summary>
+							<div class="sol__body">
+								<p>
+									y = 3/14 · x + 5/7 — genau dieselbe Gerade wie in
+									<a href="01-regressionsgerade.html#ex-residuenquadrate"
+										>Übung 1.01</a
+									>, diesmal ganz ohne den Schwerpunktsatz zu
+									benutzen.
+								</p>
+								<div
+									class="workbench"
+									data-id="sol119"
+									data-files="python"
+									data-seed-python="regression/hand1.py"
+									data-height="200"
+								></div>
+							</div>
+						</details>
+					</div>
+				</section>
+
+				<!-- ============================================== Übung 1.19 (Bonus) -->
+				<section class="exercise" id="ex-beweis-schwerpunkt" data-tag="Bonus">
+					<div class="exercise__body">
+						<p>
+							Beweisen Sie den
+							<a href="01-regressionsgerade.html#thm-schwerpunkt"
+								>Schwerpunktsatz</a
+							>.
+						</p>
+						<p class="hint">
+							Hinweis: Zeigen Sie zuerst, dass gilt
+						</p>
+						<p style="text-align: center">
+							Σ (m·x<sub>i</sub>+b−y<sub>i</sub>)² = n·(m·x̄+b−ȳ)² +
+							Σ (m·(x<sub>i</sub>−x̄) − y<sub>i</sub>+ȳ)²
+						</p>
+						<p>
+							(dieselbe Umformung wie in der
+							<a href="#beweis-regall">Beweisskizze</a> weiter oben) und
+							überlegen Sie sich, was daraus für b folgt, wenn m fest
+							ist und die Summe minimal werden soll.
+						</p>
+						<p class="hint">
+							Dies ist eine reine Papier-und-Bleistift-Übung — es gibt
+							dafür keine sinnvolle Python-Werkbank.
+						</p>
+					</div>
+				</section>
+
+				<nav class="pager">
+					<a href="03-korrelationskoeffizient.html">← <b>Abschnitt 3 Korrelationskoeffizient</b></a>
+					<a href="index.html" style="text-align: right"><b>Übersicht →</b></a>
+				</nav>
+			</div>
+
+			<aside class="minitoc">
+				<h2>Auf dieser Seite</h2>
+				<ol></ol>
+			</aside>
+		</main>
+
+		<script src="assets/examples.js"></script>
+		<script src="../assets/js/editor.js"></script>
+		<script src="../assets/js/pyrunner.js"></script>
+		<script src="../assets/js/site.js"></script>
+	</body>
+</html>
