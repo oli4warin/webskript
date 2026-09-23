@@ -86,8 +86,8 @@
 					<p>wobei</p>
 					<p style="text-align: center">
 						\[
-						s_{xy} = \sum (x_i - \bar{x}) \cdot (y_i - \bar{y})
-						\quad\text{und}\quad s_{xx} = \sum (x_i - \bar{x})^2.
+						s_{xy} = \sum_{i=1}^{n} (x_i - \bar{x}) \cdot (y_i - \bar{y})
+						\quad\text{und}\quad s_{xx} = \sum_{i=1}^{n} (x_i - \bar{x})^2.
 						\]
 					</p>
 				</div>
@@ -155,15 +155,15 @@ y = np.array([0, 3, 4, 5])
 					<p>
 						Wir müssen zeigen, dass \(m \cdot x + b\) so gewählt werden muss,
 						dass die Summe der Residuenquadrate
-						\(S(m,b) = \sum (m \cdot x_i + b - y_i)^2\) minimal wird. Der
+						\(S(m,b) = \sum_{i=1}^{n} (m \cdot x_i + b - y_i)^2\) minimal wird. Der
 						Trick besteht darin, den Term \((m \cdot x_i + b - y_i)\)
 						geschickt um den Schwerpunkt \((\bar{x}, \bar{y})\)
 						umzuschreiben:
 					</p>
 					<p style="text-align: center">
 						\[
-						\sum (m \cdot x_i + b - y_i)^2 = n \cdot (m \cdot \bar{x} + b - \bar{y})^2 +
-						\sum (m \cdot (x_i - \bar{x}) - y_i + \bar{y})^2
+						\sum_{i=1}^{n} (m \cdot x_i + b - y_i)^2 = n \cdot (m \cdot \bar{x} + b - \bar{y})^2 +
+						\sum_{i=1}^{n} (m \cdot (x_i - \bar{x}) - y_i + \bar{y})^2
 						\]
 					</p>
 					<p>
@@ -476,8 +476,8 @@ y = np.array([0, 2, 1])
 						</p>
 						<p style="text-align: center">
 							\[
-							\sum (m \cdot x_i + b - y_i)^2 = n \cdot (m \cdot \bar{x} + b - \bar{y})^2 +
-							\sum (m \cdot (x_i - \bar{x}) - y_i + \bar{y})^2
+							\sum_{i=1}^{n} (m \cdot x_i + b - y_i)^2 = n \cdot (m \cdot \bar{x} + b - \bar{y})^2 +
+							\sum_{i=1}^{n} (m \cdot (x_i - \bar{x}) - y_i + \bar{y})^2
 							\]
 						</p>
 						<p>

@@ -22,7 +22,7 @@ deckt darum nur den tatsächlich gedruckten Teil ab, beginnend bei
 | ----------------------------------- | ----------------------------------------------------------------- | ------- |
 | `index.html`                        | Kapiteleinstieg, Zitat, Linksammlung                              | –       |
 | `01-regressionsgerade.html`         | «Die Regressionsgerade» (Methode der kleinsten Fehlerquadrate, Schwerpunktsatz) | 1.01–1.04 |
-| `02-python-matplotlib.html`         | «Vorbereitung: Python und Matplotlib» (Code ausführen, Funktionen, `plt.plot`/`plt.scatter`) | 1.05 |
+| `02-python-matplotlib.html`         | «Vorbereitung: Python und Matplotlib» (`plt.plot`/`plt.scatter`; ohne die Unterabschnitte «Python Code ausführen» und «Funktionen», siehe unten) | 1.05 |
 | `03-regression-mit-python.html`     | «Regression mit Python» (lineare/nicht-lineare Regression, `curve_fit`) | 1.06–1.12 |
 | `04-korrelationskoeffizient.html`   | «Der empirische Korrelationskoeffizient»                          | – |
 | `05-herleitung.html`                | «Allgemeine Herleitung»                                            | 1.13–1.19 |
@@ -122,14 +122,27 @@ also über einen Server öffnen und eine Internetverbindung haben.
   (`tasks`-Umgebung mit fünf TikZ-Abbildungen), stehen auf der Webseite als
   eine Werkbank mit fünf Teildiagrammen (`04-korrelationskoeffizient.html`).
   Die zugrundeliegenden Datenpunkte sind identisch mit dem Skript.
-- **«Vorbereitung: Python und Matplotlib» nennt nur zwei der drei im Skript
-  vorgeschlagenen Wege, Python auszuführen.** Die erste im Skript genannte
-  Option («Sie finden unter … eine Online Version dieses Skripts») verweist
-  auf genau diese Webseite selbst — auf der Seite, auf der man diesen Satz
-  liest, ergibt der Verweis keinen Sinn mehr und wird darum weggelassen,
-  gleiches Vorgehen wie beim entsprechenden Absatz in «Regression mit
-  Python» weiter unten. Übrig bleiben die lokale Installation (empfohlen)
-  und der Online-Runner `matplotlib.codeutility.io`.
+- **«Vorbereitung: Python und Matplotlib» lässt den Unterabschnitt «Python
+  Code ausführen» ganz weg.** Das gedruckte Kapitel nennt dort drei Wege,
+  Python auszuführen — u. a. «Sie finden unter … eine Online Version dieses
+  Skripts» (verweist auf genau diese Webseite selbst: auf der Seite, auf der
+  man diesen Satz liest, ergibt der Verweis keinen Sinn mehr), dazu die
+  lokale Installation und der Online-Runner `matplotlib.codeutility.io`. Da
+  auf dieser Webseite ohnehin jedes Codebeispiel direkt in einer Werkbank
+  läuft (siehe Box «Anders als im gedruckten Skript» oben), erübrigt sich
+  eine Erklärung, *wie* man Python-Code ausführt, komplett — der ganze
+  Unterabschnitt entfällt darum, nicht nur der selbstreferenzielle Punkt.
+  Gleiches Vorgehen beim entsprechenden Absatz in «Regression mit Python»
+  weiter unten.
+- **Der Unterabschnitt «Funktionen» steht hier nicht.** `chap_modellieren.tex`
+  hat unter «Vorbereitung: Python und Matplotlib» gar keinen
+  Funktionen-Unterabschnitt (nur «Python Code ausführen» und «Daten
+  visualisieren mit Matplotlib») — diese Webseite hatte ihn früher trotzdem,
+  vermutlich ein Überbleibsel aus der Zeit vor der Aufteilung des Kapitels
+  (siehe oben, Commit "moved matplotlib stuff to chap_modellieren"). Der
+  eigentliche Funktionen-Unterabschnitt gehört zu `chap_bio.tex`
+  («Vorbereitung: Listen und Iterationen in Python») und steht darum nur dort,
+  in [`chap_bio/01-listen-iterationen.html`](../chap_bio/01-listen-iterationen.html#funktionen).
 - **Eine Übung ohne Musterlösung im Skript hat trotzdem eine Werkbank.** Die
   Statistiker-Übung zu Quadrat- vs. Betragskriterium (1.16, im Skript ohne
   `\sol`) hat eine Werkbank zum Experimentieren, aber **keinen**

@@ -12,7 +12,7 @@ zu diesem Kapitel stehen weiter unten.
 | Datei                             | Entspricht im Skript                                    | Übungen |
 | ---------------------------------- | --------------------------------------------------------- | ------- |
 | `index.html`                       | Kapiteleinstieg, Zitat, Linksammlung                       | –       |
-| `01-listen-iterationen.html`       | «Vorbereitung: Listen und Iterationen in Python»            | –       |
+| `01-listen-iterationen.html`       | «Vorbereitung: Listen und Iterationen in Python» (inkl. Unterabschnitt «Funktionen») | –       |
 | `02-iterationen.html`              | «Iterationen» (inkl. Schaefer'sches Modell, Definition)    | 2.01–2.08 |
 | `03-wachstumsmodelle.html`         | «Das Schaefer'sche Modell», Übungsteil                     | 2.09–2.12 |
 | `04-mehrere-zustandsgroessen.html` | «Modelle mit mehreren Zustandsgrössen» (Räuber-Beute, SI, SIR) | 2.13–2.21 |
@@ -25,12 +25,16 @@ und ist dort neu als Webseite umgesetzt, siehe
 [`chap_regression/02-python-matplotlib.html`](../chap_regression/02-python-matplotlib.html)
 (Dateiname zum Zeitpunkt dieser Änderung — dort ggf. nochmals
 gegenprüfen, falls sich das noch verschiebt). `01-listen-iterationen.html`
-(vormals `01-python-matplotlib.html`) deckt seither nur noch den
-schlankeren Rest ab, der in `chap_bio.tex` verblieben ist (Listen,
-Indizes/Slicing, Schleifen) und verweist mit einem Link auf jene Seite für
-die Grundlagen. Dadurch fiel die alte Übung 2.01 weg und **alle übrigen
+(vormals `01-python-matplotlib.html`) deckt seither den schlankeren Rest ab,
+der in `chap_bio.tex` verblieben ist (Listen, Indizes/Slicing, Schleifen)
+und verweist mit einem Link auf jene Seite für Code-Ausführung und
+`matplotlib`. Dadurch fiel die alte Übung 2.01 weg und **alle übrigen
 Übungsnummern verschoben sich um 1 nach unten** (ehemals 2.02–2.22, neu
-2.01–2.21).
+2.01–2.21). `chap_bio.tex` hat seitdem allerdings einen eigenen
+Unterabschnitt «Funktionen» zurückerhalten (einfache Funktionsdefinition,
+unabhängig vom Matplotlib-Teil in `chap_modellieren.tex`) — die Webseite
+bildet ihn entsprechend als eigenen Abschnitt in `01-listen-iterationen.html`
+ab, nicht in `chap_regression/`.
 
 Die Übungen sind durchgehend numeriert wie im Skript (`\thechapter.NN`).
 Jede Seite trägt dazu `data-ex-chapter` und `data-ex-offset` auf `<main>`;
